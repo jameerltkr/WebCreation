@@ -281,10 +281,10 @@ public class datalayer
                 select a;
         return q;
     }
-    public IEnumerable<BodyContent> Retrieve_Website(string email)
+    public IEnumerable<BodyContent> Retrieve_Website(string username)
     {
         var q = from a in da.BodyContents
-                where a.UserName == email
+                where a.UserName == username
                 select a;
         return q;
     }
