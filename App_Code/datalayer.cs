@@ -258,7 +258,7 @@ public class datalayer
             return msg;
         }
     }
-    public IEnumerable<BodyContent> GetWebsiteName(string name,string userid)
+    public IEnumerable<BodyContent> GetWebsiteName(string name,Guid userid)
     {
         var q = from a in da.BodyContents
                 where a.WebsiteName == name&&a.UserId==userid
