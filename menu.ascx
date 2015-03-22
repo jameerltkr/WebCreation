@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="menu.ascx.cs" Inherits="menu" %>
 <%@ Register Src="~/user_control/UserShow.ascx" TagPrefix="uc1" TagName="UserShow" %>
-
+<link href="css/site.css" rel="stylesheet" />
 <header id="header">
         <div class="top-bar">
             <div class="container">
