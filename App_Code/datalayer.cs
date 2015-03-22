@@ -228,14 +228,42 @@ public class datalayer
 
 
 
-    public void SaveWebsite(string username, string websitename,Guid userid)
+    public string SaveWebsite(string username, string websitename,Guid userid)
     {
-        BodyContent bd = new BodyContent();
-        bd.UserName = username;
-        bd.WebsiteName = websitename;
-        bd.UserId = userid;
-        da.BodyContents.InsertOnSubmit(bd);
-        da.SubmitChanges();
+        string msg;
+        try
+        {
+            var q = GetWebsiteName(websitename);
+            if (q.Any())
+            {
+                msg = Constants.WEBSITE_ALREADY_EXIST;
+                return msg;
+            }
+            else
+            {
+                BodyContent bd = new BodyContent();
+                bd.UserName = username;
+                bd.WebsiteName = websitename;
+                bd.UserId = userid;
+                da.BodyContents.InsertOnSubmit(bd);
+                da.SubmitChanges();
+                msg = Constants.SUCCESS;
+                return msg;
+            }
+            
+        }
+        catch
+        {
+            msg = Constants.ERROR;
+            return msg;
+        }
+    }
+    public IEnumerable<BodyContent> GetWebsiteName(string name)
+    {
+        var q = from a in da.BodyContents
+                where a.WebsiteName == name
+                select a;
+        return q;
     }
     public void SavePages(string username, string pagename, string websitename)
     {

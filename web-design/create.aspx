@@ -99,18 +99,74 @@
 
         <section id="feature">
         <div class="container wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
-            <br />
+            <div runat="server" id="error_div"></div>
             <fieldset class="website-panel">
                <legend>Website editing</legend>
-                <asp:Panel runat="server" ID="pnl_website_name">
-                    <asp:TextBox CssClass="align-left" ID="txt_website_name" runat="server"></asp:TextBox>
+                
+                <asp:Panel CssClass="create-web" Visible="false" runat="server" ID="pnl_website_name" Height="251px" Width="375px">
+                    <asp:Wizard ID="Wizard_Create_Web" runat="server" Height="248px" Width="370px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
+                        <HeaderStyle BackColor="#5D7B9D" BorderStyle="Solid" Font-Bold="True" Font-Size="0.9em" ForeColor="White" HorizontalAlign="Left" />
+                        <HeaderTemplate>
+                            
+                        </HeaderTemplate>
+                        
+                        
+                        <NavigationButtonStyle BackColor="#FFFBFF" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284775" />
+                        <SideBarButtonStyle BorderWidth="0px" Font-Names="Verdana" ForeColor="White" />
+                        <SideBarStyle BackColor="#7C6F57" BorderWidth="0px" Font-Size="0.9em" VerticalAlign="Top" />
+                        
+                        
+                        <StartNavigationTemplate>
+                            <asp:Button ID="StartNextButton" runat="server" CommandName="MoveNext" Text="Next" />
+                        </StartNavigationTemplate>
+                        
+                            
+                        <StepStyle BorderWidth="0px" ForeColor="#5D7B9D" />
+                        
+                            
+                        <WizardSteps>
+                            <asp:WizardStep ID="WizardStep1" runat="server" Title="Step 1" OnActivate="WizardStep1_Activate" OnDeactivate="WizardStep1_Deactivate">
+                                <table>
+                                    <tr>
+                                        <td style="text-align:left">
+                                            <span>Website name:</span>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align:left">
+                                            <asp:TextBox ID="txt_website_name" runat="server" CssClass="align-left"></asp:TextBox><br />
+                                        </td>
+                                    </tr>
+                                   <%-- <tr>
+                                        <td style="text-align:left">
+                                            <asp:Button ID="btn_save_website" runat="server" OnClick="btn_save_website_Click" Text="Create" />
+                                        </td>
+                                    </tr>--%>
+                                </table>
+                            
+                            </asp:WizardStep>
+                            <asp:WizardStep ID="WizardStep2" runat="server" Title="Step 2">
+
+                            </asp:WizardStep>
+                            <asp:WizardStep runat="server" Title="Step 3">
+                            </asp:WizardStep>
+                        </WizardSteps>
+                    </asp:Wizard>
+
+
+                    
+                    <br />
                 </asp:Panel>
            </fieldset>
             <fieldset class="align-right">
                 <legend>Create and manage website</legend>
                 <section >
-                <asp:LinkButton CssClass="" Text="New Website" OnClick="btn_create_website_Click" runat="server" ID="btn_create_website">
-            </asp:LinkButton>
+                    <%--<asp:UpdatePanel runat="server">--%>                        <%--<ContentTemplate>--%>
+                            <asp:LinkButton CssClass="" Text="New Website" OnClick="btn_create_website_Click" runat="server" ID="btn_create_website">
+                            </asp:LinkButton>
+                    <%--</ContentTemplate>--%>                    <%--</asp:UpdatePanel>--%>
+                
             </section>
             </fieldset><br /><br /><br /><br /><br />
             <fieldset class="align-right2">

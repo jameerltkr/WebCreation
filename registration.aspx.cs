@@ -26,11 +26,28 @@ public partial class registration : System.Web.UI.Page
             switch (createStatus)
             {
                 case MembershipCreateStatus.Success:
-                    clear();
+                    
                     lbl_message.Text = "Please wait...";
                     Button1.Enabled = false;
-                    System.Threading.Thread.Sleep(500);
-                    Response.Redirect("~/Home.aspx");
+                   // System.Threading.Thread.Sleep(500);
+                    if (System.Web.Security.Membership.ValidateUser(Tname.Text.Trim(), Tpassword.Text))
+                    {
+                        {
+                            Session[Constants.Session.USERNAME] = Tname.Text;
+                        }
+                        var user1 = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
+                        if (user1 != null)
+                        {
+                            Session[Constants.Session.ID] = user.Email.ToString();
+                        }
+                        //System.Web.Security.MembershipUser mu;
+                        FormsAuthentication.SetAuthCookie(Tname.Text, true);
+
+                        clear();
+                        Response.Redirect("~/home.aspx");
+                    }
+                  //  if (Session[Constants.Session.USERNAME] != null)
+                    
                     break;
                 case MembershipCreateStatus.DuplicateUserName:
                     lbl_message.ForeColor = Color.Red;

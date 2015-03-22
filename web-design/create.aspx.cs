@@ -281,32 +281,7 @@ public partial class web_design_create : System.Web.UI.Page
     }
     protected void btn_create_website_Click(object sender, EventArgs e)
     {
-        datalayer dl = new datalayer();
-        
-        System.Web.Security.MembershipUser mu;
-        if (!Request.IsAuthenticated)
-        {
-            mu = null;
-            Response.Redirect("~/login.aspx");
-        }
-        else
-        {
-            Guid userid;
-            mu = System.Web.Security.Membership.GetUser();
-            userid = (Guid)mu.ProviderUserKey;
-            dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid);
-            pnl_create_pages.Visible = true;
-            txt_website_name.Text = "";
-
-            txt_website_name.Visible = false;
-            btn_create_website.Visible = false;
-
-            
-          //  userid = (Guid)string.Empty;
-        }
-        
-        
-        
+        pnl_website_name.Visible = true;
         
     }
     protected void rpt_website_name_ItemCommand1(object source, RepeaterCommandEventArgs e)
@@ -326,6 +301,51 @@ public partial class web_design_create : System.Web.UI.Page
         if (e.CommandName == "website") 
         {
             Response.Write("Hello");
+        }
+    }
+    //protected void btn_save_website_Click(object sender, EventArgs e)
+    //{
+        
+    //}
+    protected void WizardStep1_Activate(object sender, EventArgs e)
+    {
+       // Response.Write("hello");
+    }
+    protected void WizardStep1_Deactivate(object sender, EventArgs e)
+    {
+        //Response.Write("hello");
+
+        datalayer dl = new datalayer();
+
+        System.Web.Security.MembershipUser mu;
+        if (!Request.IsAuthenticated)
+        {
+            mu = null;
+            Response.Redirect("~/login.aspx");
+        }
+        else
+        {
+            Guid userid;
+            mu = System.Web.Security.Membership.GetUser();
+            userid = (Guid)mu.ProviderUserKey;
+            if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.SUCCESS)
+            {
+                pnl_create_pages.Visible = true;
+                pnl_website_name.Visible = false;
+            }
+            else
+                if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.WEBSITE_ALREADY_EXIST)
+                {
+                    Message m = new Message();
+                    error_div.Controls.Add(m.Error(Constants.WEBSITE_ALREADY_EXIST));
+                }
+                else
+                    if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.ERROR)
+                    {
+                        Message m = new Message();
+                        error_div.Controls.Add(m.Error(Constants.ERROR));
+                    }
+            //  userid = (Guid)string.Empty;
         }
     }
 }

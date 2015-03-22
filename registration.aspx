@@ -61,8 +61,8 @@
         <div class="container wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
             <div class="register_section">
     
-    <asp:UpdatePanel runat="server">
-        <ContentTemplate>
+    <%--<asp:UpdatePanel runat="server">--%>
+        <%--<ContentTemplate>--%>
 
         
 
@@ -225,8 +225,8 @@
             </tr>
         </table>
         
-            </ContentTemplate>
-    </asp:UpdatePanel>       
+            <%--</ContentTemplate>--%>
+    <%--</asp:UpdatePanel>--%>       
 </div>
        </div></section>
 

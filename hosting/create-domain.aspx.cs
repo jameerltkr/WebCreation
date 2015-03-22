@@ -17,8 +17,11 @@ public partial class hosting_create_domain : System.Web.UI.Page
         else
         {
             System.Web.Security.MembershipUser mu;
-            mu = System.Web.Security.Membership.GetUser();
-            Response.Write(mu.UserName);
+            if (Session[Constants.Session.USERNAME] != null)
+            {
+                //mu = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
+                //Response.Write(mu.UserName);
+            }
             txt_user_name.Focus();
         }
     }

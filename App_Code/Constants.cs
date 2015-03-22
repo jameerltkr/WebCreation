@@ -26,4 +26,5 @@ public class Constants
         public const string ERROR = "Invalid Email or Password!";
         public const string SUCCESS = "Login Successful!";
     }
+    public const string WEBSITE_ALREADY_EXIST = "This website is already exist. Please choose another name!";
 }
