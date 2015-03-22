@@ -14,7 +14,14 @@ public partial class login : System.Web.UI.Page
     datalayer c = new datalayer();
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        if (Session[Constants.Session.ID]!=null)
+        {
+            Response.Redirect("~/home.aspx");
+        }
+        if (!Request.IsAuthenticated)
+        {
+            
+        }
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
