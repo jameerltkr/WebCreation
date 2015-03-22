@@ -286,6 +286,12 @@ public partial class web_design_create : System.Web.UI.Page
         System.Web.Security.MembershipUser mu;
         if (!Request.IsAuthenticated)
         {
+            mu = null;
+            Response.Redirect("~/login.aspx");
+            
+        }
+        else
+        {
             Guid userid;
             mu = System.Web.Security.Membership.GetUser();
             userid = (Guid)mu.ProviderUserKey;
@@ -295,11 +301,8 @@ public partial class web_design_create : System.Web.UI.Page
 
             txt_website_name.Visible = false;
             btn_create_website.Visible = false;
-        }
-        else
-        {
-            Response.Redirect("~/login.aspx");
-            mu = null;
+
+            
           //  userid = (Guid)string.Empty;
         }
         
