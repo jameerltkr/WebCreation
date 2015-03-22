@@ -16,7 +16,7 @@ public partial class login : System.Web.UI.Page
     {
         if (Session[Constants.Session.ID]!=null)
         {
-            Response.Redirect("~/home.aspx");
+           // Response.Redirect("~/home.aspx");
         }
         if (!Request.IsAuthenticated)
         {

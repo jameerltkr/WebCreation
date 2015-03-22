@@ -11,6 +11,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <link href="../css/site.css" rel="stylesheet" />
     <title>Create website | webcreation.com</title>
     <link href="../css/animate.min.css" rel="stylesheet" />
     <link href="../css/bootstrap.min.css" rel="stylesheet" />
@@ -83,13 +84,7 @@
     <div>
         <uc1:menu runat="server" ID="menu" />
     </div>
-
-
-        <section id="feature">
-        <div class="container wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
-            <br />
-            <div class="website-name">
-                        <%
+        <%
                             datalayer dl=new datalayer();
                             var q = dl.Retrieve_Website(Session[Constants.Session.ID].ToString());
                             if (q.Any())
@@ -101,17 +96,34 @@
                                 }
                             }
                              %>
+
+        <section id="feature">
+        <div class="container wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
+            <br />
+            <fieldset class="website-panel">
+               <legend>Website editing</legend>
+                <asp:Panel runat="server" ID="pnl_website_name">
+                    <asp:TextBox CssClass="align-left" ID="txt_website_name" runat="server"></asp:TextBox>
+                </asp:Panel>
+           </fieldset>
+            <fieldset class="align-right">
+                <legend>Create and manage website</legend>
+                <section >
+                <asp:LinkButton CssClass="" Text="New Website" OnClick="btn_create_website_Click" runat="server" ID="btn_create_website">
+            </asp:LinkButton>
+            </section>
+            </fieldset><br /><br /><br /><br /><br />
+            <fieldset class="align-right2">
+                <legend>Your websites</legend>
                 <asp:Repeater ID="rpt_website_name" OnItemCommand="rpt_website_name_ItemCommand1" runat="server">
                     <ItemTemplate>
                         <asp:LinkButton ID="btn_website_name" CommandName="website" OnCommand="btn_website_name_Command" CommandArgument="Hello" Text='<%#Eval("WebsiteName") %>' runat="server"></asp:LinkButton><br />
                     </ItemTemplate>
                 </asp:Repeater>
-                        
-            </div>
-            <asp:TextBox CssClass="align-left" ID="txt_website_name" runat="server"></asp:TextBox>
-            <asp:LinkButton CssClass="a_demo_four align-left" OnClick="btn_create_website_Click" runat="server" ID="btn_create_website">
-                Website Name
-            </asp:LinkButton>
+            </fieldset>
+           
+            
+            
             <asp:Panel Visible="false" ID="pnl_create_pages" runat="server">
             <asp:TextBox ID="txtpagename" CssClass="align-left" runat="server"></asp:TextBox>
             <asp:LinkButton CssClass="a_demo_four align-left" OnClick="btn_create_page_Click" runat="server" ID="btn_create_page">

@@ -204,3 +204,28 @@
 
 
 
+.align-right{
+    float:right;
+    width:250px;
+    height:100px;
+}
+.align-right2{
+    float:right;
+    width:250px;
+    height:300px;
+}
+.align-right2 a{
+    color:#428bca;
+}
+.align-right2 a:hover{
+    color:blue;
+}
+
+.align-right fieldset{
+    border-radius:5px;
+}
+.website-panel{
+    float:left;
+    height:100%;
+    width:881px;
+}
