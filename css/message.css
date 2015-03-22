@@ -1,0 +1,33 @@
+﻿.error-div {
+    background-color: #fafaf9;
+    background-image: url("img/error_msg.png");
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    border: 2px solid #e59696;
+    border-radius: 7px;
+    box-shadow: 0 0 10px #93d4d4;
+    color: #4d4d4d;
+    font-size: 15px;
+    font-weight: bold;
+    margin: 30px 0;
+    padding: 10px 10px 10px 45px;
+    width:666px;
+    margin-left:210px;
+}
+.divInfoMessage{
+    width: 90%;
+    height: 17px;
+    padding: 10px 10px 10px 45px;
+    color: #4D4D4D;
+    font-size: 12px;
+    font-weight: bold;
+    background-image: url("img/success_msg.png");
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    border: 2px solid #C6E596;
+    background-color: #FAFAF9;
+    margin: 30px 0px;
+    border-radius: 7px;
+    box-shadow: 0px 0px 10px #93D4D4;
+    font-family:Arial;
+}
