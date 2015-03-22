@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="menu.ascx.cs" Inherits="hosting_menu" %>
 <%@ Register Src="~/user_control/UserShow.ascx" TagPrefix="uc1" TagName="UserShow" %>
-
+<link href="../css/site.css" rel="stylesheet" />
 <script type="text/javascript">
 var closing = true;
 $(function () {
