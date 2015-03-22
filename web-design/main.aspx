@@ -30,6 +30,7 @@
     <link href="../css/responsive.css" rel="stylesheet" />
 </head>
 <body class="homepage">
+    <link href="../css/site.css" rel="stylesheet" />
     <link href="../css/prettyPhoto.css" rel="stylesheet" />
     <form id="form1" runat="server">
     <div>
