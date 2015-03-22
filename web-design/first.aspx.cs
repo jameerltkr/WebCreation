@@ -7,6 +7,85 @@ namespace generate_page_runtime {
         protected void Page_Load(object sender, EventArgs e) {
             output.Text = "Our new page";
         }
+        private void LoadCategories()
+        {
+           // allCategories = GetAllCategories();
+            rptCategories.DataSource = GetCategories();
+            rptCategories.DataBind();
+        }
+        private DataTable GetCategories()
+        {
+        SqlConnection connection = new SqlConnection("Data Source=NITESH;Initial Catalog=TestDB;Integrated Security=SSPI");
+        SqlCommand selectCommand = new SqlCommand("SELECT ID,CategoryName FROM Categories WHERE ParentCategoryID=0", connection);
+        DataTable dt = new DataTable();
+        try
+        {
+            connection.Open();
+            SqlDataReader reader = selectCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                dt.Load(reader);
+            }
+            reader.Close();
+        }
+        catch (SqlException)
+        {
+            throw;
+        }
+        finally
+        {
+            connection.Close();
+        }
+        return dt;
+        }
+        private DataTable GetAllCategories()
+        {
+        SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True");
+        SqlCommand selectCommand = new SqlCommand("SELECT ID,CategoryName FROM Categories", connection);
+        DataTable dt = new DataTable();
+        try
+        {
+            connection.Open();
+            SqlDataReader reader = selectCommand.ExecuteReader();
+            if (reader.HasRows)
+            {
+                dt.Load(reader);
+            }
+            reader.Close();
+        }
+        catch (SqlException)
+        {
+            throw;
+        }
+        finally
+        {
+            connection.Close();
+        }
+        return dt;
+        }
+        protected void rptCategories_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+            {
+              //  if (allCategories != null)
+                {
+                    DataRowView drv = e.Item.DataItem as DataRowView;
+                    string ID = drv["ID"].ToString();
+                  //  DataRow[] rows = allCategories.Select("ParentCategoryID=" + ID, "Name");
+                    if (rows.Length > 0)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append("<ul>");
+                        foreach (var item in rows)
+                        {
+                            sb.Append("<li><a href='#'>" + item["CategoryName"] + "</a></li>");
+                        }
+                        sb.Append("</ul>");
+                        (e.Item.FindControl("ltrlSubMenu") as Literal).Text = sb.ToString();
+                    }
+                }
+            }
+        }
            
        protected void btn_edit_header_Click(object sender, EventArgs e)
        {
@@ -69,6 +148,7 @@ namespace generate_page_runtime {
            hl_save.Visible = false;
            img_edit.Attributes["style"] = "display : block";
        }
-       
-    }
+
+      
+}
 }

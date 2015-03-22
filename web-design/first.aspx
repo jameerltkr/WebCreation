@@ -57,6 +57,59 @@
            });
        });
    </script>
+    <style>
+        .menu{
+    width: 500px;
+    margin: 0px auto;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+}
+.menu ul li a:link, div ul li a:visited {
+    display: block;
+    background-color: #f1f1f1;color:#000;
+    text-align: center;
+    text-decoration: none;
+    padding: 4px;
+    border-bottom: 1px solid #fff;
+    width: 150px;
+}
+.menu ul li a:hover{
+    background-color: #ccc;
+}
+.menu ul li ul li a:link, li ul li a:visited {
+    display: block;
+    background-color: #f1f1f1;
+    color: #000;
+    text-align: center;
+    text-decoration: none;
+    padding: 4px;
+    border-bottom: 1px solid #fff;
+    width: 150px;
+}
+.menu ul li ul li a:hover {
+    background-color: #ccc;
+}
+.menu ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+.menu ul li {
+    float: left;
+    margin-left: 5px;
+}
+.menu ul li ul li {
+    float: none;
+    margin-left: 0px;
+}
+.menu ul li ul {
+    display: none;
+}
+.menu li:hover ul{
+    display: block;
+}
+    </style>
 </head>
 <body>
    <form id="form1" runat="server">
@@ -74,8 +127,22 @@
                    Add
                </button></span>
            </div>
-           <div runat="Server" style="display:none;" class="menu">
-               
+
+           <div runat="Server"  class="menu">
+               <asp:repeater ID="rptCategories" runat="server" OnItemDataBound="rptCategories_ItemDataBound">
+                    <headertemplate>
+                        <div class="menu"><ul>
+                    </headertemplate>
+                    <itemtemplate>
+                        <li>
+                            <a href='#'>< %#Eval("Name") %></a>
+                            <asp:literal ID="ltrlSubMenu" runat="server"></asp:literal>
+                        </li>
+                    </itemtemplate>
+                <footertemplate>
+                       </ul></div>
+                </footertemplate>
+                </asp:repeater>
            </div>
             <div class="bottom-right">
                <asp:Button ID="btn_edit_header" OnClick="btn_edit_header_Click" runat="Server" Text="Edit Header"/>

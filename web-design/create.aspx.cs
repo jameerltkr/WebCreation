@@ -288,7 +288,6 @@ public partial class web_design_create : System.Web.UI.Page
         {
             mu = null;
             Response.Redirect("~/login.aspx");
-            
         }
         else
         {
