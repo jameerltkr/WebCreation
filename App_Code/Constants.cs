@@ -12,6 +12,7 @@ public class Constants
 	{
 		
 	}
+    // created to access from other files 
     public const string SUCCESS = "Success";
     public const string ERROR = "Error";
     public class Session

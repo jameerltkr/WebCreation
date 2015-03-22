@@ -20,4 +20,5 @@ public class Message
         errorDiv.InnerHtml = message;
         return errorDiv;
     }
+
 }
