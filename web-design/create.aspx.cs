@@ -314,7 +314,7 @@ public partial class web_design_create : System.Web.UI.Page
     protected void WizardStep1_Deactivate(object sender, EventArgs e)
     {
         //Response.Write("hello");
-
+     //   this.Visible = false;
         datalayer dl = new datalayer();
 
         System.Web.Security.MembershipUser mu;
@@ -338,6 +338,7 @@ public partial class web_design_create : System.Web.UI.Page
                 {
                     Message m = new Message();
                     error_div.Controls.Add(m.Error(Constants.WEBSITE_ALREADY_EXIST));
+                    
                 }
                 else
                     if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.ERROR)

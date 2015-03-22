@@ -30,7 +30,7 @@ public partial class registration : System.Web.UI.Page
                 //    lbl_message.Text = "Please wait...";
                 //    Button1.Enabled = false;
                    // System.Threading.Thread.Sleep(500);
-                    if (System.Web.Security.Membership.ValidateUser(Tname.Text.Trim(), Tpassword.Text))
+                //    if (System.Web.Security.Membership.ValidateUser(Tname.Text.Trim(), Tpassword.Text))
                     {
                         {
                             Session[Constants.Session.USERNAME] = Tname.Text;

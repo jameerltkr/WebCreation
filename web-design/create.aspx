@@ -104,7 +104,9 @@
                <legend>Website editing</legend>
                 
                 <asp:Panel CssClass="create-web" Visible="false" runat="server" ID="pnl_website_name" Height="251px" Width="375px">
-                    <asp:Wizard ID="Wizard_Create_Web" runat="server" Height="248px" Width="370px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
+                    <asp:UpdatePanel runat="server">
+                        <ContentTemplate>
+                            <asp:Wizard ID="Wizard_Create_Web" runat="server" Height="248px" Width="370px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
                         <HeaderStyle BackColor="#5D7B9D" BorderStyle="Solid" Font-Bold="True" Font-Size="0.9em" ForeColor="White" HorizontalAlign="Left" />
                         <HeaderTemplate>
                             
@@ -115,11 +117,7 @@
                         <SideBarButtonStyle BorderWidth="0px" Font-Names="Verdana" ForeColor="White" />
                         <SideBarStyle BackColor="#7C6F57" BorderWidth="0px" Font-Size="0.9em" VerticalAlign="Top" />
                         
-                        
-                        <StartNavigationTemplate>
-                            <asp:Button ID="StartNextButton" runat="server" CommandName="MoveNext" Text="Next" />
-                        </StartNavigationTemplate>
-                        
+                      
                             
                         <StepStyle BorderWidth="0px" ForeColor="#5D7B9D" />
                         
@@ -153,6 +151,9 @@
                             </asp:WizardStep>
                         </WizardSteps>
                     </asp:Wizard>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    
 
 
                     
