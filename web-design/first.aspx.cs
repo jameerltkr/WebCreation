@@ -65,26 +65,7 @@ namespace generate_page_runtime {
         }
         protected void rptCategories_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            {
-              //  if (allCategories != null)
-                {
-                    DataRowView drv = e.Item.DataItem as DataRowView;
-                    string ID = drv["ID"].ToString();
-                  //  DataRow[] rows = allCategories.Select("ParentCategoryID=" + ID, "Name");
-                    if (rows.Length > 0)
-                    {
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append("<ul>");
-                        foreach (var item in rows)
-                        {
-                            sb.Append("<li><a href='#'>" + item["CategoryName"] + "</a></li>");
-                        }
-                        sb.Append("</ul>");
-                        (e.Item.FindControl("ltrlSubMenu") as Literal).Text = sb.ToString();
-                    }
-                }
-            }
+           
         }
            
        protected void btn_edit_header_Click(object sender, EventArgs e)
