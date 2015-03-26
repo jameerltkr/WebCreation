@@ -27,4 +27,6 @@ public class Constants
         public const string SUCCESS = "Login Successful!";
     }
     public const string WEBSITE_ALREADY_EXIST = "This website is already exist. Please choose another name!";
+    public const string ENTER_WEBSITE_NAME = "Please choose a website name.";
+    public const string WEBSITE_NAME = "Website Name";
 }

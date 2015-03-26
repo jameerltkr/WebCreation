@@ -3,6 +3,8 @@
 <%@ Register Src="~/web-design/menu.ascx" TagPrefix="uc1" TagName="menu" %>
 <%@ Register Src="~/footer.ascx" TagPrefix="uc1" TagName="footer" %>
 <%@ Register Src="~/bottom.ascx" TagPrefix="uc1" TagName="bottom" %>
+<%@ Register Src="~/user_control/CreateWebsite.ascx" TagPrefix="uc1" TagName="CreateWebsite" %>
+
 
 
 
@@ -84,29 +86,85 @@
     <div>
         <uc1:menu runat="server" ID="menu" />
     </div>
-        <%
-                            datalayer dl=new datalayer();
-                            var q = dl.Retrieve_Website(Session[Constants.Session.ID].ToString());
-                            if (q.Any())
-                            {
-                                foreach (var a in q)
-                                {
-                                    rpt_website_name.DataSource = q;
-                                    rpt_website_name.DataBind();
-                                }
-                            }
-                             %>
+        
 
         <section id="feature">
-        <div class="container wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
+        <div class="container wow fadeInDown" style="width:1300px;" data-wow-duration="1000ms" data-wow-delay="600ms">
+            <asp:UpdatePanel runat="server">
+                        <ContentTemplate>
+                            <%
+                                
+                                if (Session[Constants.Session.ID] != null)
+                                {
+                                    datalayer dl = new datalayer();
+                                    var q = dl.Retrieve_Website(Session[Constants.Session.ID].ToString());
+                                    if (q.Any())
+                                    {
+                                        HtmlTableRow row = null;
+                                        HtmlTableCell cell = null;
+                                        HtmlTableCell cell2 = null;
+                                        HtmlAnchor a1 = null;
+                                        HtmlAnchor a2 = null;
+                                      
+                                        foreach (var a in q)
+                                        {
+
+                                          //  for (int i = 0; i < 11; i++)
+                                            {
+
+                                                row = new HtmlTableRow();
+                                                cell = new HtmlTableCell();
+                                                cell2 = new HtmlTableCell();
+                                                a2 = new HtmlAnchor();
+                                                a1 = new HtmlAnchor();
+                                                a1.InnerText = "Edit";
+                                                a1.HRef = "#";
+                                                a2.HRef = "#";
+                                                a2.InnerText = "Delete";
+
+                                                tbl_web_name.Controls.Add(row);
+                                                row.Controls.Add(cell);
+                                                row.Controls.Add(cell2);
+                                                cell.ID = "data";
+                                                cell.InnerText = a.WebsiteName;
+                                                cell2.ID = "action";
+                                                cell2.Controls.Add(a1);
+                                                cell2.Controls.Add(a2);
+                                                
+                                            }
+                                            
+                                            //lbl_website_name.Text = a.WebsiteName;
+                                            //rpt_website_name.DataSource = q;
+                                            //rpt_website_name.DataBind();
+                                        }
+                                    }
+                                }
+                             %>
             <div runat="server" id="error_div"></div>
+                            <fieldset class="left-toolbox">
+                    <legend>Toolbox</legend>
+                                <ul>
+                                    <li><label>Anchor (a)</label></li>
+                                    <li><label>Button</label></li>
+                                    <li><label>Checkbox</label></li>
+                                    <li><label>Division (div)</label></li>
+                                    <li><label>Dropdown</label></li>
+                                    <li><label>File Upload</label></li>
+                                    <li><label>Image</label></li>
+                                    <li><label>Textbox</label></li>
+                                    <li><label>Paragraph (p)</label></li>
+                                    <li><label>Radio Button</label></li>
+                                    <li><label>Table</label></li>
+                                    
+                                </ul>
+
+                </fieldset>
             <fieldset class="website-panel">
                <legend>Website editing</legend>
                 
-                <asp:Panel CssClass="create-web" Visible="false" runat="server" ID="pnl_website_name" Height="251px" Width="375px">
-                    <asp:UpdatePanel runat="server">
-                        <ContentTemplate>
-                            <asp:Wizard ID="Wizard_Create_Web" runat="server" Height="248px" Width="370px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
+                <asp:Panel CssClass="create-web" Visible="false" runat="server" ID="pnl_website_name" >
+                    
+                            <asp:Wizard OnFinishButtonClick="Wizard_Create_Web_FinishButtonClick" OnSideBarButtonClick="Wizard_Create_Web_SideBarButtonClick" OnNextButtonClick="Wizard_Create_Web_NextButtonClick" OnActiveStepChanged="Wizard_Create_Web_ActiveStepChanged" ID="Wizard_Create_Web" runat="server" Height="407px" Width="572px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
                         <HeaderStyle BackColor="#5D7B9D" BorderStyle="Solid" Font-Bold="True" Font-Size="0.9em" ForeColor="White" HorizontalAlign="Left" />
                         <HeaderTemplate>
                             
@@ -123,7 +181,7 @@
                         
                             
                         <WizardSteps>
-                            <asp:WizardStep ID="WizardStep1" runat="server" Title="Step 1" OnActivate="WizardStep1_Activate" OnDeactivate="WizardStep1_Deactivate">
+                            <asp:WizardStep ID="WizardStep1" runat="server" Title="Application Name" >
                                 <table>
                                     <tr>
                                         <td style="text-align:left">
@@ -144,39 +202,143 @@
                                 </table>
                             
                             </asp:WizardStep>
-                            <asp:WizardStep ID="WizardStep2" runat="server" Title="Step 2">
+                            <asp:WizardStep ID="WizardStep2" runat="server" Title="Choose templates">
 
                             </asp:WizardStep>
-                            <asp:WizardStep runat="server" Title="Step 3">
+                            <asp:WizardStep runat="server" Title="Create database">
                             </asp:WizardStep>
                         </WizardSteps>
                     </asp:Wizard>
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                    
-
-
-                    
                     <br />
+                </asp:Panel>
+                <asp:Panel runat="server" ID="pnl_edit_web">
+                    <%--<uc1:CreateWebsite runat="server" id="CreateWebsite" />--%>
+
+                    <asp:Panel Visible="false" runat="server" ID="pnl_web">
+    <%
+                                
+                                if (Session[Constants.Session.ID] != null)
+                                {
+                                    datalayer dl = new datalayer();
+                                    Guid userid;
+                                    System.Web.Security.MembershipUser mu;
+                                    mu = System.Web.Security.Membership.GetUser();
+                                    userid = (Guid)mu.ProviderUserKey;
+                                    if(Session[Constants.Session.USERNAME]!=null && Session[Constants.WEBSITE_NAME]!=null)
+                                    mu = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
+                                    var q = dl.Retrieve_Web_Pages(userid,Session[Constants.WEBSITE_NAME].ToString());
+                                    if (q.Any())
+                                    {
+                                        foreach (var a in q)
+                                        {
+                                            Repeater1.DataSource = q;
+                                            Repeater1.DataBind();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        lbl_pages_name.Text = "There are no pages... Please create one.";
+                                        div_create_page.Visible = true;
+                                    }
+                                }
+                               
+                             %>
+
+                     <script>
+                         $(function () {// write your code in document ready
+                             $('.btn-website-name').click(function () {
+                                 alert($(this).html());
+                             });
+                         });
+                </script>
+                <style>
+                    .btn-website-name{
+                        cursor:pointer;
+                    }
+                    .btn-website-name:hover{
+                        text-decoration:underline;
+                    }
+                </style>
+    <asp:Label runat="server" ID="lbl_pages_name"></asp:Label>
+    <div runat="server" id="div_create_page" visible="false">
+        <span>Page name:</span>
+        <asp:TextBox runat="server" ID="txt_page_name"></asp:TextBox>
+        <br />
+        <asp:Button ID="Button1" runat="server" Text="Create page" OnClick="btn_create_page_Click"/>
+    </div>
+                <asp:Repeater ID="Repeater1" runat="server">
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbl_website_name" class="btn-website-name" Text='<%#Eval("WebsiteName") %>'></asp:Label>
+                        <%--<asp:LinkButton ID="btn_website_name" class="bt-website-name" CommandName="website" OnCommand="btn_website_name_Command" CommandArgument="Hello" Text='<%#Eval("WebsiteName") %>' runat="server"></asp:LinkButton>--%><br />
+                    </ItemTemplate>
+                </asp:Repeater>
+</asp:Panel>
                 </asp:Panel>
            </fieldset>
             <fieldset class="align-right">
-                <legend>Create and manage website</legend>
+                <legend>Create website</legend>
                 <section >
                     <%--<asp:UpdatePanel runat="server">--%>                        <%--<ContentTemplate>--%>
                             <asp:LinkButton CssClass="" Text="New Website" OnClick="btn_create_website_Click" runat="server" ID="btn_create_website">
                             </asp:LinkButton>
                     <%--</ContentTemplate>--%>                    <%--</asp:UpdatePanel>--%>
-                
             </section>
             </fieldset><br /><br /><br /><br /><br />
             <fieldset class="align-right2">
                 <legend>Your websites</legend>
-                <asp:Repeater ID="rpt_website_name" OnItemCommand="rpt_website_name_ItemCommand1" runat="server">
+                <div class="wb">
+                <script>
+                    $(function () {// write your code in document ready
+                        $('.btn-website-name').click(function () {
+                            alert($(this).html());
+                        });
+                    });
+                </script>
+                <style>
+                    .btn-website-name{
+                        cursor:pointer;
+                    }
+                    .btn-website-name:hover{
+                        text-decoration:underline;
+                    }
+                    #action{
+                        width:40px;
+                    }
+                    #data{
+                        width:110px;
+                    }
+                </style>
+                <table>
+                    <tr>
+                        <th>Website name</th>
+                        <th>Action</th>
+                    </tr>
+                </table>
+                <table id="tbl_web_name" runat="server">
+                    <%--<tr>
+                        <th>Website Name</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <td>--%>
+                            <%--<asp:Repeater ID="rpt_website_name" OnItemCommand="rpt_website_name_ItemCommand1" runat="server">--%>
+                    <%--<ItemTemplate>--%>
+                        <%--<asp:Label runat="server" ID="lbl_website_name" class="btn-website-name" Text='<%#Eval("WebsiteName") %>'></asp:Label>--%>
+                    <%--</ItemTemplate>--%>
+                                <%--</asp:Repeater>--%>
+                        <%--</td>
+                        <td>
+                            <asp:LinkButton ID="lb_edit" runat="server" Text="Edit"></asp:LinkButton>
+                            <asp:LinkButton runat="server" Text="Delete" ID="lb_delete"></asp:LinkButton>
+                        </td>
+                    </tr>--%>
+                </table>
+                <%--<asp:Repeater ID="rpt_website_name" OnItemCommand="rpt_website_name_ItemCommand1" runat="server">
                     <ItemTemplate>
-                        <asp:LinkButton ID="btn_website_name" CommandName="website" OnCommand="btn_website_name_Command" CommandArgument="Hello" Text='<%#Eval("WebsiteName") %>' runat="server"></asp:LinkButton><br />
+                        <asp:Label runat="server" ID="lbl_website_name" class="btn-website-name" Text='<%#Eval("WebsiteName") %>'></asp:Label>
                     </ItemTemplate>
-                </asp:Repeater>
+                </asp:Repeater>--%>
+                    </div>
             </fieldset>
            
             
@@ -216,7 +378,8 @@
           <div style="display:none">
               <iframe id="created_page_view" style="min-height:100px;max-height:1000000px; width:100%;"></iframe>
           </div>
-
+            </ContentTemplate>
+                    </asp:UpdatePanel>
             </div>
             </section>
 

@@ -288,4 +288,11 @@ public class datalayer
                 select a;
         return q;
     }
+    public IEnumerable<Page> Retrieve_Web_Pages(Guid userid,string websitename)
+    {
+        var q = from a in da.Pages
+                where a.UserId == userid && a.WebsiteName == websitename
+                select a;
+        return q;
+    }
 }

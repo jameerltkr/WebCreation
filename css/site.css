@@ -206,13 +206,22 @@
 
 .align-right{
     float:right;
-    width:250px;
+    width:190px;
     height:100px;
+    text-align:left;
 }
 .align-right2{
     float:right;
-    width:250px;
+    text-align:left;
+    overflow:scroll;
+    width:190px;
     height:300px;
+}
+.wb{
+    overflow:scroll;
+}
+.align-right2 fieldset,.align-right fieldset{
+    margin-left:15px;
 }
 .align-right2 a{
     color:#428bca;
@@ -227,8 +236,23 @@
 .website-panel{
     float:left;
     height:100%;
-    width:881px;
+    width:875px;
 }
 .create-web{
     margin-left:200px;
+}
+.left-toolbox{
+    float:left;
+    width:190px;
+    height:500px;
+    text-align:left;
+}
+.left-toolbox ul{
+    
+    list-style:none;
+}
+.left-toolbox ul li label{
+    cursor:pointer;
+    
+    font-weight:normal;
 }

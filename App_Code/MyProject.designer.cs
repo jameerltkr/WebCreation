@@ -47,9 +47,6 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
   partial void InsertSubPage(SubPage instance);
   partial void UpdateSubPage(SubPage instance);
   partial void DeleteSubPage(SubPage instance);
-  partial void InsertPage(Page instance);
-  partial void UpdatePage(Page instance);
-  partial void DeletePage(Page instance);
   partial void InsertMembership(Membership instance);
   partial void UpdateMembership(Membership instance);
   partial void DeleteMembership(Membership instance);
@@ -92,6 +89,9 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
   partial void InsertBodyContent(BodyContent instance);
   partial void UpdateBodyContent(BodyContent instance);
   partial void DeleteBodyContent(BodyContent instance);
+  partial void InsertPage(Page instance);
+  partial void UpdatePage(Page instance);
+  partial void DeletePage(Page instance);
   #endregion
 	
 	public MyProjectDataContext() : 
@@ -169,14 +169,6 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<SubPage>();
-		}
-	}
-	
-	public System.Data.Linq.Table<Page> Pages
-	{
-		get
-		{
-			return this.GetTable<Page>();
 		}
 	}
 	
@@ -289,6 +281,14 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<BodyContent>();
+		}
+	}
+	
+	public System.Data.Linq.Table<Page> Pages
+	{
+		get
+		{
+			return this.GetTable<Page>();
 		}
 	}
 	
@@ -1320,8 +1320,6 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private string _PageName;
 	
-	private EntitySet<Page> _Pages;
-	
 	private EntityRef<BodyContent> _BodyContent;
 	
     #region Extensibility Method Definitions
@@ -1340,7 +1338,6 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	public SubPage()
 	{
-		this._Pages = new EntitySet<Page>(new Action<Page>(this.attach_Pages), new Action<Page>(this.detach_Pages));
 		this._BodyContent = default(EntityRef<BodyContent>);
 		OnCreated();
 	}
@@ -1429,19 +1426,6 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SubPage_Page", Storage="_Pages", ThisKey="PageName", OtherKey="PageName")]
-	public EntitySet<Page> Pages
-	{
-		get
-		{
-			return this._Pages;
-		}
-		set
-		{
-			this._Pages.Assign(value);
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BodyContent_SubPage", Storage="_BodyContent", ThisKey="WebsiteName", OtherKey="WebsiteName", IsForeignKey=true)]
 	public BodyContent BodyContent
 	{
@@ -1472,169 +1456,6 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 					this._WebsiteName = default(string);
 				}
 				this.SendPropertyChanged("BodyContent");
-			}
-		}
-	}
-	
-	public event PropertyChangingEventHandler PropertyChanging;
-	
-	public event PropertyChangedEventHandler PropertyChanged;
-	
-	protected virtual void SendPropertyChanging()
-	{
-		if ((this.PropertyChanging != null))
-		{
-			this.PropertyChanging(this, emptyChangingEventArgs);
-		}
-	}
-	
-	protected virtual void SendPropertyChanged(String propertyName)
-	{
-		if ((this.PropertyChanged != null))
-		{
-			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-		}
-	}
-	
-	private void attach_Pages(Page entity)
-	{
-		this.SendPropertyChanging();
-		entity.SubPage = this;
-	}
-	
-	private void detach_Pages(Page entity)
-	{
-		this.SendPropertyChanging();
-		entity.SubPage = null;
-	}
-}
-
-[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Pages")]
-public partial class Page : INotifyPropertyChanging, INotifyPropertyChanged
-{
-	
-	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-	
-	private int _Id;
-	
-	private string _PageName;
-	
-	private string _PageContents;
-	
-	private EntityRef<SubPage> _SubPage;
-	
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnPageNameChanging(string value);
-    partial void OnPageNameChanged();
-    partial void OnPageContentsChanging(string value);
-    partial void OnPageContentsChanged();
-    #endregion
-	
-	public Page()
-	{
-		this._SubPage = default(EntityRef<SubPage>);
-		OnCreated();
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
-	public int Id
-	{
-		get
-		{
-			return this._Id;
-		}
-		set
-		{
-			if ((this._Id != value))
-			{
-				this.OnIdChanging(value);
-				this.SendPropertyChanging();
-				this._Id = value;
-				this.SendPropertyChanged("Id");
-				this.OnIdChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PageName", DbType="VarChar(100)")]
-	public string PageName
-	{
-		get
-		{
-			return this._PageName;
-		}
-		set
-		{
-			if ((this._PageName != value))
-			{
-				if (this._SubPage.HasLoadedOrAssignedValue)
-				{
-					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-				}
-				this.OnPageNameChanging(value);
-				this.SendPropertyChanging();
-				this._PageName = value;
-				this.SendPropertyChanged("PageName");
-				this.OnPageNameChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PageContents", DbType="VarChar(MAX)")]
-	public string PageContents
-	{
-		get
-		{
-			return this._PageContents;
-		}
-		set
-		{
-			if ((this._PageContents != value))
-			{
-				this.OnPageContentsChanging(value);
-				this.SendPropertyChanging();
-				this._PageContents = value;
-				this.SendPropertyChanged("PageContents");
-				this.OnPageContentsChanged();
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="SubPage_Page", Storage="_SubPage", ThisKey="PageName", OtherKey="PageName", IsForeignKey=true)]
-	public SubPage SubPage
-	{
-		get
-		{
-			return this._SubPage.Entity;
-		}
-		set
-		{
-			SubPage previousValue = this._SubPage.Entity;
-			if (((previousValue != value) 
-						|| (this._SubPage.HasLoadedOrAssignedValue == false)))
-			{
-				this.SendPropertyChanging();
-				if ((previousValue != null))
-				{
-					this._SubPage.Entity = null;
-					previousValue.Pages.Remove(this);
-				}
-				this._SubPage.Entity = value;
-				if ((value != null))
-				{
-					value.Pages.Add(this);
-					this._PageName = value.PageName;
-				}
-				else
-				{
-					this._PageName = default(string);
-				}
-				this.SendPropertyChanged("SubPage");
 			}
 		}
 	}
@@ -5270,6 +5091,8 @@ public partial class BodyContent : INotifyPropertyChanging, INotifyPropertyChang
 	
 	private EntitySet<SubPage> _SubPages;
 	
+	private EntitySet<Page> _Pages;
+	
 	private EntityRef<aspnet_Membership> _aspnet_Membership;
 	
     #region Extensibility Method Definitions
@@ -5289,6 +5112,7 @@ public partial class BodyContent : INotifyPropertyChanging, INotifyPropertyChang
 	public BodyContent()
 	{
 		this._SubPages = new EntitySet<SubPage>(new Action<SubPage>(this.attach_SubPages), new Action<SubPage>(this.detach_SubPages));
+		this._Pages = new EntitySet<Page>(new Action<Page>(this.attach_Pages), new Action<Page>(this.detach_Pages));
 		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
 		OnCreated();
 	}
@@ -5390,6 +5214,19 @@ public partial class BodyContent : INotifyPropertyChanging, INotifyPropertyChang
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BodyContent_Page", Storage="_Pages", ThisKey="WebsiteName", OtherKey="WebsiteName")]
+	public EntitySet<Page> Pages
+	{
+		get
+		{
+			return this._Pages;
+		}
+		set
+		{
+			this._Pages.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_BodyContent", Storage="_aspnet_Membership", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
 	public aspnet_Membership aspnet_Membership
 	{
@@ -5454,6 +5291,217 @@ public partial class BodyContent : INotifyPropertyChanging, INotifyPropertyChang
 	{
 		this.SendPropertyChanging();
 		entity.BodyContent = null;
+	}
+	
+	private void attach_Pages(Page entity)
+	{
+		this.SendPropertyChanging();
+		entity.BodyContent = this;
+	}
+	
+	private void detach_Pages(Page entity)
+	{
+		this.SendPropertyChanging();
+		entity.BodyContent = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Pages")]
+public partial class Page : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _Id;
+	
+	private string _PageName;
+	
+	private string _PageContents;
+	
+	private System.Nullable<System.Guid> _UserId;
+	
+	private string _WebsiteName;
+	
+	private EntityRef<BodyContent> _BodyContent;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnPageNameChanging(string value);
+    partial void OnPageNameChanged();
+    partial void OnPageContentsChanging(string value);
+    partial void OnPageContentsChanged();
+    partial void OnUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnUserIdChanged();
+    partial void OnWebsiteNameChanging(string value);
+    partial void OnWebsiteNameChanged();
+    #endregion
+	
+	public Page()
+	{
+		this._BodyContent = default(EntityRef<BodyContent>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
+	public int Id
+	{
+		get
+		{
+			return this._Id;
+		}
+		set
+		{
+			if ((this._Id != value))
+			{
+				this.OnIdChanging(value);
+				this.SendPropertyChanging();
+				this._Id = value;
+				this.SendPropertyChanged("Id");
+				this.OnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PageName", DbType="VarChar(100)")]
+	public string PageName
+	{
+		get
+		{
+			return this._PageName;
+		}
+		set
+		{
+			if ((this._PageName != value))
+			{
+				this.OnPageNameChanging(value);
+				this.SendPropertyChanging();
+				this._PageName = value;
+				this.SendPropertyChanged("PageName");
+				this.OnPageNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PageContents", DbType="VarChar(MAX)")]
+	public string PageContents
+	{
+		get
+		{
+			return this._PageContents;
+		}
+		set
+		{
+			if ((this._PageContents != value))
+			{
+				this.OnPageContentsChanging(value);
+				this.SendPropertyChanging();
+				this._PageContents = value;
+				this.SendPropertyChanged("PageContents");
+				this.OnPageContentsChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WebsiteName", DbType="VarChar(200)")]
+	public string WebsiteName
+	{
+		get
+		{
+			return this._WebsiteName;
+		}
+		set
+		{
+			if ((this._WebsiteName != value))
+			{
+				if (this._BodyContent.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnWebsiteNameChanging(value);
+				this.SendPropertyChanging();
+				this._WebsiteName = value;
+				this.SendPropertyChanged("WebsiteName");
+				this.OnWebsiteNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="BodyContent_Page", Storage="_BodyContent", ThisKey="WebsiteName", OtherKey="WebsiteName", IsForeignKey=true)]
+	public BodyContent BodyContent
+	{
+		get
+		{
+			return this._BodyContent.Entity;
+		}
+		set
+		{
+			BodyContent previousValue = this._BodyContent.Entity;
+			if (((previousValue != value) 
+						|| (this._BodyContent.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._BodyContent.Entity = null;
+					previousValue.Pages.Remove(this);
+				}
+				this._BodyContent.Entity = value;
+				if ((value != null))
+				{
+					value.Pages.Add(this);
+					this._WebsiteName = value.WebsiteName;
+				}
+				else
+				{
+					this._WebsiteName = default(string);
+				}
+				this.SendPropertyChanged("BodyContent");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
 	}
 }
 

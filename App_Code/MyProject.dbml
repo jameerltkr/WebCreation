@@ -60,16 +60,7 @@
       <Column Name="UserName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="WebsiteName" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="PageName" Type="System.String" DbType="VarChar(100) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Association Name="SubPage_Page" Member="Pages" ThisKey="PageName" OtherKey="PageName" Type="Page" />
       <Association Name="BodyContent_SubPage" Member="BodyContent" ThisKey="WebsiteName" OtherKey="WebsiteName" Type="BodyContent" IsForeignKey="true" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Pages" Member="Pages">
-    <Type Name="Page">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="PageName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
-      <Column Name="PageContents" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Association Name="SubPage_Page" Member="SubPage" ThisKey="PageName" OtherKey="PageName" Type="SubPage" IsForeignKey="true" />
     </Type>
   </Table>
   <Table Name="dbo.Memberships" Member="Memberships">
@@ -249,7 +240,18 @@
       <Column Name="WebsiteName" Type="System.String" DbType="VarChar(200) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
       <Association Name="BodyContent_SubPage" Member="SubPages" ThisKey="WebsiteName" OtherKey="WebsiteName" Type="SubPage" />
+      <Association Name="BodyContent_Page" Member="Pages" ThisKey="WebsiteName" OtherKey="WebsiteName" Type="Page" />
       <Association Name="aspnet_Membership_BodyContent" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Pages" Member="Pages">
+    <Type Name="Page">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="PageName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="PageContents" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="WebsiteName" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Association Name="BodyContent_Page" Member="BodyContent" ThisKey="WebsiteName" OtherKey="WebsiteName" Type="BodyContent" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.proc_retrieve_second_row" Method="proc_retrieve_second_row">

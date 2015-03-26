@@ -286,14 +286,14 @@ public partial class web_design_create : System.Web.UI.Page
     }
     protected void rpt_website_name_ItemCommand1(object source, RepeaterCommandEventArgs e)
     {
-        switch (e.CommandName)
+        if(e.CommandName=="website")
         {
-            case "website":
-                string lb = e.CommandArgument.ToString();
-                pnl_create_pages.Visible = true;
-                break;
-            default:
-                break;
+            //case "website":
+            //    string lb = e.CommandArgument.ToString();
+            //    pnl_create_pages.Visible = true;
+            //    break;
+            //default:
+            //    break;
         }
     }
     protected void btn_website_name_Command(object sender, CommandEventArgs e)
@@ -307,46 +307,102 @@ public partial class web_design_create : System.Web.UI.Page
     //{
         
     //}
-    protected void WizardStep1_Activate(object sender, EventArgs e)
+   
+    protected void Wizard_Create_Web_ActiveStepChanged(object sender, EventArgs e)
     {
-       // Response.Write("hello");
-    }
-    protected void WizardStep1_Deactivate(object sender, EventArgs e)
-    {
-        //Response.Write("hello");
-     //   this.Visible = false;
-        datalayer dl = new datalayer();
-
-        System.Web.Security.MembershipUser mu;
-        if (!Request.IsAuthenticated)
+        if (Wizard_Create_Web.ActiveStepIndex == 1)
         {
-            mu = null;
-            Response.Redirect("~/login.aspx");
+           
         }
-        else
+    }
+    protected void Wizard_Create_Web_NextButtonClick(object sender, WizardNavigationEventArgs e)
+    {
+        if (Wizard_Create_Web.ActiveStepIndex == 0)
         {
-            Guid userid;
-            mu = System.Web.Security.Membership.GetUser();
-            userid = (Guid)mu.ProviderUserKey;
-            if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.SUCCESS)
+            Message m = new Message();
+            datalayer dl = new datalayer();
+
+            System.Web.Security.MembershipUser mu;
+            if (!Request.IsAuthenticated)
             {
-                pnl_create_pages.Visible = true;
-                pnl_website_name.Visible = false;
+                mu = null;
+                Response.Redirect("~/login.aspx");
+            }
+                else
+                
+            if (txt_website_name.Text.Trim() == "")
+            {
+                e.Cancel = true;
+                error_div.Controls.Add(m.Error(Constants.ENTER_WEBSITE_NAME));
             }
             else
-                if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.WEBSITE_ALREADY_EXIST)
+            {
+                Guid userid;
+                mu = System.Web.Security.Membership.GetUser();
+                userid = (Guid)mu.ProviderUserKey;
+                if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.SUCCESS)
                 {
-                    Message m = new Message();
-                    error_div.Controls.Add(m.Error(Constants.WEBSITE_ALREADY_EXIST));
+                    e.Cancel = false;
+                    Session[Constants.WEBSITE_NAME] = txt_website_name.Text.Trim();
                     
+                  //  pnl_create_pages.Visible = true;
+                  //  pnl_website_name.Visible = false;
                 }
                 else
-                    if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.ERROR)
+                    if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.WEBSITE_ALREADY_EXIST)
                     {
-                        Message m = new Message();
-                        error_div.Controls.Add(m.Error(Constants.ERROR));
+                        e.Cancel = true;
+                        
+                        Session[Constants.ERROR] = Constants.WEBSITE_ALREADY_EXIST;
+                        error_div.Controls.Add(m.Error(Constants.WEBSITE_ALREADY_EXIST));
+
                     }
-            //  userid = (Guid)string.Empty;
+                    else
+                        if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.ERROR)
+                        {
+                            Session[Constants.ERROR] = Constants.ERROR;
+                            e.Cancel = true;
+                            
+                            error_div.Controls.Add(m.Error(Constants.ERROR));
+                        }
+                //  userid = (Guid)string.Empty;
+            }
+        }
+    }
+    protected void Wizard_Create_Web_SideBarButtonClick(object sender, WizardNavigationEventArgs e)
+    {
+        if (Wizard_Create_Web.ActiveStepIndex == 0)
+        {
+            Message m = new Message();
+            if (txt_website_name.Text.Trim() == "")
+            {
+                e.Cancel = true;
+                error_div.Controls.Add(m.Error(Constants.ENTER_WEBSITE_NAME));
+            }
+            else
+            if(Session[Constants.ERROR]!=null)
+            {
+                
+                if (Session[Constants.ERROR] == Constants.WEBSITE_ALREADY_EXIST)
+                {
+                    e.Cancel = true;
+                    error_div.Controls.Add(m.Error(Constants.WEBSITE_ALREADY_EXIST));
+                }
+                else if (Session[Constants.ERROR] == Constants.ERROR)
+                {
+                    e.Cancel = true;
+                    error_div.Controls.Add(m.Error(Constants.ERROR));
+                }
+            }
+          //  Response.Write("h");
+        }
+    }
+    protected void Wizard_Create_Web_FinishButtonClick(object sender, WizardNavigationEventArgs e)
+    {
+        Wizard_Create_Web.Visible = false;
+        if (Session[Constants.WEBSITE_NAME] != null)
+        {
+            pnl_web.Visible = true;
         }
     }
 }
