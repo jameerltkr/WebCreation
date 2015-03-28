@@ -94,6 +94,10 @@
                         <ContentTemplate>
                             <%
                                 
+                                
+                                
+                                
+                                
                                 if (Session[Constants.Session.ID] != null)
                                 {
                                     datalayer dl = new datalayer();
@@ -103,8 +107,11 @@
                                         HtmlTableRow row = null;
                                         HtmlTableCell cell = null;
                                         HtmlTableCell cell2 = null;
-                                        HtmlAnchor a1 = null;
-                                        HtmlAnchor a2 = null;
+                                        HtmlTableCell cell3 = null;
+                                        
+                                        LinkButton lb_web_name = null;
+                                        ImageButton a1 = null;
+                                        ImageButton a2 = null;
                                       
                                         foreach (var a in q)
                                         {
@@ -115,21 +122,35 @@
                                                 row = new HtmlTableRow();
                                                 cell = new HtmlTableCell();
                                                 cell2 = new HtmlTableCell();
-                                                a2 = new HtmlAnchor();
-                                                a1 = new HtmlAnchor();
-                                                a1.InnerText = "Edit";
-                                                a1.HRef = "#";
-                                                a2.HRef = "#";
-                                                a2.InnerText = "Delete";
-
+                                                cell3 = new HtmlTableCell();
+                                                a2 = new ImageButton();
+                                                a1 = new ImageButton();
+                                                lb_web_name = new LinkButton();
+                                                a1.Height = 15;
+                                                a2.Height = 15;
+                                                a1.Width = 16;
+                                                a2.Width = 16;
+                                                
+                                                a1.ToolTip = "Edit your application name.";
+                                                a2.ToolTip = "Delete your application.";
+                                                a1.ImageUrl = "~/img/edit.png";
+                                                a2.ImageUrl = "~/img/delete.png";
+                                                //a2.Click = "a2_click";
+                                                lb_web_name.ID = "lb_web";
+                                                lb_web_name.Text = a.WebsiteName;
                                                 tbl_web_name.Controls.Add(row);
                                                 row.Controls.Add(cell);
                                                 row.Controls.Add(cell2);
+                                                row.Controls.Add(cell3);
+
+                                                a2.ID = "img_delete";
+                                                a2.Click += new ImageClickEventHandler(img_delete_Click);
                                                 cell.ID = "data";
-                                                cell.InnerText = a.WebsiteName;
+                                                //cell.InnerText = a.WebsiteName;
+                                                cell.Controls.Add(lb_web_name);
                                                 cell2.ID = "action";
                                                 cell2.Controls.Add(a1);
-                                                cell2.Controls.Add(a2);
+                                                cell3.Controls.Add(a2);
                                                 
                                             }
                                             
@@ -157,7 +178,7 @@
                                     <li><label>Table</label></li>
                                     
                                 </ul>
-
+                                
                 </fieldset>
             <fieldset class="website-panel">
                <legend>Website editing</legend>
@@ -286,7 +307,7 @@
             </fieldset><br /><br /><br /><br /><br />
             <fieldset class="align-right2">
                 <legend>Your websites</legend>
-                <div class="wb">
+                <div class="">
                 <script>
                     $(function () {// write your code in document ready
                         $('.btn-website-name').click(function () {
@@ -310,11 +331,11 @@
                 </style>
                 <table>
                     <tr>
-                        <th>Website name</th>
+                        <th style="width:99px">Website name</th>
                         <th>Action</th>
                     </tr>
                 </table>
-                <table id="tbl_web_name" runat="server">
+                <table class="wb" id="tbl_web_name" runat="server">
                     <%--<tr>
                         <th>Website Name</th>
                         <th>Action</th>

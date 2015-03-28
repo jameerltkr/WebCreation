@@ -405,4 +405,32 @@ public partial class web_design_create : System.Web.UI.Page
             pnl_web.Visible = true;
         }
     }
+    //protected void a2_click(object sender, ImageClickEventArgs e)
+    //{
+    //    Guid userid;
+    //    System.Web.Security.MembershipUser mu;
+    //    mu = System.Web.Security.Membership.GetUser();
+    //    userid = (Guid)mu.ProviderUserKey;
+
+    //    datalayer dl = new datalayer();
+    //    if (dl.Delete_Website(userid, lb_web_name.Text))
+    //    {
+
+    //    }
+    //}
+
+    protected void img_delete_Click(object sender, ImageClickEventArgs e)
+    {
+        
+        Guid userid;
+        System.Web.Security.MembershipUser mu;
+        mu = System.Web.Security.Membership.GetUser();
+        userid = (Guid)mu.ProviderUserKey;
+        LinkButton lnk = (LinkButton)FindControl("lb_web");
+      //  datalayer dl = new datalayer();
+        if (dl.Delete_Website(userid, lnk.Text))
+        {
+            
+        }
+    }
 }

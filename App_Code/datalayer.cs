@@ -295,4 +295,25 @@ public class datalayer
                 select a;
         return q;
     }
+    public bool Delete_Website(Guid userid, string webstename)
+    {
+        bool delete = false;
+        var q = from a in da.BodyContents
+                where a.UserId == userid && a.WebsiteName == webstename
+                select a;
+        foreach (var o in q)
+        {
+            da.BodyContents.DeleteOnSubmit(o);
+        }
+        try
+        {
+            da.SubmitChanges();
+            delete = true;
+        }
+        catch
+        {
+            delete = false;
+        }
+        return delete;
+    }
 }
