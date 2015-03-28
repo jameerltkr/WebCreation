@@ -5,6 +5,8 @@ using System.Web;
 
 using System.Net;
 using System.Net.Mail;
+using System.Web.Services;
+using System.Web.Script.Services;
 public class datalayer
 {
   public  MyProjectDataContext da = new MyProjectDataContext("Data Source=(LocalDB)\\v11.0;AttachDbFilename=|DataDirectory|\\Database.mdf;Integrated Security=True");
@@ -265,14 +267,23 @@ public class datalayer
                 select a;
         return q;
     }
-    public void SavePages(string username, string pagename, string websitename)
+    public bool SavePages(Guid userid, string username, string pagename, string websitename)
     {
         SubPage sp = new SubPage();
+        sp.userid = userid;
         sp.PageName = pagename;
         sp.UserName = username;
         sp.WebsiteName = websitename;
-        da.SubPages.InsertOnSubmit(sp);
-        da.SubmitChanges();
+        try
+        {
+            da.SubPages.InsertOnSubmit(sp);
+            da.SubmitChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
     public IEnumerable<BodyContent> Retrieve_Website_Name(string email,string websitename)
     {
@@ -295,11 +306,13 @@ public class datalayer
                 select a;
         return q;
     }
-    public bool Delete_Website(Guid userid, string webstename)
+    [WebMethod]
+   // [ScriptMethod(UseHttpGet = false)]
+    public string Delete_Website(Guid userid, string websitename)
     {
-        bool delete = false;
+        string delete = "";
         var q = from a in da.BodyContents
-                where a.UserId == userid && a.WebsiteName == webstename
+                where a.UserId == userid && a.WebsiteName == websitename
                 select a;
         foreach (var o in q)
         {
@@ -308,11 +321,11 @@ public class datalayer
         try
         {
             da.SubmitChanges();
-            delete = true;
+            delete = "deleted";
         }
         catch
         {
-            delete = false;
+            delete = "error";
         }
         return delete;
     }

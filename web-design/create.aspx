@@ -79,10 +79,27 @@
             display:block;
         }
     </style>
+    <script>
+        function Hello() {
+            alert("JK");
+        }
+
+       
+    </script>
+    <script type="text/javascript">
+        var baseUrl = 'http://example.com';
+        function ConfirmDelete() {
+            if (confirm("Do you want to delete website?"))
+                //location.href = baseUrl + '/deleteRecord.php';
+
+        }
+  </script>
+    <script src="js/delete.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:ScriptManager runat="server"></asp:ScriptManager>
+        <asp:ScriptManager EnablePageMethods="true" runat="server"></asp:ScriptManager>
     <div>
         <uc1:menu runat="server" ID="menu" />
     </div>
@@ -100,10 +117,16 @@
                                 
                                 if (Session[Constants.Session.ID] != null)
                                 {
+                                    Guid userid;
+                                    System.Web.Security.MembershipUser mu;
+                                    mu = System.Web.Security.Membership.GetUser();
+                                    userid = (Guid)mu.ProviderUserKey;
                                     datalayer dl = new datalayer();
                                     var q = dl.Retrieve_Website(Session[Constants.Session.ID].ToString());
                                     if (q.Any())
                                     {
+                                        
+                                        
                                         HtmlTableRow row = null;
                                         HtmlTableCell cell = null;
                                         HtmlTableCell cell2 = null;
@@ -130,6 +153,15 @@
                                                 a2.Height = 15;
                                                 a1.Width = 16;
                                                 a2.Width = 16;
+
+                                                //string str = @"<asp:ImageButton ID=""img_delete_website"" OnClick=""clickme""  ImageUrl=""~/img/delete.png"" runat=""server"" oncommand=""clickme"" commandname=""btn"" />";
+                                                //Control c = ParseControl(str);
+                                                string username="";
+                                                TextBox txt_rename_website = new TextBox();
+                                                if(Session[Constants.Session.USERNAME]!=null)
+                                                {
+                                                     username=Session[Constants.Session.USERNAME].ToString();
+                                                }
                                                 
                                                 a1.ToolTip = "Edit your application name.";
                                                 a2.ToolTip = "Delete your application.";
@@ -142,9 +174,13 @@
                                                 row.Controls.Add(cell);
                                                 row.Controls.Add(cell2);
                                                 row.Controls.Add(cell3);
-
+                                                a1.OnClientClick = "edit_data('" + userid + "','" + a.WebsiteName + "')";
                                                 a2.ID = "img_delete";
-                                                a2.Click += new ImageClickEventHandler(img_delete_Click);
+
+                                                lb_web_name.OnClientClick = "show('" + username + "','" + a.WebsiteName + "')";
+                                                
+                                                a2.OnClientClick = "if(confirm('Are you sure you want to delete website?')) delete_data('" + userid + "','" + a.WebsiteName + "')";
+                                                //a2.OnClientClick = "Hello(); return false;";
                                                 cell.ID = "data";
                                                 //cell.InnerText = a.WebsiteName;
                                                 cell.Controls.Add(lb_web_name);
@@ -152,6 +188,10 @@
                                                 cell2.Controls.Add(a1);
                                                 cell3.Controls.Add(a2);
                                                 
+                                              //  ((ImageButton)Page.FindControl("img_delete_website")).Command += new CommandEventHandler(clickme);
+                                                
+                                                
+                                               
                                             }
                                             
                                             //lbl_website_name.Text = a.WebsiteName;
@@ -162,6 +202,7 @@
                                 }
                              %>
             <div runat="server" id="error_div"></div>
+                            
                             <fieldset class="left-toolbox">
                     <legend>Toolbox</legend>
                                 <ul>
@@ -185,7 +226,7 @@
                 
                 <asp:Panel CssClass="create-web" Visible="false" runat="server" ID="pnl_website_name" >
                     
-                            <asp:Wizard OnFinishButtonClick="Wizard_Create_Web_FinishButtonClick" OnSideBarButtonClick="Wizard_Create_Web_SideBarButtonClick" OnNextButtonClick="Wizard_Create_Web_NextButtonClick" OnActiveStepChanged="Wizard_Create_Web_ActiveStepChanged" ID="Wizard_Create_Web" runat="server" Height="407px" Width="572px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
+                            <asp:Wizard OnCancelButtonClick="Wizard_Create_Web_CancelButtonClick" OnFinishButtonClick="Wizard_Create_Web_FinishButtonClick" OnSideBarButtonClick="Wizard_Create_Web_SideBarButtonClick" OnNextButtonClick="Wizard_Create_Web_NextButtonClick" OnActiveStepChanged="Wizard_Create_Web_ActiveStepChanged" ID="Wizard_Create_Web" runat="server" Height="407px" Width="572px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
                         <HeaderStyle BackColor="#5D7B9D" BorderStyle="Solid" Font-Bold="True" Font-Size="0.9em" ForeColor="White" HorizontalAlign="Left" />
                         <HeaderTemplate>
                             
@@ -195,6 +236,17 @@
                         <NavigationButtonStyle BackColor="#FFFBFF" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284775" />
                         <SideBarButtonStyle BorderWidth="0px" Font-Names="Verdana" ForeColor="White" />
                         <SideBarStyle BackColor="#7C6F57" BorderWidth="0px" Font-Size="0.9em" VerticalAlign="Top" />
+                        
+                      
+                            
+                                <StartNavigationTemplate>
+                                    <asp:Button ID="btn_cancel" BackColor="#FFFBFF" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" CausesValidation="False" CommandName="Cancel" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284775" runat="server" Text="Cancel" />
+                                    <asp:Button ID="StartNextButton" runat="server" BackColor="#FFFBFF" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" CommandName="MoveNext" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284775" Text="Next" />
+                                </StartNavigationTemplate>
+                                <StepNavigationTemplate>
+                                    <asp:Button ID="StepPreviousButton" runat="server" BackColor="#FFFBFF" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" CausesValidation="False" CommandName="MovePrevious" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284775" Text="Previous" />
+                                    <asp:Button ID="StepNextButton" runat="server" BackColor="#FFFBFF" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" CommandName="MoveNext" Font-Names="Verdana" Font-Size="0.8em" ForeColor="#284775" Text="Next" />
+                                </StepNavigationTemplate>
                         
                       
                             
@@ -215,11 +267,6 @@
                                             <asp:TextBox ID="txt_website_name" runat="server" CssClass="align-left"></asp:TextBox><br />
                                         </td>
                                     </tr>
-                                   <%-- <tr>
-                                        <td style="text-align:left">
-                                            <asp:Button ID="btn_save_website" runat="server" OnClick="btn_save_website_Click" Text="Create" />
-                                        </td>
-                                    </tr>--%>
                                 </table>
                             
                             </asp:WizardStep>
@@ -285,7 +332,7 @@
         <span>Page name:</span>
         <asp:TextBox runat="server" ID="txt_page_name"></asp:TextBox>
         <br />
-        <asp:Button ID="Button1" runat="server" Text="Create page" OnClick="btn_create_page_Click"/>
+        <asp:Button ID="Button1" runat="server" Text="Create page" OnClick="Button1_Click"/>
     </div>
                 <asp:Repeater ID="Repeater1" runat="server">
                     <ItemTemplate>

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Services;
+using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -281,6 +283,9 @@ public partial class web_design_create : System.Web.UI.Page
     }
     protected void btn_create_website_Click(object sender, EventArgs e)
     {
+        
+       // Wizard_Create_Web.ActiveStepIndex = 1;
+        Wizard_Create_Web.Visible = true;
         pnl_website_name.Visible = true;
         
     }
@@ -399,38 +404,131 @@ public partial class web_design_create : System.Web.UI.Page
     }
     protected void Wizard_Create_Web_FinishButtonClick(object sender, WizardNavigationEventArgs e)
     {
+        //Wizard_Create_Web.WizardSteps.Clear();
         Wizard_Create_Web.Visible = false;
         if (Session[Constants.WEBSITE_NAME] != null)
         {
             pnl_web.Visible = true;
         }
     }
-    //protected void a2_click(object sender, ImageClickEventArgs e)
-    //{
-    //    Guid userid;
-    //    System.Web.Security.MembershipUser mu;
-    //    mu = System.Web.Security.Membership.GetUser();
-    //    userid = (Guid)mu.ProviderUserKey;
-
-    //    datalayer dl = new datalayer();
-    //    if (dl.Delete_Website(userid, lb_web_name.Text))
-    //    {
-
-    //    }
-    //}
-
-    protected void img_delete_Click(object sender, ImageClickEventArgs e)
+    [WebMethod]
+    public static string show(string username, string websitename)
     {
-        
-        Guid userid;
-        System.Web.Security.MembershipUser mu;
-        mu = System.Web.Security.Membership.GetUser();
-        userid = (Guid)mu.ProviderUserKey;
-        LinkButton lnk = (LinkButton)FindControl("lb_web");
-      //  datalayer dl = new datalayer();
-        if (dl.Delete_Website(userid, lnk.Text))
+        string msg = "";
+        MyProjectDataContext da = new MyProjectDataContext();
+        var q = from a in da.SubPages
+                where a.UserName == username && a.WebsiteName == websitename
+                select a;
+        foreach (var o in q)
         {
-            
+            if (o.PageName.Count() == 0)
+            {
+                msg = "nothing";
+                //pnl_web.Visible = true;
+            }
+            else
+            {
+                msg = "data";
+                //pnl_web.Visible = false;
+            }
+        }
+        return msg;
+    }
+  
+    protected void a2_Click(object sender, ImageClickEventArgs e)
+    {
+        ImageButton img = sender as ImageButton;
+        string id = img.ID;
+        Response.Write(id);
+    }
+    [WebMethod]
+    //[ScriptMethod(UseHttpGet = false)]
+    public static string delete(Guid userid,string websitename)
+    {
+        string msg;
+       // Response.Write(userid);
+       // Response.Write(websitename);
+        msg = "Hello";
+      //  datalayer dl = new datalayer();
+        MyProjectDataContext da = new MyProjectDataContext();
+        var q = from a in da.BodyContents
+                where a.UserId == userid && a.WebsiteName == websitename
+                select a;
+        var q1 = from b in da.SubPages
+                 where b.WebsiteName == websitename
+                 select b;
+        foreach (var o in q)
+        {
+            da.BodyContents.DeleteOnSubmit(o);
+        }
+        foreach (var o in q1)
+        {
+            da.SubPages.DeleteOnSubmit(o);   // removing foreign key references
+        }
+        try
+        {
+            da.SubmitChanges();
+            msg = "success";
+        }
+        catch
+        {
+            msg = "error";
+        }
+
+     //   msg=dl.Delete_Website(userid, websitename);
+        return msg;
+    }
+    [WebMethod]
+    public static string edit(Guid userid, string websitename)
+    {
+        string msg = "";
+        return msg;
+    }
+
+    [WebMethod]
+    public static string Print()
+    {
+        string result = "Guid is ";
+        return result;
+    }
+
+    protected void clickme(object sender, CommandEventArgs e)
+    {
+        Response.Write("Image clicked");
+       // Label1.Text = "Image clicked";
+    }
+    protected void Wizard_Create_Web_CancelButtonClick(object sender, EventArgs e)
+    {
+        Wizard_Create_Web.Visible = false;
+    }
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+
+        if(Session[Constants.Session.USERNAME]!=null)
+        {
+            if(Session[Constants.WEBSITE_NAME]!=null)
+            {
+                Guid userid;
+                System.Web.Security.MembershipUser mu;
+                mu = System.Web.Security.Membership.GetUser();
+                userid = (Guid)mu.ProviderUserKey;
+                if (dl.SavePages(userid, Session[Constants.Session.USERNAME].ToString(), txt_page_name.Text.Trim(), Session[Constants.WEBSITE_NAME].ToString()))
+                {
+                    txt_page_name.Text = "";
+                    Message m = new Message();
+                   error_div.Controls.Add(m.Error(Constants.PAGE_CREATED));
+                }
+                else
+                {
+                    Message m = new Message();
+                    error_div.Controls.Add(m.Error(Constants.ERROR));
+                }
+            }
+            else
+            {
+                div_create_page.Visible=false;
+
+            }
         }
     }
 }
