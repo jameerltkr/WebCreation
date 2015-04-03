@@ -12,26 +12,288 @@ function delete_data(userid, websitename) {
         async: "true",
         success: function (response) {
             var myObject = eval('(' + response.d + ')');
-         //   if (myObject > 0)
+            //   if (myObject > 0)
             {
-              //  alert("deleted");
+                //  alert("deleted");
             }
+        },
+        failure: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        },
+        error: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
         }
     });
 }
 url3 = window.location.pathname + "/show";
-function show(username, websitename) {
+function show(userid, username, websitename) {
     $.ajax({
         type: "POST",
         url: url3,
-        data: "{username:'" + username + "',websitename:'" + websitename + "'}",
+        data: "{userid:'" + userid + "', username:'" + username + "',websitename:'" + websitename + "'}",
         contentType: "application/json; charset=utf-8",
         datatype: "jsondata",
         async: "true",
         success: function (response) {
+            if ((response.d) == "") {
+                // show_div();
+                // alert(response.d);
+                addTextBox(userid, username, websitename);
+            }
+            else
+                if (response.d == "data") {
+                    document.getElementById("tbl_pages").style.display = "block";
+                    get_page_name(username, websitename);
+                }
+
+            //  alert(response.d);
             //alert("H");
+        },
+        failure: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        },
+        error: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
         }
     });
+}
+function run(pagename) {
+    $("#hf_page_name").val(pagename);
+    //document.getElementById('<%= Button1.ClientID %>').click();
+    $("#Button1").click();
+    return false;
+}
+
+function show_div() {
+    document.getElementById("div_create_page").style.display = "block";
+}
+$(document).ready(function () {
+    $("#txt_page_name").keydown(function (event) {
+        if (event.keyCode == 32) {
+            event.preventDefault();
+        }
+    });
+});
+function create_div(userid, username, websitename) {
+
+    return '<p id="error" style="color: Red; display: none">* Special Characters not allowed</p><br/>'+
+    '<input type="text" id="txt_page_name" onkeypress="return IsAlphaNumeric(event);" ondrop="return false;" onpaste="return false;"/>' +
+        '<input type="button" id="btn_create_page" onclick="add_page(\'' + userid + '\',\'' + username + '\',\'' + websitename + '\'); return false;" value="Create Page"/>'
+}
+function addTextBox(userid, username, websitename) {
+    $("#website_div input").remove();
+    $("#website_div div").remove();
+    var div = document.createElement('div');
+    div.innerHTML = create_div(userid, username, websitename);
+    document.getElementById("website_div").appendChild(div);
+}
+function add_page(userid, username, websitename) {
+    var page = document.getElementById("txt_page_name").value;
+    var pagename = document.getElementById("txt_page_name").value + ".aspx";
+    url_add_page = window.location.pathname + "/add_page";
+    $.ajax({
+        type: "POST",
+        url: url_add_page,
+        data: "{userid:'" + userid + "', username: '" + username + "',websitename:'" + websitename + "', pagename: '" + pagename + "'}",
+        contentType: "application/json; charset=utf-8",
+        datatype: "jsondata",
+        async: "true",
+        success: function (response) {
+            if (response.d == "") {
+                alert('An error occurred');
+            }
+            else
+                if (response.d == "error") {
+                    alert('error while inserting');
+                }
+                else
+                    if (response.d == "inserted") {
+
+                        document.getElementById("txt_page_name").value = "";
+                        document.getElementById("website_div").style.display = "none";
+                        run(page);
+                        document.getElementById("first_window").innerHTML = "Page created successfully.";
+                        show_modal("first_window");
+                    }
+        },
+        failure: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        },
+        error: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        }
+    });
+}
+
+function nospace() {
+
+}
+function alpha(e) {
+    var k;
+    document.all ? k = e.keyCode : k = e.which;
+    return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
+}
+function validate(event) {
+
+    if (!((event.keyCode >= 65) && (event.keyCode <= 90) || (event.keyCode >= 97) && (event.keyCode <= 122) || (event.keyCode >= 48) && (event.keyCode <= 57))) {
+
+        document.getElementById("first_window").innerHTML = "Space is not allowed.";
+        show_modal("first_window");
+        var value = $("#txt_page_name").val();
+        value = value.replaceAll(" ", "");
+        $("#txt_page_name").val() = value;
+        return false;
+    }
+    event.returnValue = true;
+}
+var specialKeys = new Array();
+specialKeys.push(8); //Backspace
+specialKeys.push(9); //Tab
+specialKeys.push(46); //Delete
+specialKeys.push(36); //Home
+specialKeys.push(35); //End
+specialKeys.push(37); //Left
+specialKeys.push(39); //Right
+function IsAlphaNumeric(e) {
+    var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
+    var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || (specialKeys.indexOf(e.keyCode) != -1 && e.charCode != e.keyCode));
+    document.getElementById("error").style.display = ret ? "none" : "inline";
+    return ret;
+}
+function check(e) {
+    var keynum
+    var keychar
+    var numcheck
+    // For Internet Explorer  
+    //if (window.event) {
+    //    keynum = e.keyCode
+    //}
+    //    // For Netscape/Firefox/Opera  
+    //else if (e.which) {
+    //    keynum = e.which
+    //}
+    //keychar = String.fromCharCode(keynum)
+    ////List of special characters you want to restrict  
+    //if (keychar == "'" || keychar == "`") {
+
+    //    return false;
+    //}
+    //else {
+    //    return true;
+    //}
+
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if (keycode == '32') {
+        document.getElementById("first_window").innerHTML = "Space is not allowed.";
+        show_modal("first_window");
+        return false;
+    }
+
+}
+
+//$(document).keypress(function (event) {
+
+//    var keycode = (event.keyCode ? event.keyCode : event.which);
+//    if (keycode == '32') {
+//        document.getElementById("first_window").innerHTML = "Space is not allowed.";
+//        show_modal("first_window");
+//        return false;
+//    }
+//});
+
+function get_page_name(username, websitename) {
+    $("#tbl_pages tbody tr").remove();
+    $("#website_name a").remove();
+
+    var url_get_page = window.location.pathname + "/getpage";
+    $.ajax({
+        type: "POST",
+        url: url_get_page,
+        data: "{username:'" + username + "',websitename:'" + websitename + "'}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            ($.map(data.d, function (item) {
+              //  var url = "\'" + username + "\'" + "/" + "\'" + item.PageName + "\'";
+                $("#website_name").append("<a href='#'>" + item.WebsiteName + "</a>");
+                var rows = "<tr>"
+                
+                + "<td>" + "<a href='#' onclick='edit_page(\"" + username + "\",\"" + item.PageName + "\"); return false;' id=" + "\'" + item.PageName + "\'" + " >" + item.PageName + "</a></td>"
+                //+ "<td>" + item.WebsiteName + "</td>"
+                + "</tr>";
+                $('#tbl_pages').append(rows);
+            }))
+        },
+        failure: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        },
+        error: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        }
+    });
+}
+function edit_page(username, pagename) {
+    document.getElementById('iframe_edit_page').style.display = "block";
+    var address = username + "/" + pagename;
+    var iframe = document.getElementById('iframe_edit_page');
+    iframe.src = address;
+
+    //   maximize
+    var maximize = document.createElement("input");
+    //Set the attributes
+    maximize.setAttribute("onclick", "maximize()");
+    maximize.setAttribute("type", "button");
+    maximize.setAttribute("value", "Maximize");
+    maximize.style.position = "absolute";
+    maximize.style.top = "176px";
+    maximize.style.right = "244px";
+    maximize.style.height = "49px";
+    maximize.style.width = "200px";
+    document.body.appendChild(maximize);
+}
+
+
+
+function maximize() {
+    var iframe = document.getElementById('iframe_edit_page');
+    iframe.height = height();
+    iframe.width = width();
+}
+
+function height() {
+    var viewportHeight;
+    if (document.compatMode === 'BackCompat') {
+        viewportHeight = document.body.clientHeight;
+    } else {
+        viewportHeight = document.documentElement.clientHeight;
+    }
+    return viewportHeight;
+}
+function width() {
+    var viewportWidth;
+    if (document.compatMode === 'BackCompat') {
+        viewportWidth = document.body.clientWidth;
+    } else {
+        viewportWidth = document.documentElement.clientWidth;
+    }
+    return viewportWidth;
+}
+function close_modal() {
+
+    //hide the mask  
+    $('#mask').fadeOut(500);
+
+    //hide modal window(s)  
+    $('.modal_window').fadeOut(500);
+
 }
 
 function edit_data(userid, websitename) {
@@ -49,18 +311,26 @@ function edit_data(userid, websitename) {
             {
                 //  alert("deleted");
             }
+        },
+        failure: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        },
+        error: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
         }
     });
 }
 
 
-function Hello() {
-    var userid = document.getElementById('<%=userid %>').value;
-    PageMethods.Print(onSuccess, onError);
-    function onSucess(result) {
-        alert(result);
-    }
-    function onError(result) {
-        alert('Something wrong.');
-    }
-}
+//function Hello() {
+//    var userid = document.getElementById('<%=userid %>').value;
+//    PageMethods.Print(onSuccess, onError);
+//    function onSucess(result) {
+//        alert(result);
+//    }
+//    function onError(result) {
+//        alert('Something wrong.');
+//    }
+//}

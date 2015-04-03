@@ -247,10 +247,11 @@
   </Table>
   <Table Name="dbo.SubPages" Member="SubPages">
     <Type Name="SubPage">
-      <Column Name="userid" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="userid" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
       <Column Name="UserName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
       <Column Name="WebsiteName" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
       <Column Name="PageName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Association Name="BodyContent_SubPage" Member="BodyContent" ThisKey="WebsiteName" OtherKey="WebsiteName" Type="BodyContent" IsForeignKey="true" />
     </Type>
   </Table>

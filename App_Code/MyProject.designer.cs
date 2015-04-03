@@ -5344,6 +5344,8 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private string _PageName;
 	
+	private int _id;
+	
 	private EntityRef<BodyContent> _BodyContent;
 	
     #region Extensibility Method Definitions
@@ -5358,6 +5360,8 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
     partial void OnWebsiteNameChanged();
     partial void OnPageNameChanging(string value);
     partial void OnPageNameChanged();
+    partial void OnidChanging(int value);
+    partial void OnidChanged();
     #endregion
 	
 	public SubPage()
@@ -5366,7 +5370,7 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 		OnCreated();
 	}
 	
-	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userid", DbType="UniqueIdentifier NOT NULL", IsPrimaryKey=true)]
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_userid", DbType="UniqueIdentifier NOT NULL")]
 	public System.Guid userid
 	{
 		get
@@ -5446,6 +5450,26 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 				this._PageName = value;
 				this.SendPropertyChanged("PageName");
 				this.OnPageNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int id
+	{
+		get
+		{
+			return this._id;
+		}
+		set
+		{
+			if ((this._id != value))
+			{
+				this.OnidChanging(value);
+				this.SendPropertyChanging();
+				this._id = value;
+				this.SendPropertyChanged("id");
+				this.OnidChanged();
 			}
 		}
 	}

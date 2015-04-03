@@ -3,69 +3,9 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 namespace generate_page_runtime {
-    public partial class first : System.Web.UI.Page {
+    public partial class new : System.Web.UI.Page {
         protected void Page_Load(object sender, EventArgs e) {
             output.Text = "Our new page";
-        }
-        private void LoadCategories()
-        {
-           // allCategories = GetAllCategories();
-            rptCategories.DataSource = GetCategories();
-            rptCategories.DataBind();
-        }
-        private DataTable GetCategories()
-        {
-        SqlConnection connection = new SqlConnection("Data Source=NITESH;Initial Catalog=TestDB;Integrated Security=SSPI");
-        SqlCommand selectCommand = new SqlCommand("SELECT ID,CategoryName FROM Categories WHERE ParentCategoryID=0", connection);
-        DataTable dt = new DataTable();
-        try
-        {
-            connection.Open();
-            SqlDataReader reader = selectCommand.ExecuteReader();
-            if (reader.HasRows)
-            {
-                dt.Load(reader);
-            }
-            reader.Close();
-        }
-        catch (SqlException)
-        {
-            throw;
-        }
-        finally
-        {
-            connection.Close();
-        }
-        return dt;
-        }
-        private DataTable GetAllCategories()
-        {
-        SqlConnection connection = new SqlConnection(@"Data Source=(LocalDB)\v11.0;AttachDbFilename=|DataDirectory|\Database.mdf;Integrated Security=True");
-        SqlCommand selectCommand = new SqlCommand("SELECT ID,CategoryName FROM Categories", connection);
-        DataTable dt = new DataTable();
-        try
-        {
-            connection.Open();
-            SqlDataReader reader = selectCommand.ExecuteReader();
-            if (reader.HasRows)
-            {
-                dt.Load(reader);
-            }
-            reader.Close();
-        }
-        catch (SqlException)
-        {
-            throw;
-        }
-        finally
-        {
-            connection.Close();
-        }
-        return dt;
-        }
-        protected void rptCategories_ItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
-           
         }
            
        protected void btn_edit_header_Click(object sender, EventArgs e)
@@ -129,7 +69,6 @@ namespace generate_page_runtime {
            hl_save.Visible = false;
            img_edit.Attributes["style"] = "display : block";
        }
-
-      
-}
+       
+    }
 }

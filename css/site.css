@@ -241,7 +241,11 @@
 .create-web{
     margin-left:200px;
 }
+.left-toolbox legend{
+}
 .left-toolbox{
+    /*background-image:url('../img/pink.png');*/
+    /*color:white;*/
     float:left;
     width:190px;
     height:500px;
