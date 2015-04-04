@@ -56,7 +56,7 @@
                             <ul class="dropdown-menu">
                                 <li><a href="blog-item.html">HTML Templates</a></li>
                                 <li><a href="pricing.html">ASP.Net Samples</a></li>
-                                <li><a href="help.html">Help</a></li>
+                                <li><a href="../help.html">Help</a></li>
                             </ul>
                         </li>
                         <li><a href="main.aspx">Create Website</a></li>
