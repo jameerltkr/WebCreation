@@ -59,6 +59,7 @@
     
         <section id="feature" >
         <div class="container wow fadeInDown" data-wow-duration="1000ms" data-wow-delay="600ms">
+            <asp:Panel ID="pnl_msg" runat="server"></asp:Panel>
             <div class="register_section">
     
     <%--<asp:UpdatePanel runat="server">--%>
@@ -197,8 +198,41 @@
             </tr>
             <tr>
                 <td>Type The Code</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <td>
+                    <asp:TextBox ID="txtCaptcha" runat="server" CssClass="textbox form-control"></asp:TextBox>
+                </td>
+                <td>
+                    <asp:UpdatePanel ID="UP1" runat="server">
+
+                        <ContentTemplate>
+
+                            <table>
+
+                                <tr>
+
+                                    <td >
+
+                                        <asp:Image ID="imgCaptcha" runat="server" />
+
+                                    </td>
+
+                                    <td valign="middle">
+
+                                        <%--<asp:Button ID="btnRefresh" runat="server" Text="Refresh" OnClick="btnRefresh_Click" />--%>
+                                        <asp:ImageButton ID="img_refresh" OnClick="img_refresh_Click" runat="server" ImageUrl="~/img/Refresh-icon.png" Height="27" Width="27" />
+
+                                    </td>
+
+                                </tr>
+
+                            </table>
+
+                        </ContentTemplate>
+
+                    </asp:UpdatePanel>
+
+                </td>
+                
             </tr>
             <tr>
                 <td>

@@ -13,12 +13,14 @@
     <div>
         <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
         <rsweb:ReportViewer ID="ReportViewer1" runat="server" Height="463px" Width="997px" Font-Names="Verdana" Font-Size="8pt" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt">
-            <LocalReport ReportPath="Report.rdlc">
+            <LocalReport ReportPath="admin\Report1.rdlc">
                 <DataSources>
-                    <rsweb:ReportDataSource DataSourceId="ObjectDataSource1" Name="DataSet1" />
+                    <rsweb:ReportDataSource DataSourceId="LinqDataSource1" Name="DataSet1" />
                 </DataSources>
             </LocalReport>
         </rsweb:ReportViewer>
+        <asp:LinqDataSource ID="LinqDataSource1" runat="server" ContextTypeName="MyProjectDataContext" EntityTypeName="" TableName="aspnet_Memberships">
+        </asp:LinqDataSource>
         <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" SelectMethod="GetData" TypeName="DataSetTableAdapters.RegistrationTableAdapter"></asp:ObjectDataSource>
     </div>
     </form>

@@ -1,0 +1,25 @@
+{
+  "name": "Jameer Khan",
+  "description": "WebCreation - admin control panel and dashboard",
+  "homepage": "http://jimcute.wordpress.com/",
+  "keywords": [
+    "css",
+    "js",
+    "less",
+    "responsive",
+    "back-end",
+    "template",
+    "theme",
+    "web",
+    "admin"
+  ],
+  "authors": [
+    {
+      "name": "Jameer Khan",
+      "email": "jimcute8879@gmail.com"
+    }
+  ],
+  "license": "MIT",
+  "support": {
+  }
+}

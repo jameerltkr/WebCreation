@@ -92,10 +92,16 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
   partial void InsertSubPage(SubPage instance);
   partial void UpdateSubPage(SubPage instance);
   partial void DeleteSubPage(SubPage instance);
+  partial void InsertAdminProfile(AdminProfile instance);
+  partial void UpdateAdminProfile(AdminProfile instance);
+  partial void DeleteAdminProfile(AdminProfile instance);
+  partial void InsertSiteUser(SiteUser instance);
+  partial void UpdateSiteUser(SiteUser instance);
+  partial void DeleteSiteUser(SiteUser instance);
   #endregion
 	
 	public MyProjectDataContext() : 
-			base(global::System.Configuration.ConfigurationManager.ConnectionStrings["dbconnection"].ConnectionString, mappingSource)
+			base(global::System.Configuration.ConfigurationManager.ConnectionStrings["DatabaseConnectionString1"].ConnectionString, mappingSource)
 	{
 		OnCreated();
 	}
@@ -289,6 +295,22 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<SubPage>();
+		}
+	}
+	
+	public System.Data.Linq.Table<AdminProfile> AdminProfiles
+	{
+		get
+		{
+			return this.GetTable<AdminProfile>();
+		}
+	}
+	
+	public System.Data.Linq.Table<SiteUser> SiteUsers
+	{
+		get
+		{
+			return this.GetTable<SiteUser>();
 		}
 	}
 	
@@ -2203,6 +2225,10 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 	
 	private EntitySet<BodyContent> _BodyContents;
 	
+	private EntitySet<AdminProfile> _AdminProfiles;
+	
+	private EntitySet<SiteUser> _SiteUsers;
+	
 	private EntityRef<aspnet_Application> _aspnet_Application;
 	
 	private EntityRef<aspnet_User> _aspnet_User;
@@ -2258,6 +2284,8 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 	public aspnet_Membership()
 	{
 		this._BodyContents = new EntitySet<BodyContent>(new Action<BodyContent>(this.attach_BodyContents), new Action<BodyContent>(this.detach_BodyContents));
+		this._AdminProfiles = new EntitySet<AdminProfile>(new Action<AdminProfile>(this.attach_AdminProfiles), new Action<AdminProfile>(this.detach_AdminProfiles));
+		this._SiteUsers = new EntitySet<SiteUser>(new Action<SiteUser>(this.attach_SiteUsers), new Action<SiteUser>(this.detach_SiteUsers));
 		this._aspnet_Application = default(EntityRef<aspnet_Application>);
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		OnCreated();
@@ -2704,6 +2732,32 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_AdminProfile", Storage="_AdminProfiles", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<AdminProfile> AdminProfiles
+	{
+		get
+		{
+			return this._AdminProfiles;
+		}
+		set
+		{
+			this._AdminProfiles.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_SiteUser", Storage="_SiteUsers", ThisKey="UserId", OtherKey="CreatorId")]
+	public EntitySet<SiteUser> SiteUsers
+	{
+		get
+		{
+			return this._SiteUsers;
+		}
+		set
+		{
+			this._SiteUsers.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Application_aspnet_Membership", Storage="_aspnet_Application", ThisKey="ApplicationId", OtherKey="ApplicationId", IsForeignKey=true)]
 	public aspnet_Application aspnet_Application
 	{
@@ -2799,6 +2853,30 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 	}
 	
 	private void detach_BodyContents(BodyContent entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = null;
+	}
+	
+	private void attach_AdminProfiles(AdminProfile entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = this;
+	}
+	
+	private void detach_AdminProfiles(AdminProfile entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = null;
+	}
+	
+	private void attach_SiteUsers(SiteUser entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = this;
+	}
+	
+	private void detach_SiteUsers(SiteUser entity)
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_Membership = null;
@@ -5504,6 +5582,884 @@ public partial class SubPage : INotifyPropertyChanging, INotifyPropertyChanged
 					this._WebsiteName = default(string);
 				}
 				this.SendPropertyChanged("BodyContent");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.AdminProfile")]
+public partial class AdminProfile : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _Id;
+	
+	private System.Nullable<System.Guid> _UserId;
+	
+	private string _Username;
+	
+	private string _FirstName;
+	
+	private string _LastName;
+	
+	private string _UserImgPath;
+	
+	private System.Nullable<System.DateTime> _Created;
+	
+	private System.Nullable<System.DateTime> _Updated;
+	
+	private string _UpdatedBy;
+	
+	private System.Nullable<bool> _Rejected;
+	
+	private string _Address;
+	
+	private string _City;
+	
+	private string _State;
+	
+	private string _Country;
+	
+	private EntityRef<aspnet_Membership> _aspnet_Membership;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnUserIdChanged();
+    partial void OnUsernameChanging(string value);
+    partial void OnUsernameChanged();
+    partial void OnFirstNameChanging(string value);
+    partial void OnFirstNameChanged();
+    partial void OnLastNameChanging(string value);
+    partial void OnLastNameChanged();
+    partial void OnUserImgPathChanging(string value);
+    partial void OnUserImgPathChanged();
+    partial void OnCreatedChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedChanged();
+    partial void OnUpdatedChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedChanged();
+    partial void OnUpdatedByChanging(string value);
+    partial void OnUpdatedByChanged();
+    partial void OnRejectedChanging(System.Nullable<bool> value);
+    partial void OnRejectedChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCityChanging(string value);
+    partial void OnCityChanged();
+    partial void OnStateChanging(string value);
+    partial void OnStateChanged();
+    partial void OnCountryChanging(string value);
+    partial void OnCountryChanged();
+    #endregion
+	
+	public AdminProfile()
+	{
+		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int Id
+	{
+		get
+		{
+			return this._Id;
+		}
+		set
+		{
+			if ((this._Id != value))
+			{
+				this.OnIdChanging(value);
+				this.SendPropertyChanging();
+				this._Id = value;
+				this.SendPropertyChanged("Id");
+				this.OnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_Membership.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Username", DbType="VarChar(100)")]
+	public string Username
+	{
+		get
+		{
+			return this._Username;
+		}
+		set
+		{
+			if ((this._Username != value))
+			{
+				this.OnUsernameChanging(value);
+				this.SendPropertyChanging();
+				this._Username = value;
+				this.SendPropertyChanged("Username");
+				this.OnUsernameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="VarChar(50)")]
+	public string FirstName
+	{
+		get
+		{
+			return this._FirstName;
+		}
+		set
+		{
+			if ((this._FirstName != value))
+			{
+				this.OnFirstNameChanging(value);
+				this.SendPropertyChanging();
+				this._FirstName = value;
+				this.SendPropertyChanged("FirstName");
+				this.OnFirstNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastName", DbType="VarChar(50)")]
+	public string LastName
+	{
+		get
+		{
+			return this._LastName;
+		}
+		set
+		{
+			if ((this._LastName != value))
+			{
+				this.OnLastNameChanging(value);
+				this.SendPropertyChanging();
+				this._LastName = value;
+				this.SendPropertyChanged("LastName");
+				this.OnLastNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserImgPath", DbType="VarChar(100)")]
+	public string UserImgPath
+	{
+		get
+		{
+			return this._UserImgPath;
+		}
+		set
+		{
+			if ((this._UserImgPath != value))
+			{
+				this.OnUserImgPathChanging(value);
+				this.SendPropertyChanging();
+				this._UserImgPath = value;
+				this.SendPropertyChanged("UserImgPath");
+				this.OnUserImgPathChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Created", DbType="DateTime")]
+	public System.Nullable<System.DateTime> Created
+	{
+		get
+		{
+			return this._Created;
+		}
+		set
+		{
+			if ((this._Created != value))
+			{
+				this.OnCreatedChanging(value);
+				this.SendPropertyChanging();
+				this._Created = value;
+				this.SendPropertyChanged("Created");
+				this.OnCreatedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Updated", DbType="DateTime")]
+	public System.Nullable<System.DateTime> Updated
+	{
+		get
+		{
+			return this._Updated;
+		}
+		set
+		{
+			if ((this._Updated != value))
+			{
+				this.OnUpdatedChanging(value);
+				this.SendPropertyChanging();
+				this._Updated = value;
+				this.SendPropertyChanged("Updated");
+				this.OnUpdatedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedBy", DbType="VarChar(50)")]
+	public string UpdatedBy
+	{
+		get
+		{
+			return this._UpdatedBy;
+		}
+		set
+		{
+			if ((this._UpdatedBy != value))
+			{
+				this.OnUpdatedByChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedBy = value;
+				this.SendPropertyChanged("UpdatedBy");
+				this.OnUpdatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Rejected", DbType="Bit")]
+	public System.Nullable<bool> Rejected
+	{
+		get
+		{
+			return this._Rejected;
+		}
+		set
+		{
+			if ((this._Rejected != value))
+			{
+				this.OnRejectedChanging(value);
+				this.SendPropertyChanging();
+				this._Rejected = value;
+				this.SendPropertyChanged("Rejected");
+				this.OnRejectedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(100)")]
+	public string City
+	{
+		get
+		{
+			return this._City;
+		}
+		set
+		{
+			if ((this._City != value))
+			{
+				this.OnCityChanging(value);
+				this.SendPropertyChanging();
+				this._City = value;
+				this.SendPropertyChanged("City");
+				this.OnCityChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(100)")]
+	public string State
+	{
+		get
+		{
+			return this._State;
+		}
+		set
+		{
+			if ((this._State != value))
+			{
+				this.OnStateChanging(value);
+				this.SendPropertyChanging();
+				this._State = value;
+				this.SendPropertyChanged("State");
+				this.OnStateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Country", DbType="VarChar(100)")]
+	public string Country
+	{
+		get
+		{
+			return this._Country;
+		}
+		set
+		{
+			if ((this._Country != value))
+			{
+				this.OnCountryChanging(value);
+				this.SendPropertyChanging();
+				this._Country = value;
+				this.SendPropertyChanged("Country");
+				this.OnCountryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_AdminProfile", Storage="_aspnet_Membership", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_Membership aspnet_Membership
+	{
+		get
+		{
+			return this._aspnet_Membership.Entity;
+		}
+		set
+		{
+			aspnet_Membership previousValue = this._aspnet_Membership.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_Membership.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_Membership.Entity = null;
+					previousValue.AdminProfiles.Remove(this);
+				}
+				this._aspnet_Membership.Entity = value;
+				if ((value != null))
+				{
+					value.AdminProfiles.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_Membership");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SiteUsers")]
+public partial class SiteUser : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _Id;
+	
+	private string _Username;
+	
+	private string _FirstName;
+	
+	private string _Lastname;
+	
+	private string _Email;
+	
+	private string _Address;
+	
+	private string _City;
+	
+	private string _State;
+	
+	private string _Country;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private string _CreatedBy;
+	
+	private System.Nullable<System.Guid> _CreatorId;
+	
+	private System.Nullable<bool> _IsRejected;
+	
+	private System.Nullable<bool> _IsDeleted;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private string _Password;
+	
+	private EntityRef<aspnet_Membership> _aspnet_Membership;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnUsernameChanging(string value);
+    partial void OnUsernameChanged();
+    partial void OnFirstNameChanging(string value);
+    partial void OnFirstNameChanged();
+    partial void OnLastnameChanging(string value);
+    partial void OnLastnameChanged();
+    partial void OnEmailChanging(string value);
+    partial void OnEmailChanged();
+    partial void OnAddressChanging(string value);
+    partial void OnAddressChanged();
+    partial void OnCityChanging(string value);
+    partial void OnCityChanged();
+    partial void OnStateChanging(string value);
+    partial void OnStateChanged();
+    partial void OnCountryChanging(string value);
+    partial void OnCountryChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(string value);
+    partial void OnCreatedByChanged();
+    partial void OnCreatorIdChanging(System.Nullable<System.Guid> value);
+    partial void OnCreatorIdChanged();
+    partial void OnIsRejectedChanging(System.Nullable<bool> value);
+    partial void OnIsRejectedChanged();
+    partial void OnIsDeletedChanging(System.Nullable<bool> value);
+    partial void OnIsDeletedChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    partial void OnPasswordChanging(string value);
+    partial void OnPasswordChanged();
+    #endregion
+	
+	public SiteUser()
+	{
+		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int Id
+	{
+		get
+		{
+			return this._Id;
+		}
+		set
+		{
+			if ((this._Id != value))
+			{
+				this.OnIdChanging(value);
+				this.SendPropertyChanging();
+				this._Id = value;
+				this.SendPropertyChanged("Id");
+				this.OnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Username", DbType="VarChar(100)")]
+	public string Username
+	{
+		get
+		{
+			return this._Username;
+		}
+		set
+		{
+			if ((this._Username != value))
+			{
+				this.OnUsernameChanging(value);
+				this.SendPropertyChanging();
+				this._Username = value;
+				this.SendPropertyChanged("Username");
+				this.OnUsernameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FirstName", DbType="VarChar(50)")]
+	public string FirstName
+	{
+		get
+		{
+			return this._FirstName;
+		}
+		set
+		{
+			if ((this._FirstName != value))
+			{
+				this.OnFirstNameChanging(value);
+				this.SendPropertyChanging();
+				this._FirstName = value;
+				this.SendPropertyChanged("FirstName");
+				this.OnFirstNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lastname", DbType="VarChar(50)")]
+	public string Lastname
+	{
+		get
+		{
+			return this._Lastname;
+		}
+		set
+		{
+			if ((this._Lastname != value))
+			{
+				this.OnLastnameChanging(value);
+				this.SendPropertyChanging();
+				this._Lastname = value;
+				this.SendPropertyChanged("Lastname");
+				this.OnLastnameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(50)")]
+	public string Email
+	{
+		get
+		{
+			return this._Email;
+		}
+		set
+		{
+			if ((this._Email != value))
+			{
+				this.OnEmailChanging(value);
+				this.SendPropertyChanging();
+				this._Email = value;
+				this.SendPropertyChanged("Email");
+				this.OnEmailChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Address", DbType="VarChar(500)")]
+	public string Address
+	{
+		get
+		{
+			return this._Address;
+		}
+		set
+		{
+			if ((this._Address != value))
+			{
+				this.OnAddressChanging(value);
+				this.SendPropertyChanging();
+				this._Address = value;
+				this.SendPropertyChanged("Address");
+				this.OnAddressChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(50)")]
+	public string City
+	{
+		get
+		{
+			return this._City;
+		}
+		set
+		{
+			if ((this._City != value))
+			{
+				this.OnCityChanging(value);
+				this.SendPropertyChanging();
+				this._City = value;
+				this.SendPropertyChanged("City");
+				this.OnCityChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_State", DbType="VarChar(50)")]
+	public string State
+	{
+		get
+		{
+			return this._State;
+		}
+		set
+		{
+			if ((this._State != value))
+			{
+				this.OnStateChanging(value);
+				this.SendPropertyChanging();
+				this._State = value;
+				this.SendPropertyChanged("State");
+				this.OnStateChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Country", DbType="VarChar(50)")]
+	public string Country
+	{
+		get
+		{
+			return this._Country;
+		}
+		set
+		{
+			if ((this._Country != value))
+			{
+				this.OnCountryChanging(value);
+				this.SendPropertyChanging();
+				this._Country = value;
+				this.SendPropertyChanged("Country");
+				this.OnCountryChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="VarChar(50)")]
+	public string CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatorId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> CreatorId
+	{
+		get
+		{
+			return this._CreatorId;
+		}
+		set
+		{
+			if ((this._CreatorId != value))
+			{
+				if (this._aspnet_Membership.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnCreatorIdChanging(value);
+				this.SendPropertyChanging();
+				this._CreatorId = value;
+				this.SendPropertyChanged("CreatorId");
+				this.OnCreatorIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRejected", DbType="Bit")]
+	public System.Nullable<bool> IsRejected
+	{
+		get
+		{
+			return this._IsRejected;
+		}
+		set
+		{
+			if ((this._IsRejected != value))
+			{
+				this.OnIsRejectedChanging(value);
+				this.SendPropertyChanging();
+				this._IsRejected = value;
+				this.SendPropertyChanged("IsRejected");
+				this.OnIsRejectedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDeleted", DbType="Bit")]
+	public System.Nullable<bool> IsDeleted
+	{
+		get
+		{
+			return this._IsDeleted;
+		}
+		set
+		{
+			if ((this._IsDeleted != value))
+			{
+				this.OnIsDeletedChanging(value);
+				this.SendPropertyChanging();
+				this._IsDeleted = value;
+				this.SendPropertyChanged("IsDeleted");
+				this.OnIsDeletedChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Password", DbType="VarChar(50)")]
+	public string Password
+	{
+		get
+		{
+			return this._Password;
+		}
+		set
+		{
+			if ((this._Password != value))
+			{
+				this.OnPasswordChanging(value);
+				this.SendPropertyChanging();
+				this._Password = value;
+				this.SendPropertyChanged("Password");
+				this.OnPasswordChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_SiteUser", Storage="_aspnet_Membership", ThisKey="CreatorId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_Membership aspnet_Membership
+	{
+		get
+		{
+			return this._aspnet_Membership.Entity;
+		}
+		set
+		{
+			aspnet_Membership previousValue = this._aspnet_Membership.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_Membership.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_Membership.Entity = null;
+					previousValue.SiteUsers.Remove(this);
+				}
+				this._aspnet_Membership.Entity = value;
+				if ((value != null))
+				{
+					value.SiteUsers.Add(this);
+					this._CreatorId = value.UserId;
+				}
+				else
+				{
+					this._CreatorId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_Membership");
 			}
 		}
 	}

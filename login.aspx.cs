@@ -44,7 +44,7 @@ public partial class login : System.Web.UI.Page
                     {
                         UserNameCookie.Value = txt_username.Text;
                         UserNameCookie.Expires = DateTime.Now.AddDays(10);
-                        Response.Cookies.Add(UserNameCookie);
+                     //   Response.Cookies.Add(UserNameCookie);
                     }
                 }
                 if (System.Web.Security.Membership.ValidateUser(username,pass))
@@ -62,8 +62,16 @@ public partial class login : System.Web.UI.Page
                     //Session[Constants.Session.ID] = mu.Email.ToString();
 
                     //Session[Constants.Session.ID]=System.Web.Security.Membership.ge
-
-                    FormsAuthentication.SetAuthCookie(username, true);
+                    string[] roles = Roles.GetRolesForUser(username);
+                    foreach (string role in roles)
+                    {
+                        if (role.Equals("Administrator"))
+                        {
+                            FormsAuthentication.SetAuthCookie(username, false);
+                            Response.Redirect("admin/Home.aspx");
+                        }
+                    }
+                    FormsAuthentication.SetAuthCookie(username, false);
                     Response.Redirect("~/home.aspx");
                 }
                 else

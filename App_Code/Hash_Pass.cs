@@ -11,20 +11,14 @@ using System.Web;
 /// </summary>
 public class Hash_Pass
 {
-	public Hash_Pass()
-	{
-		//
-		// TODO: Add constructor logic here
-		//
-	}
     private static readonly RC2CryptoServiceProvider rc2CSP = new RC2CryptoServiceProvider();
-    private static readonly byte[] c_key = rc2CSP.Key;
-    private static readonly byte[] c_iv = rc2CSP.IV;
+    private static readonly byte[] c_key = new byte[] { 1, 2, 23, 234, 37, 48, 134, 63, 248, 4 };
+    private static readonly byte[] c_iv = new byte[] {111,67,09,9,53};
     public static string EncryptText(string openText)
     {
         RC2CryptoServiceProvider rc2CSP = new RC2CryptoServiceProvider();
 
-        ICryptoTransform encryptor = rc2CSP.CreateEncryptor((c_key), (c_iv));
+        ICryptoTransform encryptor = rc2CSP.CreateEncryptor();
         using (MemoryStream msEncrypt = new MemoryStream())
         {
             using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
@@ -43,7 +37,7 @@ public class Hash_Pass
     public static string DecryptText(string encryptedText)
     {
         RC2CryptoServiceProvider rc2CSP = new RC2CryptoServiceProvider();
-        ICryptoTransform decryptor = rc2CSP.CreateDecryptor((c_key), (c_iv));
+        ICryptoTransform decryptor = rc2CSP.CreateDecryptor();
         using (MemoryStream msDecrypt = new MemoryStream(Convert.FromBase64String(encryptedText)))
         {
             using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))

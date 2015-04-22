@@ -116,10 +116,10 @@ public partial class web_design_create : System.Web.UI.Page
 "   <form id=\"form1\" runat=\"server\">",
 
 "       <div id='header'></div>",
-"         <div id='body'></div>",
+"         <div id='body'><label id='lb'>Hello</label></div>",
 "       <div id='footer'></div>",
 
-
+"       ",
 
 
 //"       <div style=\"display:none;\">",

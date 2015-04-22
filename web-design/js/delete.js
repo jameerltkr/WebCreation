@@ -252,20 +252,75 @@ function edit_page(username, pagename) {
     maximize.setAttribute("onclick", "maximize()");
     maximize.setAttribute("type", "button");
     maximize.setAttribute("value", "Maximize");
+    maximize.setAttribute("id", "maximize");
     maximize.style.position = "absolute";
-    maximize.style.top = "176px";
-    maximize.style.right = "244px";
-    maximize.style.height = "49px";
-    maximize.style.width = "200px";
+    maximize.style.top = "4px";
+    maximize.style.right = "15px";
+    maximize.style.height = "30px";
+    maximize.style.width = "67px";
     document.body.appendChild(maximize);
 }
 
+function show_toolbox() {
+    $("#div").remove();
+    var div = document.createElement('div');
+    document.getElementById("toolbox").style.position = "absolute";
+    document.getElementById("toolbox").style.height = "550px";
+    document.getElementById("toolbox").style.width = "230px";
+    div.innerHTML = document.getElementById("toolbox");
+    document.body.appendChild(div);
+}
 
+function hello() {
+    var iframe = document.getElementById('iframe_edit_page');
+    //alert(iframe.contentWindow.document.getElementById('lb').val());
+    var btn = iframe.contentWindow.document.getElementById('lb');
+    alert(btn.val());
+}
 
 function maximize() {
-    var iframe = document.getElementById('iframe_edit_page');
-    iframe.height = height();
-    iframe.width = width();
+
+    if (document.getElementById('maximize').value == "Close") {
+        var iframe = document.getElementById('iframe_edit_page');
+        iframe.style.border = "1px groove black";
+        iframe.style.position = "static";
+        iframe.height = 450;
+        iframe.width = 855;
+        document.getElementById('maximize').value = "Maximize";
+    }
+    else
+    {
+        show_toolbox();
+      //  document.getElementById('bd1').style.display = "none";
+        var iframe = document.getElementById('iframe_edit_page');
+        iframe.style.backgroundColor = "#f3f4f5";
+        iframe.style.position = "absolute";
+        iframe.style.left = "-20px";
+        iframe.style.border = "1px groove black";
+        iframe.style.top = "-104px";
+        iframe.height = height();
+        iframe.width = width() - 10;
+        document.getElementById('maximize').value = "Close";
+    }
+
+    // hello();
+    //Show close button
+ //   var close = document.createElement("input");
+ //   //Set the attributes
+ //   close.setAttribute("onclick", "close()");
+ //   close.setAttribute("type", "button");
+ //   close.setAttribute("value", "Close");
+ ////   close.style.position = "absolute";
+ //  // close.style.top = "-114px";
+ //   //close.style.right = "0pxx";
+ //   close.style.height = "49px";
+ //   close.style.width = "200px";
+ //   document.body.appendChild(close);
+
+}
+
+function close() {
+
 }
 
 function height() {

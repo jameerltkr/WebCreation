@@ -96,6 +96,7 @@
             /* styling bellow */
             background-color: black;
         }
+
         .modal_window {
             position: absolute; /* important so we can position it on center later */
             display: none; /* don't show it */
@@ -119,7 +120,7 @@
     </style>
     <script>
         function Hello() {
-            alert("JK");
+            //alert("JK");
         }
     </script>
 
@@ -127,7 +128,7 @@
     <script src="../js/modal.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 </head>
-<body>
+<body id="bd1">
     <form id="form1" runat="server">
         <asp:ScriptManager EnablePageMethods="true" runat="server"></asp:ScriptManager>
         <div>
@@ -228,31 +229,33 @@
 
                         <fieldset class="left-toolbox">
                             <legend>Toolbox</legend>
-                            <ul>
-                                <li>
-                                    <label onclick="add_anchor()" id="anchor">Anchor (a)</label></li>
-                                <li>
-                                    <label id="button">Button</label></li>
-                                <li>
-                                    <label>Checkbox</label></li>
-                                <li>
-                                    <label>Division (div)</label></li>
-                                <li>
-                                    <label>Dropdown</label></li>
-                                <li>
-                                    <label>File Upload</label></li>
-                                <li>
-                                    <label>Image</label></li>
-                                <li>
-                                    <label>Textbox</label></li>
-                                <li>
-                                    <label>Paragraph (p)</label></li>
-                                <li>
-                                    <label>Radio Button</label></li>
-                                <li>
-                                    <label>Table</label></li>
+                            <div id="toolbox">
+                                <ul>
+                                    <li>
+                                        <label onclick="add_anchor()" id="anchor">Anchor (a)</label></li>
+                                    <li>
+                                        <label id="button">Button</label></li>
+                                    <li>
+                                        <label>Checkbox</label></li>
+                                    <li>
+                                        <label>Division (div)</label></li>
+                                    <li>
+                                        <label>Dropdown</label></li>
+                                    <li>
+                                        <label>File Upload</label></li>
+                                    <li>
+                                        <label>Image</label></li>
+                                    <li>
+                                        <label>Textbox</label></li>
+                                    <li>
+                                        <label>Paragraph (p)</label></li>
+                                    <li>
+                                        <label>Radio Button</label></li>
+                                    <li>
+                                        <label>Table</label></li>
 
-                            </ul>
+                                </ul>
+                            </div>
 
                         </fieldset>
                         <fieldset class="website-panel">
@@ -321,7 +324,7 @@
                                     }
                                 </style>
                                 <span id="website_name"></span>
-                                <div class="pages_div" style="display:none;">
+                                <div class="pages_div" style="display: none;">
                                 </div>
 
                                 <table id="tbl_pages" style="display: none;">
@@ -332,14 +335,14 @@
                                     </thead>
                                 </table>
 
-                                <iframe style="display:none;" id="iframe_edit_page" height="450" width="855"></iframe>
+                                <iframe style="display: none;" id="iframe_edit_page" height="450" width="855"></iframe>
 
                                 <div runat="server" id="div_create_page">
                                     <!--<span>Page name:</span>-->
-                                    <asp:TextBox style="display:none;" runat="server" ID="txt_page_name"></asp:TextBox>
+                                    <asp:TextBox Style="display: none;" runat="server" ID="txt_page_name"></asp:TextBox>
                                     <asp:HiddenField ID="hf_page_name" runat="server" />
                                     <br />
-                                    <asp:Button ID="Button1" style="display:none;" runat="server" Text="Create page" OnClick="Button1_Click" />
+                                    <asp:Button ID="Button1" Style="display: none;" runat="server" Text="Create page" OnClick="Button1_Click" />
                                 </div>
                                 <%--<p><a class='activate_modal' name='first_window' href='#'>First modal window.</a></p>--%>
                                 <div id='mask' class='close_modal' onclick="close_modal()"></div>
