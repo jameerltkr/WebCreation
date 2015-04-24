@@ -9,6 +9,7 @@ public partial class menu : System.Web.UI.UserControl
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        
         check();
         if (!Request.IsAuthenticated)
         {

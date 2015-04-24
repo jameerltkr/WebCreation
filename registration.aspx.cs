@@ -51,102 +51,137 @@ public partial class registration : System.Web.UI.Page
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
+        Guid key;
+        key = Guid.NewGuid();
         Message m = new Message();
-            if (Session["captcha"].ToString() != txtCaptcha.Text)
+        if (Session["captcha"].ToString() != txtCaptcha.Text)
+        {
+            pnl_msg.Controls.Add(m.Error("Invalid captcha!"));
+        }
+        else
+        {
+
+            string username = Tname.Text.Trim();
+            string user_name = ConfigurationManager.AppSettings["Administrator"];
+            if (user_name == username)
             {
-                pnl_msg.Controls.Add(m.Error("Invalid captcha!"));
+                string[] roles = Roles.GetRolesForUser(username);
+                foreach (string role in roles)
+                {
+                    if (role.Equals("Administrator"))
+                    {
+                        // Response.Redirect("admin/Home.aspx");
+                        pnl_msg.Controls.Add(m.Error("This user already exists!"));
+
+                    }
+                }
+                string[] admin_roles = Roles.GetAllRoles();
+                foreach (string role in admin_roles)
+                {
+                    if (role.Equals("Administrator"))
+                    {
+                        Roles.AddUserToRole(username, "Administrator");
+                        if (Register())
+                        {
+                            Guid userid;
+                            System.Web.Security.MembershipUser mu;
+                            mu = System.Web.Security.Membership.GetUser(username);
+                            userid = (Guid)mu.ProviderUserKey;
+                            admin_management admin = new admin_management();
+
+                            if (admin.AddAdmin(userid, username))
+                            {
+                                Response.Redirect("admin/Home.aspx");
+                            }
+                            else
+                            {
+                                pnl_msg.Controls.Add(m.Error("User can not created!"));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Roles.CreateRole("Administrator");
+                        Roles.AddUserToRole(username, "Administrator");
+                        if (Register())
+                        {
+                            Guid userid;
+                            System.Web.Security.MembershipUser mu;
+                            mu = System.Web.Security.Membership.GetUser(username);
+                            userid = (Guid)mu.ProviderUserKey;
+                            admin_management admin = new admin_management();
+                            if (admin.AddAdmin(userid, username))
+                            {
+                                Response.Redirect("admin/Home.aspx");
+                            }
+                            else
+                            {
+                                pnl_msg.Controls.Add(m.Error("User can not created!"));
+                            }
+                        }
+                    }
+                }
+                Roles.CreateRole("Administrator");
+                Roles.AddUserToRole(username, "Administrator");
+                if (Register())
+                {
+                    Guid userid;
+                    System.Web.Security.MembershipUser mu;
+                    mu = System.Web.Security.Membership.GetUser(username);
+                    userid = (Guid)mu.ProviderUserKey;
+                    admin_management admin = new admin_management();
+                    if (admin.AddAdmin(userid, username))
+                    {
+                        Response.Redirect("admin/Home.aspx");
+                    }
+                    else
+                    {
+                        pnl_msg.Controls.Add(m.Error("User can not created!"));
+                        System.Web.Security.Membership.DeleteUser(username);
+                    }
+                }
             }
             else
             {
-                
-                string username = Tname.Text.Trim();
-                string user_name = ConfigurationManager.AppSettings["Administrator"];
-                if (user_name == username)
+                Account act = new Account();
+                if (Register())
                 {
-                    string[] roles = Roles.GetRolesForUser(username);
-                    foreach (string role in roles)
+                    Guid userid;
+                    System.Web.Security.MembershipUser mu;
+                    mu = System.Web.Security.Membership.GetUser(username);
+                    userid = (Guid)mu.ProviderUserKey;
+                    if (act.SaveActivationKey(userid, key))
                     {
-                        if (role.Equals("Administrator"))
+                      //  Hash_Pass hash = new Hash_Pass();
+                       // string hash_pass = Hash_Pass.DESCryptoHelper.DESEncrypt(Tpassword.Text.Trim());
+                        var siteRoot = Request.Url.GetLeftPart(UriPartial.Authority) + VirtualPathUtility.ToAbsolute("~/");
+                        string activate_url = siteRoot + "ActivateAccount.aspx?key=" + key;
+                        string site_url = siteRoot;
+                        string web_design_url = siteRoot + "web-design/create.aspx";
+                        string hosting_url = siteRoot + "hosting/main.aspx";
+                        string help = siteRoot + "contact-us.html";
+                        string address = "Balaganj, Lucknow Up 226003</br> Web Creation Inc.";
+                        WMail mail = new WMail();
+                        if (mail.Send(Temail.Text.Trim(), "", "", Tname.Text.Trim(), Tpassword.Text.Trim(), activate_url, site_url, web_design_url, hosting_url, help, address))
                         {
-                           // Response.Redirect("admin/Home.aspx");
-                            pnl_msg.Controls.Add(m.Error("This user already exists!"));
-
+                            pnl_msg.Controls.Add(m.Error("An activation link has been sent to your email."));
+                            clear();
                         }
                     }
-                    string[] admin_roles = Roles.GetAllRoles();
-                    foreach (string role in admin_roles)
+                    else
                     {
-                        if (role.Equals("Administrator"))
-                        {
-                            Roles.AddUserToRole(username, "Administrator");
-                            if (Register())
-                            {
-                                Guid userid;
-                                System.Web.Security.MembershipUser mu;
-                                mu = System.Web.Security.Membership.GetUser(username);
-                                userid = (Guid)mu.ProviderUserKey;
-                                admin_management admin = new admin_management();
-                                if (admin.AddAdmin(userid, username))
-                                {
-                                    Response.Redirect("admin/Home.aspx");
-                                }
-                                else
-                                {
-                                    pnl_msg.Controls.Add(m.Error("User can not created!"));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Roles.CreateRole("Administrator");
-                            Roles.AddUserToRole(username, "Administrator");
-                            if (Register())
-                            {
-                                Guid userid;
-                                System.Web.Security.MembershipUser mu;
-                                mu = System.Web.Security.Membership.GetUser(username);
-                                userid = (Guid)mu.ProviderUserKey;
-                                admin_management admin = new admin_management();
-                                if (admin.AddAdmin(userid, username))
-                                {
-                                    Response.Redirect("admin/Home.aspx");
-                                }
-                                else
-                                {
-                                    pnl_msg.Controls.Add(m.Error("User can not created!"));
-                                }
-                            }
-                        }
+                        pnl_msg.Controls.Add(m.Error("An error occurred while sending mail."));
+                        System.Web.Security.Membership.DeleteUser(username);
                     }
-                    Roles.CreateRole("Administrator");
-                    Roles.AddUserToRole(username, "Administrator");
-                    if (Register())
-                    {
-                        Guid userid;
-                        System.Web.Security.MembershipUser mu;
-                        mu = System.Web.Security.Membership.GetUser(username);
-                        userid = (Guid)mu.ProviderUserKey;
-                        admin_management admin = new admin_management();
-                        if (admin.AddAdmin(userid, username))
-                        {
-                            Response.Redirect("admin/Home.aspx");
-                        }
-                        else
-                        {
-                            pnl_msg.Controls.Add(m.Error("User can not created!"));
-                        }
-                    }
-                    
+                    // Response.Redirect("home.aspx");
                 }
                 else
                 {
-                    if (Register())
-                    {
-                        Response.Redirect("home.aspx");
-                    }
+                    pnl_msg.Controls.Add(m.Error("An error occurred while processing your request."));
                 }
-               
             }
+
+        }
     }
     public bool Register()
     {
@@ -158,25 +193,26 @@ public partial class registration : System.Web.UI.Page
         {
             case MembershipCreateStatus.Success:
                 {
-                    {
-                        Session[Constants.Session.USERNAME] = Tname.Text;
-                    }
-                    var user1 = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
-                    if (user1 != null)
-                    {
-                        Session[Constants.Session.ID] = user.Email.ToString();
-                    }
+                    //{
+                    //    Session[Constants.Session.USERNAME] = Tname.Text;
+                    //}
+                    //var user1 = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
+                    //if (user1 != null)
+                    //{
+                    //    Session[Constants.Session.ID] = user.Email.ToString();
+                    //}
                     //System.Web.Security.MembershipUser mu;
-                    FormsAuthentication.SetAuthCookie(Tname.Text, true);
+                    //   FormsAuthentication.SetAuthCookie(Tname.Text, true);
 
-                    clear();
-                    
+                    //    clear();
+
                     //  Response.Redirect("~/home.aspx");
                 }
                 //  if (Session[Constants.Session.USERNAME] != null)
                 return true;
                 break;
-               
+
+
             case MembershipCreateStatus.DuplicateUserName:
                 // lbl_message.ForeColor = Color.Red;
                 //lbl_message.Text = "The user with the same UserName already exists!";
@@ -228,6 +264,7 @@ public partial class registration : System.Web.UI.Page
         CheckBox1.Checked = false;
         Label2.Text = "";
         Label3.Text = "";
+        txtCaptcha.Text = "";
 
     }
     //protected void btnRefresh_Click(object sender, EventArgs e)

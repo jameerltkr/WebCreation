@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -9,7 +10,8 @@ public partial class user_control_UserShow : System.Web.UI.UserControl
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        if (!Request.IsAuthenticated||Session[Constants.Session.ID]==null)
+        
+        if (!Request.IsAuthenticated || Session[Constants.Session.ID] == null)
         {
             lbtn_show_user.Visible = false;
             lbtn_logout.Visible = false;
@@ -18,6 +20,7 @@ public partial class user_control_UserShow : System.Web.UI.UserControl
         }
         else
         {
+            
             if (Session[Constants.Session.USERNAME] != null)
             {
                 lbtn_show_user.Visible = true;
@@ -26,7 +29,7 @@ public partial class user_control_UserShow : System.Web.UI.UserControl
             }
             else
             {
-              //  Response.Redirect("~/login.aspx");
+                //  Response.Redirect("~/login.aspx");
             }
         }
     }

@@ -28,26 +28,28 @@ public partial class login : System.Web.UI.Page
         string username = txt_username.Text.Trim();
         string pass = TextBox2.Text.Trim();
 
-
-            DateTime dtLastLogin = DateTime.UtcNow;
-                MembershipUser memberLockedOut = System.Web.Security.Membership.GetUser(username);
-                if (memberLockedOut != null && memberLockedOut.IsLockedOut)
-                    memberLockedOut.UnlockUser();
-                if (memberLockedOut != null)
-                    dtLastLogin = memberLockedOut.LastLoginDate;
-                TimeSpan ts = DateTime.Now.ToUniversalTime().Subtract(dtLastLogin);
-               // if (ts.Days > 60 && model.UserName != us.SuperadminUserName) // do not lock down super admin
-                {
-                    // force to expire cookies
-                    HttpCookie UserNameCookie = new HttpCookie("CurrentUser");
-                    if (UserNameCookie != null)
-                    {
-                        UserNameCookie.Value = txt_username.Text;
-                        UserNameCookie.Expires = DateTime.Now.AddDays(10);
-                     //   Response.Cookies.Add(UserNameCookie);
-                    }
-                }
-                if (System.Web.Security.Membership.ValidateUser(username,pass))
+        //  trying to check that is account is activated or not. if not activated then redirect to activate account.
+        Guid userid = new Guid();
+        try
+        {
+            System.Web.Security.MembershipUser u;
+            u = System.Web.Security.Membership.GetUser(username);
+            userid = (Guid)u.ProviderUserKey;
+        }
+        catch
+        {
+            Message m = new Message();
+            pnl_msg.Controls.Add(m.Error("Invalid username!"));
+        }
+        // initialsing accoutn class
+        Account act=new Account();
+        //if admin logins then redirect to admin page ----------
+        string[] roles = Roles.GetRolesForUser(username);
+        foreach (string role in roles)
+        {
+            if (role.Equals("Administrator"))
+            {
+                if (System.Web.Security.Membership.ValidateUser(username, pass))
                 {
                     Session[Constants.Session.USERNAME] = username;
 
@@ -56,31 +58,63 @@ public partial class login : System.Web.UI.Page
                     {
                         Session[Constants.Session.ID] = user.Email.ToString();
                     }
-                    //System.Web.Security.MembershipUser mu;
-                    //mu = System.Web.Security.Membership.FindUsersByName(Session[Constants.Session.USERNAME].ToString());
-
-                    //Session[Constants.Session.ID] = mu.Email.ToString();
-
-                    //Session[Constants.Session.ID]=System.Web.Security.Membership.ge
-                    string[] roles = Roles.GetRolesForUser(username);
-                    foreach (string role in roles)
-                    {
-                        if (role.Equals("Administrator"))
-                        {
-                            FormsAuthentication.SetAuthCookie(username, false);
-                            Response.Redirect("admin/Home.aspx");
-                        }
-                    }
                     FormsAuthentication.SetAuthCookie(username, false);
-                    Response.Redirect("~/home.aspx");
+                    Response.Redirect("admin/Home.aspx");
                 }
-                else
+            }
+        }
+        //-----------------------
+        if (act.IsActivated(userid))
+        {
+            DateTime dtLastLogin = DateTime.UtcNow;
+            MembershipUser memberLockedOut = System.Web.Security.Membership.GetUser(username);
+            if (memberLockedOut != null && memberLockedOut.IsLockedOut)
+                memberLockedOut.UnlockUser();
+            if (memberLockedOut != null)
+                dtLastLogin = memberLockedOut.LastLoginDate;
+            TimeSpan ts = DateTime.Now.ToUniversalTime().Subtract(dtLastLogin);
+            // if (ts.Days > 60 && model.UserName != us.SuperadminUserName) // do not lock down super admin
+            {
+                // force to expire cookies
+                HttpCookie UserNameCookie = new HttpCookie("CurrentUser");
+                if (UserNameCookie != null)
                 {
-                    Message m = new Message();
-                    pnl_msg.Controls.Add(m.Error("Invalid Username or Password!"));
-                    TextBox2.Text = txt_username.Text = "";
+                    UserNameCookie.Value = txt_username.Text;
+                    UserNameCookie.Expires = DateTime.Now.AddDays(10);
+                    //   Response.Cookies.Add(UserNameCookie);
                 }
+            }
+            if (System.Web.Security.Membership.ValidateUser(username, pass))
+            {
+                Session[Constants.Session.USERNAME] = username;
 
+                var user = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
+                if (user != null)
+                {
+                    Session[Constants.Session.ID] = user.Email.ToString();
+                }
+                //System.Web.Security.MembershipUser mu;
+                //mu = System.Web.Security.Membership.FindUsersByName(Session[Constants.Session.USERNAME].ToString());
+
+                //Session[Constants.Session.ID] = mu.Email.ToString();
+
+                //Session[Constants.Session.ID]=System.Web.Security.Membership.ge
+                
+                FormsAuthentication.SetAuthCookie(username, false);
+                Response.Redirect("~/home.aspx");
+            }
+            else
+            {
+                Message m = new Message();
+                pnl_msg.Controls.Add(m.Error("Invalid Username or Password!"));
+                TextBox2.Text = txt_username.Text = "";
+            }
+        }
+        else
+        {
+            Message m = new Message();
+            pnl_msg.Controls.Add(m.Error("Activate your account first!"));
+        }
 
        // System.Web.Security.Membership m = new System.Web.Security.Membership();
         //StoreInformation si = new StoreInformation();

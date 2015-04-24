@@ -79,7 +79,7 @@
                                             First Name:<asp:TextBox runat="server" placeholder="First Name" class="form-control" ID="txt_firstname"></asp:TextBox>
                                             Last Name:<asp:TextBox runat="server" placeholder="Last Name" class="form-control" ID="txt_lastname"></asp:TextBox>
                                             Email:<asp:TextBox runat="server" placeholder="Email" class="form-control" ID="txt_email"></asp:TextBox>
-                                            Password:<asp:TextBox TextMode="Password" runat="server" placeholder="Enter a password" class="form-control" ID="txt_password"></asp:TextBox>
+                                            <%--Password:<asp:TextBox TextMode="Password" runat="server" placeholder="Enter a password" class="form-control" ID="txt_password"></asp:TextBox>--%>
                                         </div>
                                         <div class="col-lg-6 connectedSortable">
                                             Address:<asp:TextBox runat="server" placeholder="Address" class="form-control" ID="txt_address"></asp:TextBox>
