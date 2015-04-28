@@ -19,7 +19,7 @@ public class datalayer
       da.Registrations.InsertOnSubmit(rg);
       da.SubmitChanges();
   }
-    public void Registration(string name,string email,string password,string gender,string s_ques,string s_ans,string dbbirth,string mobile,string country,string city,string address)
+    public bool Registration(string name,string email,string gender,string s_ques,string s_ans,string dbbirth,string mobile,string country,string city,string address)
     {
         Registration rg = new Registration();
         rg.name = name;
@@ -37,7 +37,7 @@ public class datalayer
 
         logindetail lg = new logindetail();
         lg.name = name;
-        lg.password = password;
+        //lg.password = password;
         lg.email = email;
         lg.s_ques = s_ques;
         lg.s_ans = s_ans;
@@ -49,8 +49,15 @@ public class datalayer
         img1.Imagename = "";
         img1.ImagePath = "";
         da.ImageDetails.InsertOnSubmit(img1);
-
-        da.SubmitChanges();
+        try
+        {
+            da.SubmitChanges();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public IEnumerable<logindetail> login(string id)

@@ -20,6 +20,7 @@ public class Constants
     {
         public const string USERNAME = "Username";
         public const string ID = "Id";
+        public const string PASSWORD = "Password";
     }
     public class Login
     {

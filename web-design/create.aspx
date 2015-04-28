@@ -482,8 +482,19 @@
                     </ItemTemplate>
                 </asp:Repeater>--%>
                             </div>
-                        </fieldset>
+                        </fieldset><br />
+                       <br /><br />
+                        <br />
+                        <br />
+                        <br/>
+                        <br />
+                        <br />
+                        <br /><br />
 
+                        <fieldset class="pages-section">
+                            <legend>Pages</legend>
+
+                        </fieldset>
 
 
                         <asp:Panel Visible="false" ID="pnl_create_pages" runat="server">

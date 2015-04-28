@@ -38,7 +38,7 @@ public class admin_management
         dbContext = new MyProjectDataContext();
         var q = from a in dbContext.SubPages
                 select a;
-        dbContext.Connection.Close();
+      //  dbContext.Connection.Close();
         return q;
     }
     public IEnumerable<BodyContent> GetWebsites()
@@ -46,7 +46,7 @@ public class admin_management
         dbContext = new MyProjectDataContext();
         var q = from a in dbContext.BodyContents
                 select a;
-        dbContext.Connection.Close();
+     //   dbContext.Connection.Close();
         return q;
     }
     public IEnumerable<aspnet_User> GetUsers()

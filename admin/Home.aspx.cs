@@ -36,10 +36,10 @@ public partial class admin_Home : System.Web.UI.Page
         var q = admin_manage.GetPages();
         if (q.Any())
         {
-            foreach (var a in q)
+            //foreach (var a in q)
             {
                 int total = 0;
-                total = a.PageName.Count();     //counts total number of pages in table
+                total = q.Count();     //counts total number of pages in table
                 lt_pages.Text = total.ToString();
             }
         }
@@ -50,9 +50,9 @@ public partial class admin_Home : System.Web.UI.Page
         var q = admin_manage.GetWebsites();
         if (q.Any())
         {
-            foreach (var a in q)
+            //foreach (var a in q)
             {
-                int count = a.WebsiteName.Count();      //total website
+                int count = q.Count();      //total website
                 ltr_websites.Text = count.ToString();
             }
         }
@@ -63,9 +63,9 @@ public partial class admin_Home : System.Web.UI.Page
         var q = admin_manage.GetUsers();
         if (q.Any())
         {
-            foreach (var a in q)
+            //foreach (var a in q)
             {
-                int count = a.UserName.Count();     //total user
+                int count = q.Count();     //total user
                 ltr_users.Text = count.ToString();
             }
         }

@@ -91,6 +91,19 @@ public partial class registration : System.Web.UI.Page
 
                             if (admin.AddAdmin(userid, username))
                             {
+                                string name = Tname.Text.Trim();
+                                string email = Temail.Text.Trim();
+                                //string password = Tpassword.Text.Trim();
+                                string gender = Rblgender.Text.Trim();
+                                string s_ques = ddlsecurityQ.Text.Trim();
+                                string s_ans = TAnswer.Text.Trim();
+                                string dob = Tdob.Text.Trim();
+                                string mobileno = Tmobile.Text.Trim();
+                                string country = ddlcountry.Text.Trim();
+                                string city = Tcity.Text.Trim();
+                                string address = Taddress.Text.Trim();
+                                datalayer c = new datalayer();
+                                c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
                                 Response.Redirect("admin/Home.aspx");
                             }
                             else
@@ -112,6 +125,19 @@ public partial class registration : System.Web.UI.Page
                             admin_management admin = new admin_management();
                             if (admin.AddAdmin(userid, username))
                             {
+                                string name = Tname.Text.Trim();
+                                string email = Temail.Text.Trim();
+                                //string password = Tpassword.Text.Trim();
+                                string gender = Rblgender.Text.Trim();
+                                string s_ques = ddlsecurityQ.Text.Trim();
+                                string s_ans = TAnswer.Text.Trim();
+                                string dob = Tdob.Text.Trim();
+                                string mobileno = Tmobile.Text.Trim();
+                                string country = ddlcountry.Text.Trim();
+                                string city = Tcity.Text.Trim();
+                                string address = Taddress.Text.Trim();
+                                datalayer c = new datalayer();
+                                c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
                                 Response.Redirect("admin/Home.aspx");
                             }
                             else
@@ -132,6 +158,19 @@ public partial class registration : System.Web.UI.Page
                     admin_management admin = new admin_management();
                     if (admin.AddAdmin(userid, username))
                     {
+                        string name = Tname.Text.Trim();
+                        string email = Temail.Text.Trim();
+                        //string password = Tpassword.Text.Trim();
+                        string gender = Rblgender.Text.Trim();
+                        string s_ques = ddlsecurityQ.Text.Trim();
+                        string s_ans = TAnswer.Text.Trim();
+                        string dob = Tdob.Text.Trim();
+                        string mobileno = Tmobile.Text.Trim();
+                        string country = ddlcountry.Text.Trim();
+                        string city = Tcity.Text.Trim();
+                        string address = Taddress.Text.Trim();
+                        datalayer c = new datalayer();
+                        c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
                         Response.Redirect("admin/Home.aspx");
                     }
                     else
@@ -161,9 +200,23 @@ public partial class registration : System.Web.UI.Page
                         string hosting_url = siteRoot + "hosting/main.aspx";
                         string help = siteRoot + "contact-us.html";
                         string address = "Balaganj, Lucknow Up 226003</br> Web Creation Inc.";
+                        string password = Hash_Pass.DESCryptoHelper.DESDecrypt(Session[Constants.Session.PASSWORD].ToString());
                         WMail mail = new WMail();
-                        if (mail.Send(Temail.Text.Trim(), "", "", Tname.Text.Trim(), Tpassword.Text.Trim(), activate_url, site_url, web_design_url, hosting_url, help, address))
+                        if (mail.Send(Temail.Text.Trim(), "", "", Tname.Text.Trim(), password, activate_url, site_url, web_design_url, hosting_url, help, address))
                         {
+                            string name = Tname.Text.Trim();
+                            string email = Temail.Text.Trim();
+                            //string password = Tpassword.Text.Trim();
+                            string gender = Rblgender.Text.Trim();
+                            string s_ques = ddlsecurityQ.Text.Trim();
+                            string s_ans = TAnswer.Text.Trim();
+                            string dob = Tdob.Text.Trim();
+                            string mobileno = Tmobile.Text.Trim();
+                            string country = ddlcountry.Text.Trim();
+                            string city = Tcity.Text.Trim();
+                            string user_address = Taddress.Text.Trim();
+                            datalayer c = new datalayer();
+                            c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, user_address);
                             pnl_msg.Controls.Add(m.Error("An activation link has been sent to your email."));
                             clear();
                         }
@@ -185,10 +238,13 @@ public partial class registration : System.Web.UI.Page
     }
     public bool Register()
     {
+        string password = "";
+        password = Guid.NewGuid().ToString("d").Substring(1, 6);
+        Session[Constants.Session.PASSWORD] = Hash_Pass.DESCryptoHelper.DESEncrypt(password);
         Message m = new Message();
         lbl_message.Text = "";
         MembershipCreateStatus createStatus;
-        MembershipUser user = System.Web.Security.Membership.CreateUser(Tname.Text, Tpassword.Text, Temail.Text, ddlsecurityQ.SelectedItem.Text, TAnswer.Text, true, out createStatus);
+        MembershipUser user = System.Web.Security.Membership.CreateUser(Tname.Text, password, Temail.Text, ddlsecurityQ.SelectedItem.Text, TAnswer.Text, true, out createStatus);
         switch (createStatus)
         {
             case MembershipCreateStatus.Success:
@@ -256,7 +312,7 @@ public partial class registration : System.Web.UI.Page
     }
     void clear()
     {
-        Tname.Text = Tpassword.Text = Tconfirmpassword.Text =
+        Tname.Text = 
      TAnswer.Text = Taddress.Text = Temail.Text = Tdob.Text = Tcity.Text = Tmobile.Text = "";
         ddlsecurityQ.ClearSelection();
         ddlcountry.ClearSelection();

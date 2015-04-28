@@ -64,56 +64,64 @@ public partial class login : System.Web.UI.Page
             }
         }
         //-----------------------
-        if (act.IsActivated(userid))
+        if (System.Web.Security.Membership.ValidateUser(username, pass))
         {
-            DateTime dtLastLogin = DateTime.UtcNow;
-            MembershipUser memberLockedOut = System.Web.Security.Membership.GetUser(username);
-            if (memberLockedOut != null && memberLockedOut.IsLockedOut)
-                memberLockedOut.UnlockUser();
-            if (memberLockedOut != null)
-                dtLastLogin = memberLockedOut.LastLoginDate;
-            TimeSpan ts = DateTime.Now.ToUniversalTime().Subtract(dtLastLogin);
-            // if (ts.Days > 60 && model.UserName != us.SuperadminUserName) // do not lock down super admin
+            if (act.IsActivated(userid))
             {
-                // force to expire cookies
-                HttpCookie UserNameCookie = new HttpCookie("CurrentUser");
-                if (UserNameCookie != null)
+                DateTime dtLastLogin = DateTime.UtcNow;
+                MembershipUser memberLockedOut = System.Web.Security.Membership.GetUser(username);
+                if (memberLockedOut != null && memberLockedOut.IsLockedOut)
+                    memberLockedOut.UnlockUser();
+                if (memberLockedOut != null)
+                    dtLastLogin = memberLockedOut.LastLoginDate;
+                TimeSpan ts = DateTime.Now.ToUniversalTime().Subtract(dtLastLogin);
+                // if (ts.Days > 60 && model.UserName != us.SuperadminUserName) // do not lock down super admin
                 {
-                    UserNameCookie.Value = txt_username.Text;
-                    UserNameCookie.Expires = DateTime.Now.AddDays(10);
-                    //   Response.Cookies.Add(UserNameCookie);
+                    // force to expire cookies
+                    HttpCookie UserNameCookie = new HttpCookie("CurrentUser");
+                    if (UserNameCookie != null)
+                    {
+                        UserNameCookie.Value = txt_username.Text;
+                        UserNameCookie.Expires = DateTime.Now.AddDays(10);
+                        //   Response.Cookies.Add(UserNameCookie);
+                    }
                 }
-            }
-            if (System.Web.Security.Membership.ValidateUser(username, pass))
-            {
-                Session[Constants.Session.USERNAME] = username;
-
-                var user = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
-                if (user != null)
+                if (System.Web.Security.Membership.ValidateUser(username, pass))
                 {
-                    Session[Constants.Session.ID] = user.Email.ToString();
+                    Session[Constants.Session.USERNAME] = username;
+
+                    var user = System.Web.Security.Membership.GetUser(Session[Constants.Session.USERNAME].ToString());
+                    if (user != null)
+                    {
+                        Session[Constants.Session.ID] = user.Email.ToString();
+                    }
+                    //System.Web.Security.MembershipUser mu;
+                    //mu = System.Web.Security.Membership.FindUsersByName(Session[Constants.Session.USERNAME].ToString());
+
+                    //Session[Constants.Session.ID] = mu.Email.ToString();
+
+                    //Session[Constants.Session.ID]=System.Web.Security.Membership.ge
+
+                    FormsAuthentication.SetAuthCookie(username, false);
+                    Response.Redirect("~/home.aspx");
                 }
-                //System.Web.Security.MembershipUser mu;
-                //mu = System.Web.Security.Membership.FindUsersByName(Session[Constants.Session.USERNAME].ToString());
-
-                //Session[Constants.Session.ID] = mu.Email.ToString();
-
-                //Session[Constants.Session.ID]=System.Web.Security.Membership.ge
-                
-                FormsAuthentication.SetAuthCookie(username, false);
-                Response.Redirect("~/home.aspx");
+                else
+                {
+                    Message m = new Message();
+                    pnl_msg.Controls.Add(m.Error("Invalid Username or Password!"));
+                    TextBox2.Text = txt_username.Text = "";
+                }
             }
             else
             {
                 Message m = new Message();
-                pnl_msg.Controls.Add(m.Error("Invalid Username or Password!"));
-                TextBox2.Text = txt_username.Text = "";
+                pnl_msg.Controls.Add(m.Error("Activate your account first!"));
             }
         }
         else
         {
             Message m = new Message();
-            pnl_msg.Controls.Add(m.Error("Activate your account first!"));
+            pnl_msg.Controls.Add(m.Error("Please check your username or password!"));
         }
 
        // System.Web.Security.Membership m = new System.Web.Security.Membership();

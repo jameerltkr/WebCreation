@@ -221,7 +221,7 @@ function get_page_name(username, websitename) {
         success: function (data) {
             ($.map(data.d, function (item) {
               //  var url = "\'" + username + "\'" + "/" + "\'" + item.PageName + "\'";
-                $("#website_name").append("<a href='#'>" + item.WebsiteName + "</a>");
+                //$("#website_name").append("<a href='#'>" + item.WebsiteName + "</a>");
                 var rows = "<tr>"
                 
                 + "<td>" + "<a href='#' onclick='edit_page(\"" + username + "\",\"" + item.PageName + "\"); return false;' id=" + "\'" + item.PageName + "\'" + " >" + item.PageName + "</a></td>"

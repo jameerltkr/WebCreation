@@ -1,6 +1,16 @@
 ﻿function UpdateUserValidation() {
     var valid = true;
-    
+    var x = document.getElementById("CheckBox1").checked;
+    if (x == false) {
+        //  alert("Box1 is checked");
+        //  $("#lbl_message").style.color = "red";
+        document.getElementById('lbl_message').style.color = "red";
+        $("#lbl_message").html("Accept our terms & conditions.");
+        valid = false;
+    }
+    else {
+        $("#lbl_message").html("");
+    }
     if ($("#Tname").val() == "") {
         $("#error_name").html("Name Required");
         //$("#Tname").css({ "border": "1px groove red" });
@@ -106,6 +116,19 @@
     else { return true; }
 }
 
+function CheckBox() {
+    var x = document.getElementById("CheckBox1").checked;
+    if (x == false) {
+        //  alert("Box1 is checked");
+        //  $("#lbl_message").style.color = "red";
+        document.getElementById('lbl_message').style.color = "red";
+        $("#lbl_message").html("Accept our terms & conditions.");
+        valid = false;
+    }
+    else {
+        $("#lbl_message").html("");
+    }
+}
 
 function isValidEmailAddress(emailAddress) {
     var pattern = new RegExp(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/);
