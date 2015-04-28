@@ -10,7 +10,10 @@ public partial class registration : System.Web.UI.Page
     datalayer c = new datalayer();
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (Request.IsAuthenticated)
+        {
 
+        }
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
