@@ -2022,8 +2022,8 @@
 			{
 				_fnClearTable( oSettings );
 			}
-			oSettings._iRecordsTotal = parseInt(json.iTotalRecords, 10);
-			oSettings._iRecordsDisplay = parseInt(json.iTotalDisplayRecords, 10);
+			oSettings._iRecordsTotal = parseInt(json.iTotalRecords, 4);
+			oSettings._iRecordsDisplay = parseInt(json.iTotalDisplayRecords, 4);
 			
 			/* Determine if reordering is required */
 			var sOrdering = _fnColumnOrdering(oSettings);
@@ -2790,7 +2790,7 @@
 				}
 				
 				/* Redraw the table */
-				oSettings._iDisplayLength = parseInt(iVal, 10);
+				oSettings._iDisplayLength = parseInt(iVal, 4);
 				_fnCalculateEnd( oSettings );
 				
 				/* If we have space to show extra rows (backing up from the end point - then do so */
@@ -2948,7 +2948,7 @@
 			{
 				if ( oSettings._iDisplayLength >= 0 )
 				{
-					var iPages = parseInt( (oSettings.fnRecordsDisplay()-1) / oSettings._iDisplayLength, 10 ) + 1;
+					var iPages = parseInt( (oSettings.fnRecordsDisplay()-1) / oSettings._iDisplayLength, 4 ) + 1;
 					oSettings._iDisplayStart = (iPages-1) * oSettings._iDisplayLength;
 				}
 				else
@@ -3738,7 +3738,7 @@
 							}
 							else
 							{
-								iTotal += parseInt(oSettings.aoColumns[i].sWidth.replace('px',''), 10) +
+								iTotal += parseInt(oSettings.aoColumns[i].sWidth.replace('px',''), 4) +
 									($(oNodes[iCorrector]).outerWidth() - $(oNodes[iCorrector]).width());
 							}
 							iCorrector++;
@@ -4336,7 +4336,7 @@
 				}
 				for (i = 0, iClass = 1; i < aaSort.length; i++)
 				{
-					iTargetCol = parseInt( aaSort[i][0], 10 );
+					iTargetCol = parseInt( aaSort[i][0], 4 );
 					asClasses[iTargetCol] = sClass + iClass;
 					
 					if ( iClass < 3 )
@@ -4515,7 +4515,7 @@
 				iNewCookieLen = sFullCookie.split(';')[0].length,
 				aOldCookies = [];
 			
-			if ( iNewCookieLen+document.cookie.length+10 > 4096 ) /* Magic 10 for padding */
+			if ( iNewCookieLen+document.cookie.length+4 > 4096 ) /* Magic 10 for padding */
 			{
 				for ( var i=0, iLen=aCookies.length ; i<iLen ; i++ )
 				{
@@ -4544,7 +4544,7 @@
 				} );
 		
 				// Eliminate as many old DataTables cookies as we need to
-				while ( iNewCookieLen + document.cookie.length + 10 > 4096 ) {
+				while ( iNewCookieLen + document.cookie.length + 4 > 4096 ) {
 					if ( aOldCookies.length === 0 ) {
 						// Deleted all DT cookies and still not enough space. Can't state save
 						return;
@@ -6832,7 +6832,7 @@
 			sThat += fnZPad( aThat[i], 3 );
 		}
 		
-		return parseInt(sThis, 10) >= parseInt(sThat, 10);
+		return parseInt(sThis, 4) >= parseInt(sThat, 4);
 	};
 	
 	
@@ -9036,7 +9036,7 @@
 		 *      } );
 		 *    } )
 		 */
-		"iDisplayLength": 10,
+		"iDisplayLength": 4,
 	
 	
 		/**
@@ -11234,9 +11234,9 @@
 		/**
 		 * Paging display length
 		 *  @type int
-		 *  @default 10
+		 *  @default 4
 		 */
-		"_iDisplayLength": 10,
+		"_iDisplayLength": 4,
 	
 		/**
 		 * Paging start point - aiDisplay index
@@ -11252,7 +11252,7 @@
 		 *  @default 10
 		 *  @private
 		 */
-		"_iDisplayEnd": 10,
+		"_iDisplayEnd": 4,
 		
 		/**
 		 * Server-side processing - number of records in the result set
@@ -11344,7 +11344,7 @@
 		"fnRecordsTotal": function ()
 		{
 			if ( this.oFeatures.bServerSide ) {
-				return parseInt(this._iRecordsTotal, 10);
+				return parseInt(this._iRecordsTotal, 4);
 			} else {
 				return this.aiDisplayMaster.length;
 			}
@@ -11357,7 +11357,7 @@
 		"fnRecordsDisplay": function ()
 		{
 			if ( this.oFeatures.bServerSide ) {
-				return parseInt(this._iRecordsDisplay, 10);
+				return parseInt(this._iRecordsDisplay, 4);
 			} else {
 				return this.aiDisplay.length;
 			}

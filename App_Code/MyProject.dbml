@@ -122,6 +122,7 @@
       <Association Name="aspnet_Membership_AdminProfile" Member="AdminProfiles" ThisKey="UserId" OtherKey="UserId" Type="AdminProfile" />
       <Association Name="aspnet_Membership_SiteUser" Member="SiteUsers" ThisKey="UserId" OtherKey="CreatorId" Type="SiteUser" />
       <Association Name="aspnet_Membership_ActivateUser" Member="ActivateUsers" ThisKey="UserId" OtherKey="UserId" Type="ActivateUser" />
+      <Association Name="aspnet_Membership_Website" Member="Websites" ThisKey="UserId" OtherKey="UserId" Type="Website" />
       <Association Name="aspnet_Application_aspnet_Membership" Member="aspnet_Application" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Application" IsForeignKey="true" />
       <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
@@ -307,6 +308,35 @@
       <Column Name="Created" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="IsExpired" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="aspnet_Membership_ActivateUser" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Websites" Member="Websites">
+    <Type Name="Website">
+      <Column Name="WebsiteId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="WebsiteName" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Association Name="Website_WebsitePage" Member="WebsitePages" ThisKey="WebsiteId" OtherKey="WebsiteId" Type="WebsitePage" />
+      <Association Name="aspnet_Membership_Website" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.WebsitePages" Member="WebsitePages">
+    <Type Name="WebsitePage">
+      <Column Name="PageId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="WebsiteId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="PageName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="Website_WebsitePage" Member="Website" ThisKey="WebsiteId" OtherKey="WebsiteId" Type="Website" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.proc_retrieve_second_row" Method="proc_retrieve_second_row">

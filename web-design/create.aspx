@@ -149,7 +149,7 @@
                                 mu = System.Web.Security.Membership.GetUser();
                                 userid = (Guid)mu.ProviderUserKey;
                                 datalayer dl = new datalayer();
-                                var q = dl.Retrieve_Website(Session[Constants.Session.ID].ToString());
+                                var q = dl.Retrieve_Website(Session[Constants.Session.USERNAME].ToString());
                                 if (q.Any())
                                 {
 
@@ -206,7 +206,7 @@
 
                                             lb_web_name.OnClientClick = "show('" + userid + "' ,'" + username + "','" + a.WebsiteName + "'); return false;";
 
-                                            a2.OnClientClick = "if(confirm('Are you sure you want to delete website?')) delete_data('" + userid + "','" + a.WebsiteName + "')";
+                                            a2.OnClientClick = "if(confirm('Are you sure you want to delete website?')) delete_data('" + userid + "','" + a.WebsiteName + "','"+username+"')";
                                             //a2.OnClientClick = "Hello(); return false;";
                                             cell.ID = "data";
                                             //cell.InnerText = a.WebsiteName;

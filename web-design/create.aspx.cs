@@ -19,14 +19,14 @@ public partial class web_design_create : System.Web.UI.Page
         }
         else
         {
-            var q = dl.Retrieve_Website(Session[Constants.Session.ID].ToString());
-            if (q.Any())
-            {
-                foreach (var a in q)
-                {
-                    // btn_website_name.Text += a.WebsiteName;
-                }
-            }
+            //var q = dl.Retrieve_Website(Session[Constants.Session.ID].ToString());
+            //if (q.Any())
+            //{
+            //    foreach (var a in q)
+            //    {
+            //        // btn_website_name.Text += a.WebsiteName;
+            //    }
+            //}
         }
     }
     protected void btn_create_page_Click(object sender, EventArgs e)
@@ -365,7 +365,7 @@ public partial class web_design_create : System.Web.UI.Page
                     Guid userid;
                     mu = System.Web.Security.Membership.GetUser();
                     userid = (Guid)mu.ProviderUserKey;
-                    if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.SUCCESS)
+                    if (dl.SaveWebsite(Session[Constants.Session.USERNAME].ToString(), txt_website_name.Text.Trim(), userid) == Constants.SUCCESS)
                     {
                         e.Cancel = false;
                         Session[Constants.WEBSITE_NAME] = txt_website_name.Text.Trim();
@@ -374,7 +374,7 @@ public partial class web_design_create : System.Web.UI.Page
                         //  pnl_website_name.Visible = false;
                     }
                     else
-                        if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.WEBSITE_ALREADY_EXIST)
+                        if (dl.SaveWebsite(Session[Constants.Session.USERNAME].ToString(), txt_website_name.Text.Trim(), userid) == Constants.WEBSITE_ALREADY_EXIST)
                         {
                             e.Cancel = true;
 
@@ -383,7 +383,7 @@ public partial class web_design_create : System.Web.UI.Page
 
                         }
                         else
-                            if (dl.SaveWebsite(Session[Constants.Session.ID].ToString(), txt_website_name.Text.Trim(), userid) == Constants.ERROR)
+                            if (dl.SaveWebsite(Session[Constants.Session.USERNAME].ToString(), txt_website_name.Text.Trim(), userid) == Constants.ERROR)
                             {
                                 Session[Constants.ERROR] = Constants.ERROR;
                                 e.Cancel = true;
@@ -448,37 +448,62 @@ public partial class web_design_create : System.Web.UI.Page
     {
         string msg = "";
         MyProjectDataContext da = new MyProjectDataContext();
-        var q = from a in da.SubPages
-                where a.UserName == username && a.WebsiteName == websitename
+        var q = from a in da.WebsitePages
+                where a.Username == username && a.UserId == userid
                 select a;
-        foreach (var o in q)
+        if (q.Any())
         {
-            if (o.PageName.Count() == 0)
-            {
-                msg = "nothing";
-                //pnl_web.Visible = true;
-            }
-            else
-            {
-                msg = "data";
-                //pnl_web.Visible = false;
-            }
+            msg = "data";
         }
+        else
+        {
+            msg = "nothing";
+        }
+        //foreach (var o in q)
+        //{
+        //    if (o.PageName.Count() == 0)
+        //    {
+        //        msg = "nothing";
+        //        //pnl_web.Visible = true;
+        //    }
+        //    else
+        //    {
+        //        msg = "data";
+        //        //pnl_web.Visible = false;
+        //    }
+        //}
         return msg;
     }
-    [WebMethod]
-    public static PageData[] getpage(string username, string websitename)
+    public static int GetWebsiteId(Guid userid, string username, string websitename)
     {
+        MyProjectDataContext da = new MyProjectDataContext();
+        int id = 0;
+        var q = from a in da.Websites
+                where a.UserId == userid && a.Username == username && a.WebsiteName == websitename
+                select a.WebsiteId;
+        if (q.Any())
+        {
+            id = Convert.ToInt32(q.Single());
+        }
+        return id;
+    }
+    [WebMethod]
+    public static PageData[] getpage(string username, string websitename, Guid userid)
+    {
+        //getting website id from tables
+        int websiteid = GetWebsiteId(userid, username, websitename);
+
+
         List<PageData> page = new List<PageData>();
         MyProjectDataContext da = new MyProjectDataContext();
-        var q = from a in da.SubPages
-                where a.UserName == username && a.WebsiteName == websitename
+        var q = from a in da.WebsitePages
+                where a.Username == username && a.WebsiteId == websiteid
                 select a;
         foreach (var o in q)
         {
             PageData pd = new PageData();
             pd.PageName = o.PageName;
-            pd.WebsiteName = o.WebsiteName;
+            pd.WebsiteName = websitename;
             page.Add(pd);
         }
         return page.ToArray();

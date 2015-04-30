@@ -1,12 +1,12 @@
 ﻿//var userid,websitename;
 var url = window.location.pathname + "/delete";
 var url2 = window.location.pathname + "/edit";
-function delete_data(userid, websitename) {
+function delete_data(userid, websitename,username) {
 
     $.ajax({
         type: "POST",
         url: url,
-        data: "{userid:'" + userid + "',websitename:'" + websitename + "'}",
+        data: "{userid:'" + userid + "',websitename:'" + websitename + "',username:'"+username+"'}",
         contentType: "application/json; charset=utf-8",
         datatype: "jsondata",
         async: "true",
@@ -45,7 +45,7 @@ function show(userid, username, websitename) {
             else
                 if (response.d == "data") {
                     document.getElementById("tbl_pages").style.display = "block";
-                    get_page_name(username, websitename);
+                    get_page_name(username, websitename,userid);
                 }
 
             //  alert(response.d);
@@ -207,7 +207,7 @@ function check(e) {
 //    }
 //});
 
-function get_page_name(username, websitename) {
+function get_page_name(username, websitename,userid) {
     $("#tbl_pages tbody tr").remove();
     $("#website_name a").remove();
 
@@ -215,7 +215,7 @@ function get_page_name(username, websitename) {
     $.ajax({
         type: "POST",
         url: url_get_page,
-        data: "{username:'" + username + "',websitename:'" + websitename + "'}",
+        data: "{username:'" + username + "',websitename:'" + websitename + "',userid:'"+userid+"'}",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
@@ -228,6 +228,40 @@ function get_page_name(username, websitename) {
                 //+ "<td>" + item.WebsiteName + "</td>"
                 + "</tr>";
                 $('#tbl_pages').append(rows);
+            }))
+        },
+        failure: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        },
+        error: function (response) {
+            document.getElementById("first_window").innerHTML = response.d;
+            show_modal("first_window");
+        }
+    });
+}
+function get_websites_name(username) {
+    $("#tbl_created_websites tbody tr").remove();
+   // $("#website_name a").remove();
+
+    var url_get_page = window.location.pathname + "/getwebsites";
+    $.ajax({
+        type: "POST",
+        url: url_get_page,
+        data: "{username:'" + username + "'}",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            ($.map(data.d, function (item) {
+                //  var url = "\'" + username + "\'" + "/" + "\'" + item.PageName + "\'";
+                //$("#website_name").append("<a href='#'>" + item.WebsiteName + "</a>");
+                var rows = "<tr>"
+                    + "<td>" + item.Name + "</td>"
+                + "<td>" + "<a class='btn' title='Edit your application name'><i class='fa fa-edit'></i></a></td>"
+                + "<td>" + "<a class='btn' title='Delete your application' onclick='if(confirm(Are you sure you want to delete website?)) delete(" + item.Name + ")'><i class='fa fa-times'></i></a></td>"
+                //+ "<td>" + item.WebsiteName + "</td>"
+                + "</tr>";
+                $('#tbl_created_websites').append(rows);
             }))
         },
         failure: function (response) {

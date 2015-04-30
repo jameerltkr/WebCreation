@@ -12,3 +12,7 @@ public class PageData
     public string WebsiteName{ get; set; }
 
 }
+public class WebsiteName
+{
+    public string Name { get; set; }
+}

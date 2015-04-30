@@ -242,7 +242,8 @@ public class datalayer
         string msg;
         try
         {
-            var q = GetWebsiteName(websitename,userid);
+            int websiteid = GetWebsiteId(userid, username, websitename);
+            var q = GetWebsiteName(websitename,userid,websiteid);
             if (q.Any())
             {
                 msg = Constants.WEBSITE_ALREADY_EXIST;
@@ -250,11 +251,17 @@ public class datalayer
             }
             else
             {
-                BodyContent bd = new BodyContent();
-                bd.UserName = username;
+                Website bd = new Website();
+                //bd.WebsiteId = websiteid;
+                bd.Username = username;
+                bd.UpdatedOn = DateTime.Now;
+                bd.CreatedOn = DateTime.Now;
+                bd.CreatedBy = username;
+                bd.UpdatedBy = username;
+                bd.IsDeleted = false;
                 bd.WebsiteName = websitename;
                 bd.UserId = userid;
-                da.BodyContents.InsertOnSubmit(bd);
+                da.Websites.InsertOnSubmit(bd);
                 da.SubmitChanges();
                 msg = Constants.SUCCESS;
                 return msg;
@@ -267,23 +274,40 @@ public class datalayer
             return msg;
         }
     }
-    public IEnumerable<BodyContent> GetWebsiteName(string name,Guid userid)
+    public IEnumerable<Website> GetWebsiteName(string name,Guid userid,int websiteid)
     {
-        var q = from a in da.BodyContents
-                where a.WebsiteName == name&&a.UserId==userid
+        var q = from a in da.Websites
+                where a.WebsiteName == name&&a.UserId==userid && a.WebsiteId == websiteid
                 select a;
         return q;
     }
+    public int GetWebsiteId(Guid userid, string username, string websitename)
+    {
+        int id = 0;
+        var q = from a in da.Websites
+                where a.UserId == userid && a.Username == username && a.WebsiteName == websitename
+                select a.WebsiteId;
+        if (q.Any())
+        {
+            id = Convert.ToInt32(q.Single());
+        }
+        return id;
+    }
     public bool SavePages(Guid userid, string username, string pagename, string websitename)
     {
-        SubPage sp = new SubPage();
-        sp.userid = userid;
+        int websiteid = GetWebsiteId(userid, username, websitename);
+        WebsitePage sp = new WebsitePage();
+        sp.UserId = userid;
         sp.PageName = pagename;
-        sp.UserName = username;
-        sp.WebsiteName = websitename;
+        sp.Username = username;
+        sp.CreatedBy = username;
+        sp.CreatedOn = DateTime.Now;
+        sp.UpdatedBy = username;
+        sp.UpdatedOn = DateTime.Now;
+        sp.WebsiteId = websiteid;
         try
         {
-            da.SubPages.InsertOnSubmit(sp);
+            da.WebsitePages.InsertOnSubmit(sp);
             da.SubmitChanges();
             return true;
         }
@@ -292,17 +316,17 @@ public class datalayer
             return false;
         }
     }
-    public IEnumerable<BodyContent> Retrieve_Website_Name(string email,string websitename)
+    public IEnumerable<Website> Retrieve_Website_Name(string email,string websitename)
     {
-        var q = from a in da.BodyContents
-                where a.UserName == email && a.WebsiteName == websitename
+        var q = from a in da.Websites
+                where a.Username == email && a.WebsiteName == websitename
                 select a;
         return q;
     }
-    public IEnumerable<BodyContent> Retrieve_Website(string username)
+    public IEnumerable<Website> Retrieve_Website(string username)
     {
-        var q = from a in da.BodyContents
-                where a.UserName == username
+        var q = from a in da.Websites
+                where a.Username == username && a.IsDeleted == false
                 select a;
         return q;
     }
@@ -318,12 +342,12 @@ public class datalayer
     public string Delete_Website(Guid userid, string websitename)
     {
         string delete = "";
-        var q = from a in da.BodyContents
+        var q = from a in da.Websites
                 where a.UserId == userid && a.WebsiteName == websitename
                 select a;
         foreach (var o in q)
         {
-            da.BodyContents.DeleteOnSubmit(o);
+            da.Websites.DeleteOnSubmit(o);
         }
         try
         {

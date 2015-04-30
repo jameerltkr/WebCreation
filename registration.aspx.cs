@@ -51,158 +51,114 @@ public partial class registration : System.Web.UI.Page
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
-        Guid key;
-        key = Guid.NewGuid();
-        Message m = new Message();
-        if (Session["captcha"].ToString() != txtCaptcha.Text)
+        if (CheckBox1.Checked == true)
         {
-            pnl_msg.Controls.Add(m.Error("Invalid captcha!"));
-        }
-        else
-        {
-
-            string username = Tname.Text.Trim();
-            string user_name = ConfigurationManager.AppSettings["Administrator"];
-            if (user_name == username)
+            Guid key;
+            key = Guid.NewGuid();
+            Message m = new Message();
+            if (Session["captcha"].ToString() != txtCaptcha.Text)
             {
-                string[] roles = Roles.GetRolesForUser(username);
-                foreach (string role in roles)
-                {
-                    if (role.Equals("Administrator"))
-                    {
-                        // Response.Redirect("admin/Home.aspx");
-                        pnl_msg.Controls.Add(m.Error("This user already exists!"));
-
-                    }
-                }
-                string[] admin_roles = Roles.GetAllRoles();
-                foreach (string role in admin_roles)
-                {
-                    if (role.Equals("Administrator"))
-                    {
-                        Roles.AddUserToRole(username, "Administrator");
-                        if (Register())
-                        {
-                            Guid userid;
-                            System.Web.Security.MembershipUser mu;
-                            mu = System.Web.Security.Membership.GetUser(username);
-                            userid = (Guid)mu.ProviderUserKey;
-                            admin_management admin = new admin_management();
-
-                            if (admin.AddAdmin(userid, username))
-                            {
-                                string name = Tname.Text.Trim();
-                                string email = Temail.Text.Trim();
-                                //string password = Tpassword.Text.Trim();
-                                string gender = Rblgender.Text.Trim();
-                                string s_ques = ddlsecurityQ.Text.Trim();
-                                string s_ans = TAnswer.Text.Trim();
-                                string dob = Tdob.Text.Trim();
-                                string mobileno = Tmobile.Text.Trim();
-                                string country = ddlcountry.Text.Trim();
-                                string city = Tcity.Text.Trim();
-                                string address = Taddress.Text.Trim();
-                                datalayer c = new datalayer();
-                                c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
-                                Response.Redirect("admin/Home.aspx");
-                            }
-                            else
-                            {
-                                pnl_msg.Controls.Add(m.Error("User can not created!"));
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Roles.CreateRole("Administrator");
-                        Roles.AddUserToRole(username, "Administrator");
-                        if (Register())
-                        {
-                            Guid userid;
-                            System.Web.Security.MembershipUser mu;
-                            mu = System.Web.Security.Membership.GetUser(username);
-                            userid = (Guid)mu.ProviderUserKey;
-                            admin_management admin = new admin_management();
-                            if (admin.AddAdmin(userid, username))
-                            {
-                                string name = Tname.Text.Trim();
-                                string email = Temail.Text.Trim();
-                                //string password = Tpassword.Text.Trim();
-                                string gender = Rblgender.Text.Trim();
-                                string s_ques = ddlsecurityQ.Text.Trim();
-                                string s_ans = TAnswer.Text.Trim();
-                                string dob = Tdob.Text.Trim();
-                                string mobileno = Tmobile.Text.Trim();
-                                string country = ddlcountry.Text.Trim();
-                                string city = Tcity.Text.Trim();
-                                string address = Taddress.Text.Trim();
-                                datalayer c = new datalayer();
-                                c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
-                                Response.Redirect("admin/Home.aspx");
-                            }
-                            else
-                            {
-                                pnl_msg.Controls.Add(m.Error("User can not created!"));
-                            }
-                        }
-                    }
-                }
-                Roles.CreateRole("Administrator");
-                Roles.AddUserToRole(username, "Administrator");
-                if (Register())
-                {
-                    Guid userid;
-                    System.Web.Security.MembershipUser mu;
-                    mu = System.Web.Security.Membership.GetUser(username);
-                    userid = (Guid)mu.ProviderUserKey;
-                    admin_management admin = new admin_management();
-                    if (admin.AddAdmin(userid, username))
-                    {
-                        string name = Tname.Text.Trim();
-                        string email = Temail.Text.Trim();
-                        //string password = Tpassword.Text.Trim();
-                        string gender = Rblgender.Text.Trim();
-                        string s_ques = ddlsecurityQ.Text.Trim();
-                        string s_ans = TAnswer.Text.Trim();
-                        string dob = Tdob.Text.Trim();
-                        string mobileno = Tmobile.Text.Trim();
-                        string country = ddlcountry.Text.Trim();
-                        string city = Tcity.Text.Trim();
-                        string address = Taddress.Text.Trim();
-                        datalayer c = new datalayer();
-                        c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
-                        Response.Redirect("admin/Home.aspx");
-                    }
-                    else
-                    {
-                        pnl_msg.Controls.Add(m.Error("User can not created!"));
-                        System.Web.Security.Membership.DeleteUser(username);
-                    }
-                }
+                pnl_msg.Controls.Add(m.Error("Invalid captcha!"));
             }
             else
             {
-                Account act = new Account();
-                if (Register())
+
+                string username = Tname.Text.Trim();
+                string user_name = ConfigurationManager.AppSettings["Administrator"];
+                if (user_name == username)
                 {
-                    Guid userid;
-                    System.Web.Security.MembershipUser mu;
-                    mu = System.Web.Security.Membership.GetUser(username);
-                    userid = (Guid)mu.ProviderUserKey;
-                    if (act.SaveActivationKey(userid, key))
+                    string[] roles = Roles.GetRolesForUser(username);
+                    foreach (string role in roles)
                     {
-                      //  Hash_Pass hash = new Hash_Pass();
-                       // string hash_pass = Hash_Pass.DESCryptoHelper.DESEncrypt(Tpassword.Text.Trim());
-                        var siteRoot = Request.Url.GetLeftPart(UriPartial.Authority) + VirtualPathUtility.ToAbsolute("~/");
-                        string activate_url = siteRoot + "ActivateAccount.aspx?key=" + key;
-                        string site_url = siteRoot;
-                        string web_design_url = siteRoot + "web-design/create.aspx";
-                        string hosting_url = siteRoot + "hosting/main.aspx";
-                        string help = siteRoot + "contact-us.html";
-                        string address = "Balaganj, Lucknow Up 226003</br> Web Creation Inc.";
-                        string password = Hash_Pass.DESCryptoHelper.DESDecrypt(Session[Constants.Session.PASSWORD].ToString());
-                        WMail mail = new WMail();
-                        if (mail.Send(Temail.Text.Trim(), "", "", Tname.Text.Trim(), password, activate_url, site_url, web_design_url, hosting_url, help, address))
+                        if (role.Equals("Administrator"))
+                        {
+                            // Response.Redirect("admin/Home.aspx");
+                            pnl_msg.Controls.Add(m.Error("This user already exists!"));
+
+                        }
+                    }
+                    string[] admin_roles = Roles.GetAllRoles();
+                    foreach (string role in admin_roles)
+                    {
+                        if (role.Equals("Administrator"))
+                        {
+                            Roles.AddUserToRole(username, "Administrator");
+                            if (Register())
+                            {
+                                Guid userid;
+                                System.Web.Security.MembershipUser mu;
+                                mu = System.Web.Security.Membership.GetUser(username);
+                                userid = (Guid)mu.ProviderUserKey;
+                                admin_management admin = new admin_management();
+
+                                if (admin.AddAdmin(userid, username))
+                                {
+                                    string name = Tname.Text.Trim();
+                                    string email = Temail.Text.Trim();
+                                    //string password = Tpassword.Text.Trim();
+                                    string gender = Rblgender.Text.Trim();
+                                    string s_ques = ddlsecurityQ.Text.Trim();
+                                    string s_ans = TAnswer.Text.Trim();
+                                    string dob = Tdob.Text.Trim();
+                                    string mobileno = Tmobile.Text.Trim();
+                                    string country = ddlcountry.Text.Trim();
+                                    string city = Tcity.Text.Trim();
+                                    string address = Taddress.Text.Trim();
+                                    datalayer c = new datalayer();
+                                    c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
+                                    Response.Redirect("admin/Home.aspx");
+                                }
+                                else
+                                {
+                                    pnl_msg.Controls.Add(m.Error("User can not created!"));
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Roles.CreateRole("Administrator");
+                            Roles.AddUserToRole(username, "Administrator");
+                            if (Register())
+                            {
+                                Guid userid;
+                                System.Web.Security.MembershipUser mu;
+                                mu = System.Web.Security.Membership.GetUser(username);
+                                userid = (Guid)mu.ProviderUserKey;
+                                admin_management admin = new admin_management();
+                                if (admin.AddAdmin(userid, username))
+                                {
+                                    string name = Tname.Text.Trim();
+                                    string email = Temail.Text.Trim();
+                                    //string password = Tpassword.Text.Trim();
+                                    string gender = Rblgender.Text.Trim();
+                                    string s_ques = ddlsecurityQ.Text.Trim();
+                                    string s_ans = TAnswer.Text.Trim();
+                                    string dob = Tdob.Text.Trim();
+                                    string mobileno = Tmobile.Text.Trim();
+                                    string country = ddlcountry.Text.Trim();
+                                    string city = Tcity.Text.Trim();
+                                    string address = Taddress.Text.Trim();
+                                    datalayer c = new datalayer();
+                                    c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
+                                    Response.Redirect("admin/Home.aspx");
+                                }
+                                else
+                                {
+                                    pnl_msg.Controls.Add(m.Error("User can not created!"));
+                                }
+                            }
+                        }
+                    }
+                    Roles.CreateRole("Administrator");
+                    Roles.AddUserToRole(username, "Administrator");
+                    if (Register())
+                    {
+                        Guid userid;
+                        System.Web.Security.MembershipUser mu;
+                        mu = System.Web.Security.Membership.GetUser(username);
+                        userid = (Guid)mu.ProviderUserKey;
+                        admin_management admin = new admin_management();
+                        if (admin.AddAdmin(userid, username))
                         {
                             string name = Tname.Text.Trim();
                             string email = Temail.Text.Trim();
@@ -214,26 +170,78 @@ public partial class registration : System.Web.UI.Page
                             string mobileno = Tmobile.Text.Trim();
                             string country = ddlcountry.Text.Trim();
                             string city = Tcity.Text.Trim();
-                            string user_address = Taddress.Text.Trim();
+                            string address = Taddress.Text.Trim();
                             datalayer c = new datalayer();
-                            c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, user_address);
-                            pnl_msg.Controls.Add(m.Error("An activation link has been sent to your email."));
-                            clear();
+                            c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, address);
+                            Response.Redirect("admin/Home.aspx");
+                        }
+                        else
+                        {
+                            pnl_msg.Controls.Add(m.Error("User can not created!"));
+                            System.Web.Security.Membership.DeleteUser(username);
                         }
                     }
-                    else
-                    {
-                        pnl_msg.Controls.Add(m.Error("An error occurred while sending mail."));
-                        System.Web.Security.Membership.DeleteUser(username);
-                    }
-                    // Response.Redirect("home.aspx");
                 }
                 else
                 {
-                    pnl_msg.Controls.Add(m.Error("An error occurred while processing your request."));
+                    Account act = new Account();
+                    if (Register())
+                    {
+                        Guid userid;
+                        System.Web.Security.MembershipUser mu;
+                        mu = System.Web.Security.Membership.GetUser(username);
+                        userid = (Guid)mu.ProviderUserKey;
+                        if (act.SaveActivationKey(userid, key))
+                        {
+                            //  Hash_Pass hash = new Hash_Pass();
+                            // string hash_pass = Hash_Pass.DESCryptoHelper.DESEncrypt(Tpassword.Text.Trim());
+                            var siteRoot = Request.Url.GetLeftPart(UriPartial.Authority) + VirtualPathUtility.ToAbsolute("~/");
+                            string activate_url = siteRoot + "ActivateAccount.aspx?key=" + key;
+                            string site_url = siteRoot;
+                            string web_design_url = siteRoot + "web-design/create.aspx";
+                            string hosting_url = siteRoot + "hosting/main.aspx";
+                            string help = siteRoot + "contact-us.html";
+                            string address = "Balaganj, Lucknow Up 226003</br> Web Creation Inc.";
+                            string password = Hash_Pass.DESCryptoHelper.DESDecrypt(Session[Constants.Session.PASSWORD].ToString());
+                            WMail mail = new WMail();
+                            if (mail.Send(Temail.Text.Trim(), "", "", Tname.Text.Trim(), password, activate_url, site_url, web_design_url, hosting_url, help, address))
+                            {
+                                string name = Tname.Text.Trim();
+                                string email = Temail.Text.Trim();
+                                //string password = Tpassword.Text.Trim();
+                                string gender = Rblgender.Text.Trim();
+                                string s_ques = ddlsecurityQ.Text.Trim();
+                                string s_ans = TAnswer.Text.Trim();
+                                string dob = Tdob.Text.Trim();
+                                string mobileno = Tmobile.Text.Trim();
+                                string country = ddlcountry.Text.Trim();
+                                string city = Tcity.Text.Trim();
+                                string user_address = Taddress.Text.Trim();
+                                datalayer c = new datalayer();
+                                c.Registration(name, email, gender, s_ques, s_ans, dob, mobileno, country, city, user_address);
+                                pnl_msg.Controls.Add(m.Error("An activation link has been sent to your email."));
+                                clear();
+                            }
+                        }
+                        else
+                        {
+                            pnl_msg.Controls.Add(m.Error("An error occurred while sending mail."));
+                            System.Web.Security.Membership.DeleteUser(username);
+                        }
+                        // Response.Redirect("home.aspx");
+                    }
+                    else
+                    {
+                        pnl_msg.Controls.Add(m.Error("An error occurred while processing your request."));
+                    }
                 }
-            }
 
+            }
+        }
+        else
+        {
+            lbl_message.ForeColor = System.Drawing.Color.Red;
+            lbl_message.Text = "Accept our terms and conditions.";
         }
     }
     public bool Register()
