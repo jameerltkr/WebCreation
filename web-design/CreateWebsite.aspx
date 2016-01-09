@@ -40,6 +40,7 @@
     <script src="../js/jquery-1.10.2.js"></script>
     <script src="js/controls.js"></script>
     <script src="js/delete.js"></script>
+    <script src="js/website-creation.js"></script>
     <style>
         .create-web-header {
             margin-top: 11px;
@@ -53,13 +54,58 @@
             display: block;
         }
     </style>
+
+    <!-- determine first visit of the user-->
+    <script type="text/javascript">
+        function CheckFirstVisit() {
+            // check cookie
+            var visited = $.cookie("visited")
+
+            if (visited == null) {
+                //   $('.newsletter_layer').show();
+                $.cookie('visited', 'yes');
+                alert($.cookie("visited"));
+            }
+
+            // set cookie
+            $.cookie('visited', 'yes', { expires: 1, path: '/' });
+        });
+    </script>
+    <!--   end of first user visiting -------------->
+    <script type="text/javascript">
+
+    </script>
+
+    <link href="../admin/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+    <link href="../admin/plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet" type="text/css" media='print' />
 </head>
-<body class="skin-blue" onload="get_websites_name('web_sa_admin')">
+<body class="skin-blue" onload="CheckFirstVisit()">
     <form id="form1" runat="server">
+        <asp:ScriptManager runat="server"></asp:ScriptManager>
+        <asp:HiddenField ID="hf_page_name" runat="server" />
+        <asp:HiddenField ID="hf_website_name" runat="server" />
+        <asp:HiddenField runat="server" ID="hf_db_id" />
+        <asp:HiddenField ID="hf_db_id_for_tbl" runat="server" />
+        <asp:HiddenField runat="server" ID="hf_website_preview" />
+        <asp:HiddenField runat="server" ID="hf_column_details" />
+        <%--<asp:HiddenField runat="server" ID="hf_database_id" />--%>
+        <asp:UpdatePanel runat="server">
+            <ContentTemplate>
+                <!--   these events are being clicked using javascript  --------------->
+                <asp:Button ID="btn_write_page" Style="display: none;" runat="server" Text="Create page" OnClick="btn_create_page_Click" />
+                <!-- this onclik event used to create page --------------->
+                <asp:Button ID="btn_edit_db" Style="display: none" runat="server" OnClick="btn_edit_db_Click" />
+                <!--   this onclikc event used to edit the database on user request---------------->
+
+                <!--   table mngment event   ---->
+                <asp:Button ID="btn_manage_tables" Style="display: none" runat="server" OnClick="btn_manage_tables_Click" />
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
         <div class="wrapper">
             <%--<uc1:header runat="server" ID="header" />--%>
             <!-- Header contents goes here  -->
-            <asp:ScriptManager runat="server"></asp:ScriptManager>
+
             <!-- side bar ends here-->
             <asp:UpdatePanel runat="server">
                 <ContentTemplate>
@@ -91,7 +137,10 @@
                             <i class="fa fa-gear btn btn-flat btn-success">  Project Settings</i>
                                 </asp:LinkButton>
                                 <nav style="float: right; margin-right: 30px;">
-                                    <asp:LinkButton runat="server" ID="lb_preview">
+                                    <asp:LinkButton runat="server" ID="lb_download_project">
+                                <i class="fa fa-download btn btn-flat btn-success"> Download Project</i>
+                                    </asp:LinkButton>
+                                    <asp:LinkButton runat="server" ID="lb_preview" OnClick="lb_preview_Click">
                                 <i class="fa fa-external-link-square btn btn-flat btn-success"> Preview</i>
                                     </asp:LinkButton>
                                 </nav>
@@ -100,19 +149,114 @@
                         </nav>
                     </header>
 
+                </ContentTemplate>
+            </asp:UpdatePanel>
+            <!--   end of header contents-->
 
-                    <!--   end of header contents-->
+            <!-- side bar starts here-->
+            <%--<uc1:sidebar runat="server" ID="sidebar" />--%>
+            <aside class="main-sidebar">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
+                    <div class="box-body">
+                        <div class="box-group" id="accordion">
+                            <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                            <div class="panel box box-success">
+                                <div class="box-header with-border">
+                                    <h4>
+                                        <a style="color: black;" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">HTML toolbox
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse">
+                                    <div id="external-events">
+                                        <div class="external-event bg-purple">Anchor (a)</div>
+                                        <div class="external-event bg-purple">Button</div>
+                                        <div class="external-event bg-purple">Div</div>
+                                        <div class="external-event bg-purple">Checkbox</div>
+                                        <div class="external-event bg-purple">Input (File)</div>
+                                        <div class="external-event bg-purple">Input (Text)</div>
+                                        <div class="external-event bg-purple">Input (Password)</div>
+                                        <div class="external-event bg-purple">Input (Radio)</div>
+                                        <div class="external-event bg-purple">Textarea</div>
+                                        <div class="external-event bg-purple">Table</div>
+                                        <div class="external-event bg-purple">Image</div>
+                                        <div class="external-event bg-purple">Select</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel box box-danger">
+                                <div class="box-header with-border">
+                                    <h4>
+                                        <a style="color: black;" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">ASP.Net toolbox
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse">
+                                    <div>
+                                        <div class="external-event bg-purple">Button</div>
+                                        <div class="external-event bg-purple">Calendar</div>
+                                        <div class="external-event bg-purple">Checkbox</div>
+                                        <div class="external-event bg-purple">CheckboxList</div>
+                                        <div class="external-event bg-purple">DropDownList</div>
+                                        <div class="external-event bg-purple">FileUpload</div>
+                                        <div class="external-event bg-purple">HyperLink</div>
+                                        <div class="external-event bg-purple">Image</div>
+                                        <div class="external-event bg-purple">ImageButton</div>
+                                        <div class="external-event bg-purple">Label</div>
+                                        <div class="external-event bg-purple">LinkButton</div>
+                                        <div class="external-event bg-purple">ListBox</div>
+                                        <div class="external-event bg-purple">Literal</div>
+                                        <div class="external-event bg-purple">Panel</div>
+                                        <div class="external-event bg-purple">RadioButton</div>
+                                        <div class="external-event bg-purple">RadioButtonList</div>
+                                        <div class="external-event bg-purple">Table</div>
+                                        <div class="external-event bg-purple">TextBox</div>
+                                        <div class="external-event bg-purple">GridView</div>
+                                        <%-- <div class="external-event bg-purple">Image</div>
+                                                <div class="external-event bg-purple">ImageButton</div>
+                                                <div class="external-event bg-purple">Label</div>
+                                                <div class="external-event bg-purple">LinkButton</div>
+                                                <div class="external-event bg-purple">ListBox</div>--%>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel box box-primary">
+                                <div class="box-header with-border">
+                                    <h4>
+                                        <a style="color: black;" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">UI templates
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseThree" class="panel-collapse collapse">
+                                    <div>
+                                        <div class="external-event bg-purple">Anchor (a)</div>
+                                        <div class="external-event bg-purple">Button</div>
+                                        <div class="external-event bg-purple">Div</div>
+                                        <div class="external-event bg-purple">Checkbox</div>
+                                        <div class="external-event bg-purple">Input (File)</div>
+                                        <div class="external-event bg-purple">Input (Text)</div>
+                                        <div class="external-event bg-purple">Input (Password)</div>
+                                        <div class="external-event bg-purple">Input (Radio)</div>
+                                        <div class="external-event bg-purple">Textarea</div>
+                                        <div class="external-event bg-purple">Table</div>
+                                        <div class="external-event bg-purple">Image</div>
+                                        <div class="external-event bg-purple">Select</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- side bar starts here-->
-                    <%--<uc1:sidebar runat="server" ID="sidebar" />--%>
-                    <aside class="main-sidebar">
-                        <!-- sidebar: style can be found in sidebar.less -->
-                        <section class="sidebar">
-                        </section>
-                        <!-- /.sidebar -->
-                    </aside>
+                    <div>
+                    </div>
+                </section>
+                <!-- /.sidebar -->
+            </aside>
 
 
+            <asp:UpdatePanel runat="server">
+                <ContentTemplate>
 
                     <div class="content-wrapper">
                         <!-- Content Header (Page header) -->
@@ -121,7 +265,8 @@
                             <div class="row">
                                 <!-- Main col -->
                                 <section class="col-lg-12 ">
-                                    <div class="box box-success">
+                                    <div class="box">
+                                        <iframe style="display: none; min-height: 500px; max-height: 100%;" id="iframe_edit_page" class="col-lg-12 "></iframe>
                                     </div>
                                 </section>
                             </div>
@@ -141,8 +286,15 @@
                                         HtmlTableCell cell_website_name = null;
                                         HtmlTableCell cell_edit_website = null;
                                         HtmlTableCell cell_delete_website = null;
+                                        //ddl_select_website.Items.Clear();
+                                        //ddl_select_website.Items.Insert(0, "Select");  // inserting at first position
                                         foreach (var a in q)
                                         {
+                                            //binding website list in drop down------------
+
+                                            //    ddl_select_website.Items.Add(a.WebsiteName);
+                                            //------------------------------------------
+
                                             row = new HtmlTableRow();
                                             cell_delete_website = new HtmlTableCell();
                                             cell_edit_website = new HtmlTableCell();
@@ -155,12 +307,11 @@
                                             row.Controls.Add(cell_website_name);
                                             row.Controls.Add(cell_edit_website);
                                             row.Controls.Add(cell_delete_website);
-                                            //  tbl_created_websites.Controls.Add(row);
+                                            tbl_created_websites.Controls.Add(row);
                                         }
                                     }
                                     
                                 %>
-                                <a onclick="javascript:if(confirm('heelo'))" class="btn">click</a>
                                 <!-- end of showing created websites on page-->
                                 <div runat="server" class=" display-none" id="create_website">
                                     <section class="col-lg-12">
@@ -171,14 +322,14 @@
                                                 <div class="box-body">
                                                     <div class="col-lg-4">
                                                         Website Name:<asp:TextBox runat="server" placeholder="Choose website name" class="form-control" ID="txt_websitename"></asp:TextBox><br />
-                                                        <asp:Button ID="btn_create_website" runat="server" OnClientClick="get_websites_name('web_sa_admin'); return false" Text="Create Website" OnClick="btn_create_website_Click" class="btn btn-block bg-maroon btn-flat" />
+                                                        <asp:Button ID="btn_create_website" runat="server" Text="Create Website" OnClick="btn_create_website_Click" class="btn btn-block bg-maroon btn-flat" />
                                                         <asp:Label runat="server" ID="lbl_message"></asp:Label>
                                                     </div>
                                                     <div class="col-lg-8">
                                                         <i class="fa fa-list"></i>
                                                         <h3 class="box-title">List of websites</h3>
                                                         <div class="box-body">
-                                                            <table id="tbl_created_websites" class="table table-bordered table-hover dataTable">
+                                                            <table id="tbl_created_websites" runat="server" class="table table-bordered table-hover dataTable">
                                                                 <thead>
                                                                     <tr>
                                                                         <th width="290">Website Name</th>
@@ -204,7 +355,7 @@
                                                                         "bAutoWidth": false
                                                                     });
                                                                 });
-    </script>
+                                                            </script>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -215,31 +366,192 @@
                             </div>
                             <div class="row">
                                 <div runat="server" class=" display-none" id="create_database">
-                                    <section class="col-lg-6">
+                                    <section class="col-lg-4">
                                         <div class="box box-primary">
                                             <div class="box-header">
                                                 <i class="fa fa-edit"></i>
                                                 <h3 class="box-title">Create Database</h3>
                                                 <div class="box-body">
                                                     <div class="col-lg-12">
+                                                        Enter Database Name:
+                                                        <asp:TextBox runat="server" ID="txt_database_name" placeholder="Database name" class="form-control"></asp:TextBox>
+                                                        Select Website:
+                                                        <img height="22" title="Select your website for which you want to create database." src="../img/question.jpg" />
+                                                        <asp:DropDownList runat="server" ID="ddl_select_website" class="form-control">
+                                                        </asp:DropDownList><br />
+                                                        <asp:Button runat="server" ID="btn_create_database" OnClick="btn_create_database_Click" Text="Create Database" class="btn btn-block bg-purple btn-flat" />
+                                                        <asp:Label runat="server" ID="lb_create_database_msg"></asp:Label>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </section>
-                                    <section class="col-lg-6">
-                                        <div class="box box-primary">
-                                            <div class="box-header">
-                                                <i class="fa fa-list"></i>
-                                                <h3 class="box-title">List of Databases</h3>
-                                                <div class="box-body">
-                                                    <div class="col-lg-12">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
+                                    <div runat="server" id="section_tbl_list" class="display-block">
+                                        <section class="col-lg-8">
+                                            <div class="box box-primary">
+                                                <div class="box-header">
+                                                    <i class="fa fa-list"></i>
+                                                    <h3 class="box-title">List of Databases</h3>
+                                                    <div class="box-body">
+                                                        <div class="col-lg-12">
+                                                            <%
+                                                                DatabaseManagement dbmanage = new DatabaseManagement();
+                                                                string username = "";
+                                                                if (Session[Constants.Session.USERNAME] != null)
+                                                                    username = Session[Constants.Session.USERNAME].ToString();
+                                                                else
+                                                                {
+                                                                    Response.Redirect("~/login.aspx");
+                                                                }
+                                                                var q = dbmanage.GetDatabaseListByUsername(username);
+                                                                HtmlTableRow row = null;
+                                                                HtmlTableCell cell_dbname = null;
+                                                                HtmlTableCell cell_edit = null;
+                                                                HtmlTableCell cell_delete = null;
+                                                                HtmlTableCell cell_website_name = null;
+                                                                HtmlTableCell cell_manage_tables = null;
 
+                                                                ImageButton a1 = null;
+                                                                ImageButton a2 = null;
+                                                                foreach (var a in q)
+                                                                {
+                                                                    row = new HtmlTableRow();
+                                                                    cell_dbname = new HtmlTableCell();
+                                                                    cell_edit = new HtmlTableCell();
+                                                                    cell_delete = new HtmlTableCell();
+                                                                    cell_website_name = new HtmlTableCell();
+                                                                    cell_manage_tables = new HtmlTableCell();
+                                                                    a2 = new ImageButton();
+                                                                    a1 = new ImageButton();
+                                                                    a1.Height = 15;
+                                                                    a2.Height = 15;
+                                                                    a1.Width = 16;
+                                                                    a2.Width = 16;
+                                                                    //a1.CssClass = "btn";
+                                                                    //a2.CssClass = "btn";
+
+                                                                    a1.ToolTip = "Edit your database.";
+                                                                    a2.ToolTip = "Delete database.";
+                                                                    a1.ImageUrl = "~/img/edit.png";
+                                                                    a2.ImageUrl = "~/img/delete.png";
+                                                                    tbl_database_list.Controls.Add(row);
+                                                                    row.Controls.Add(cell_dbname);
+                                                                    row.Controls.Add(cell_website_name);
+                                                                    row.Controls.Add(cell_manage_tables);
+                                                                    row.Controls.Add(cell_edit);
+                                                                    row.Controls.Add(cell_delete);
+                                                                    a1.OnClientClick = "edit_database('" + a.DatabaseId + "'); return false";
+                                                                    a2.OnClientClick = "if(confirm('Are you sure you want to delete database?')) delete_db('" + a.DatabaseId + "')";
+                                                                    cell_dbname.InnerHtml = a.DatabaseName;
+                                                                    cell_website_name.InnerHtml = a.WebsiteName;
+                                                                    cell_manage_tables.InnerHtml += "<a class='btn' onclick='manage_tables(" + a.DatabaseId + ")'><i class='fa fa-gear'></i></a>";
+                                                                    cell_manage_tables.InnerHtml += "[Total Tables = " + dbmanage.GetNumberOfTotalTableByDbId(a.DatabaseId) + "]";
+                                                                    cell_edit.Controls.Add(a1);
+                                                                    cell_delete.Controls.Add(a2);
+                                                                }
+                                                                   
+                                                            %>
+                                                            <table runat="server" id="tbl_database_list" class="table table-bordered table-hover dataTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="120">Database Name</th>
+                                                                        <th width="140">Created for (Website)</th>
+                                                                        <th width="190">Tables in DB</th>
+                                                                        <th>Edit</th>
+                                                                        <th>Delete</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </div>
+                                    <%
+                                        //Guid userid;
+                                        //System.Web.Security.MembershipUser mu;
+                                        //mu = System.Web.Security.Membership.GetUser();
+                                        //userid = (Guid)mu.ProviderUserKey;
+                                        //DatabaseManagement dbmanage = new DatabaseManagement();
+                                        //int dbid = hf_db_id_for_tbl.Value != "" ? Convert.ToInt32(hf_db_id_for_tbl.Value) : 0;
+                                        //if (hf_db_id_for_tbl.Value != "")
+                                        //{
+                                        //    var q = dbmanage.GetTableRecords(dbid, userid);
+                                        //    if (q.Any())
+                                        //    {
+                                        //        TableRow tr = null;
+                                        //        TableCell td_tablename = null;
+                                        //        LinkButton lb_tablename = null;
+                                        //        foreach (var a in q)
+                                        //        {
+                                        //            tr = new TableRow();
+                                        //            td_tablename = new TableCell();
+                                        //            lb_tablename = new LinkButton();
+                                        //            lb_tablename.Text = a.TableName;
+                                        //            td_tablename.Controls.Add(lb_tablename);
+                                        //            tr.Controls.Add(td_tablename);
+                                        //            tbl_table_detail.Controls.Add(tr);
+                                        //        }
+                                        //    }
+                                        //}
+                                    %>
+                                    <div runat="server" class="display-none" id="section_manage_tables">
+                                        <section class="col-lg-8">
+                                            <div class="box box-success">
+                                                <div class="box-header">
+                                                    <i class="fa fa-edit"></i>
+                                                    <h3 class="box-title">Manage Tables</h3>
+                                                    <div class="box-body">
+                                                        <!--  creating table in a particular database--------->
+                                                        <div class="col-lg-4">
+                                                            Choose table name:
+                                                    <asp:TextBox runat="server" ID="txt_table_name" class="form-control" placeholder="Table name"></asp:TextBox>
+                                                            Enter column name:
+                                                    <asp:TextBox runat="server" ID="txt_column_name" class="form-control" placeholder="Column name"></asp:TextBox>
+                                                            Data type:
+                                                    <%--<asp:TextBox runat="server" ID="txt_data_type" class="form-control" placeholder="Data type"></asp:TextBox>--%>
+                                                            <asp:DropDownList runat="server" ID="ddl_data_type" class="form-control">
+                                                                <asp:ListItem>Select</asp:ListItem>
+                                                                <asp:ListItem>varchar(50)</asp:ListItem>
+                                                                <asp:ListItem>varchar(100)</asp:ListItem>
+                                                                <asp:ListItem>int</asp:ListItem>
+                                                                <asp:ListItem>bit</asp:ListItem>
+                                                                <asp:ListItem>uniqueidentifier</asp:ListItem>
+                                                                <asp:ListItem>date</asp:ListItem>
+                                                                <asp:ListItem>datetime</asp:ListItem>
+                                                            </asp:DropDownList>
+                                                            <asp:Button runat="server" ID="btn_add_columns" Text="Add" class="btn btn-block bg-blue btn-flat" OnClick="btn_add_columns_Click" />
+                                                        </div>
+                                                        <br />
+                                                        <div class="col-lg-5">
+                                                            <asp:Button runat="server" ID="btn_create_table" class="btn btn-block bg-red btn-flat" Text="Create Table" OnClick="btn_create_table_Click" /><br />
+
+                                                            <div class="col-lg-6">
+                                                                <asp:Button ID="btn_save_table_manage" class="btn btn-block bg-purple btn-flat" runat="server" Text="Save" OnClick="btn_save_table_manage_Click" />
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <asp:Button ID="btn_cancel_table_manage" class="btn btn-block bg-gray btn-flat" runat="server" Text="Cancel" OnClick="btn_cancel_table_manage_Click" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3">
+
+                                                            <table runat="server" id="tbl_table_detail" class="table table-bordered table-hover dataTable">
+                                                                <thead>
+                                                                    <th>Table name</th>
+                                                                </thead>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="">
+                                                    <asp:Label runat="server" ID="lbl_create_table_msg"></asp:Label>
+                                                </div>
+                                            </div>
+
+                                        </section>
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -366,6 +678,17 @@
                                                 <h3 class="box-title">Pages</h3>
                                                 <div class="box-body">
                                                     <div class="col-lg-12">
+                                                        <%--<iframe style="display: none;" id="iframe_edit_page" height="450" width="855"></iframe>--%>
+                                                        <div id="website_div">
+                                                            <div runat="server" id="div_create_page">
+                                                                <!--<span>Page name:</span>-->
+                                                                <asp:TextBox Style="display: none;" runat="server" ID="txt_page_name"></asp:TextBox>
+
+                                                                <br />
+                                                                <asp:Button ID="Button1" Style="display: none;" runat="server" Text="Create page" OnClick="Button1_Click" />
+
+                                                            </div>
+                                                        </div>
                                                         <table id="tbl_pages" style="display: none;" class="table table-condensed">
                                                         </table>
                                                     </div>
@@ -423,5 +746,166 @@
     <script src="../admin/dist/js/pages/dashboard.js" type="text/javascript"></script>
     <!-- AdminLTE for demo purposes -->
     <script src="../admin/dist/js/demo.js" type="text/javascript"></script>
+    <script src="../js/jquery.js"></script>
+
+    <!-- fullCalendar 2.2.5 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
+    <script src="../admin/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            /* initialize the external events
+             -----------------------------------------------------------------*/
+            function ini_events(ele) {
+                ele.each(function () {
+
+                    // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                    // it doesn't need to have a start or end
+                    var eventObject = {
+                        title: $.trim($(this).text()) // use the element's text as the event title
+                    };
+
+                    // store the Event Object in the DOM element so we can get to it later
+                    $(this).data('eventObject', eventObject);
+
+                    // make the event draggable using jQuery UI
+                    $(this).draggable({
+                        zIndex: 1070,
+                        revert: true, // will cause the event to go back to its
+                        revertDuration: 0  //  original position after the drag
+                    });
+
+                });
+            }
+            ini_events($('#external-events div.external-event'));
+
+            /* initialize the calendar
+             -----------------------------------------------------------------*/
+            //Date for the calendar events (dummy data)
+            var date = new Date();
+            var d = date.getDate(),
+                    m = date.getMonth(),
+                    y = date.getFullYear();
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                buttonText: {
+                    today: 'today',
+                    month: 'month',
+                    week: 'week',
+                    day: 'day'
+                },
+                //Random default events
+                events: [
+                  {
+                      title: 'All Day Event',
+                      start: new Date(y, m, 1),
+                      backgroundColor: "#f56954", //red
+                      borderColor: "#f56954" //red
+                  },
+                  {
+                      title: 'Long Event',
+                      start: new Date(y, m, d - 5),
+                      end: new Date(y, m, d - 2),
+                      backgroundColor: "#f39c12", //yellow
+                      borderColor: "#f39c12" //yellow
+                  },
+                  {
+                      title: 'Meeting',
+                      start: new Date(y, m, d, 10, 30),
+                      allDay: false,
+                      backgroundColor: "#0073b7", //Blue
+                      borderColor: "#0073b7" //Blue
+                  },
+                  {
+                      title: 'Lunch',
+                      start: new Date(y, m, d, 12, 0),
+                      end: new Date(y, m, d, 14, 0),
+                      allDay: false,
+                      backgroundColor: "#00c0ef", //Info (aqua)
+                      borderColor: "#00c0ef" //Info (aqua)
+                  },
+                  {
+                      title: 'Birthday Party',
+                      start: new Date(y, m, d + 1, 19, 0),
+                      end: new Date(y, m, d + 1, 22, 30),
+                      allDay: false,
+                      backgroundColor: "#00a65a", //Success (green)
+                      borderColor: "#00a65a" //Success (green)
+                  },
+                  {
+                      title: 'Click for Google',
+                      start: new Date(y, m, 28),
+                      end: new Date(y, m, 29),
+                      url: 'http://google.com/',
+                      backgroundColor: "#3c8dbc", //Primary (light-blue)
+                      borderColor: "#3c8dbc" //Primary (light-blue)
+                  }
+                ],
+                editable: true,
+                droppable: true, // this allows things to be dropped onto the calendar !!!
+                drop: function (date, allDay) { // this function is called when something is dropped
+
+                    // retrieve the dropped element's stored Event Object
+                    var originalEventObject = $(this).data('eventObject');
+
+                    // we need to copy it, so that multiple events don't have a reference to the same object
+                    var copiedEventObject = $.extend({}, originalEventObject);
+
+                    // assign it the date that was reported
+                    copiedEventObject.start = date;
+                    copiedEventObject.allDay = allDay;
+                    copiedEventObject.backgroundColor = $(this).css("background-color");
+                    copiedEventObject.borderColor = $(this).css("border-color");
+
+                    // render the event on the calendar
+                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+                    // is the "remove after drop" checkbox checked?
+                    if ($('#drop-remove').is(':checked')) {
+                        // if so, remove the element from the "Draggable Events" list
+                        $(this).remove();
+                    }
+
+                }
+            });
+
+            /* ADDING EVENTS */
+            var currColor = "#3c8dbc"; //Red by default
+            //Color chooser button
+            var colorChooser = $("#color-chooser-btn");
+            $("#color-chooser > li > a").click(function (e) {
+                e.preventDefault();
+                //Save color
+                currColor = $(this).css("color");
+                //Add color effect to button
+                $('#add-new-event').css({ "background-color": currColor, "border-color": currColor });
+            });
+            $("#add-new-event").click(function (e) {
+                e.preventDefault();
+                //Get value and make sure it is not null
+                var val = $("#new-event").val();
+                if (val.length == 0) {
+                    return;
+                }
+
+                //Create events
+                var event = $("<div />");
+                event.css({ "background-color": currColor, "border-color": currColor, "color": "#fff" }).addClass("external-event");
+                event.html(val);
+                $('#external-events').prepend(event);
+
+                //Add draggable funtionality
+                ini_events(event);
+
+                //Remove event from text input
+                $("#new-event").val("");
+            });
+        });
+    </script>
 </body>
 </html>

@@ -107,6 +107,15 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
   partial void InsertWebsitePage(WebsitePage instance);
   partial void UpdateWebsitePage(WebsitePage instance);
   partial void DeleteWebsitePage(WebsitePage instance);
+  partial void InsertDatabaseDetail(DatabaseDetail instance);
+  partial void UpdateDatabaseDetail(DatabaseDetail instance);
+  partial void DeleteDatabaseDetail(DatabaseDetail instance);
+  partial void InsertTableDetail(TableDetail instance);
+  partial void UpdateTableDetail(TableDetail instance);
+  partial void DeleteTableDetail(TableDetail instance);
+  partial void InsertTableColumnDetail(TableColumnDetail instance);
+  partial void UpdateTableColumnDetail(TableColumnDetail instance);
+  partial void DeleteTableColumnDetail(TableColumnDetail instance);
   #endregion
 	
 	public MyProjectDataContext() : 
@@ -344,6 +353,30 @@ public partial class MyProjectDataContext : System.Data.Linq.DataContext
 		get
 		{
 			return this.GetTable<WebsitePage>();
+		}
+	}
+	
+	public System.Data.Linq.Table<DatabaseDetail> DatabaseDetails
+	{
+		get
+		{
+			return this.GetTable<DatabaseDetail>();
+		}
+	}
+	
+	public System.Data.Linq.Table<TableDetail> TableDetails
+	{
+		get
+		{
+			return this.GetTable<TableDetail>();
+		}
+	}
+	
+	public System.Data.Linq.Table<TableColumnDetail> TableColumnDetails
+	{
+		get
+		{
+			return this.GetTable<TableColumnDetail>();
 		}
 	}
 	
@@ -2266,6 +2299,12 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 	
 	private EntitySet<Website> _Websites;
 	
+	private EntitySet<DatabaseDetail> _DatabaseDetails;
+	
+	private EntitySet<TableDetail> _TableDetails;
+	
+	private EntitySet<TableColumnDetail> _TableColumnDetails;
+	
 	private EntityRef<aspnet_Application> _aspnet_Application;
 	
 	private EntityRef<aspnet_User> _aspnet_User;
@@ -2325,6 +2364,9 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 		this._SiteUsers = new EntitySet<SiteUser>(new Action<SiteUser>(this.attach_SiteUsers), new Action<SiteUser>(this.detach_SiteUsers));
 		this._ActivateUsers = new EntitySet<ActivateUser>(new Action<ActivateUser>(this.attach_ActivateUsers), new Action<ActivateUser>(this.detach_ActivateUsers));
 		this._Websites = new EntitySet<Website>(new Action<Website>(this.attach_Websites), new Action<Website>(this.detach_Websites));
+		this._DatabaseDetails = new EntitySet<DatabaseDetail>(new Action<DatabaseDetail>(this.attach_DatabaseDetails), new Action<DatabaseDetail>(this.detach_DatabaseDetails));
+		this._TableDetails = new EntitySet<TableDetail>(new Action<TableDetail>(this.attach_TableDetails), new Action<TableDetail>(this.detach_TableDetails));
+		this._TableColumnDetails = new EntitySet<TableColumnDetail>(new Action<TableColumnDetail>(this.attach_TableColumnDetails), new Action<TableColumnDetail>(this.detach_TableColumnDetails));
 		this._aspnet_Application = default(EntityRef<aspnet_Application>);
 		this._aspnet_User = default(EntityRef<aspnet_User>);
 		OnCreated();
@@ -2823,6 +2865,45 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_DatabaseDetail", Storage="_DatabaseDetails", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<DatabaseDetail> DatabaseDetails
+	{
+		get
+		{
+			return this._DatabaseDetails;
+		}
+		set
+		{
+			this._DatabaseDetails.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_TableDetail", Storage="_TableDetails", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<TableDetail> TableDetails
+	{
+		get
+		{
+			return this._TableDetails;
+		}
+		set
+		{
+			this._TableDetails.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_TableColumnDetail", Storage="_TableColumnDetails", ThisKey="UserId", OtherKey="UserId")]
+	public EntitySet<TableColumnDetail> TableColumnDetails
+	{
+		get
+		{
+			return this._TableColumnDetails;
+		}
+		set
+		{
+			this._TableColumnDetails.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Application_aspnet_Membership", Storage="_aspnet_Application", ThisKey="ApplicationId", OtherKey="ApplicationId", IsForeignKey=true)]
 	public aspnet_Application aspnet_Application
 	{
@@ -2966,6 +3047,42 @@ public partial class aspnet_Membership : INotifyPropertyChanging, INotifyPropert
 	}
 	
 	private void detach_Websites(Website entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = null;
+	}
+	
+	private void attach_DatabaseDetails(DatabaseDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = this;
+	}
+	
+	private void detach_DatabaseDetails(DatabaseDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = null;
+	}
+	
+	private void attach_TableDetails(TableDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = this;
+	}
+	
+	private void detach_TableDetails(TableDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = null;
+	}
+	
+	private void attach_TableColumnDetails(TableColumnDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.aspnet_Membership = this;
+	}
+	
+	private void detach_TableColumnDetails(TableColumnDetail entity)
 	{
 		this.SendPropertyChanging();
 		entity.aspnet_Membership = null;
@@ -6823,6 +6940,8 @@ public partial class Website : INotifyPropertyChanging, INotifyPropertyChanged
 	
 	private EntitySet<WebsitePage> _WebsitePages;
 	
+	private EntitySet<DatabaseDetail> _DatabaseDetails;
+	
 	private EntityRef<aspnet_Membership> _aspnet_Membership;
 	
     #region Extensibility Method Definitions
@@ -6852,6 +6971,7 @@ public partial class Website : INotifyPropertyChanging, INotifyPropertyChanged
 	public Website()
 	{
 		this._WebsitePages = new EntitySet<WebsitePage>(new Action<WebsitePage>(this.attach_WebsitePages), new Action<WebsitePage>(this.detach_WebsitePages));
+		this._DatabaseDetails = new EntitySet<DatabaseDetail>(new Action<DatabaseDetail>(this.attach_DatabaseDetails), new Action<DatabaseDetail>(this.detach_DatabaseDetails));
 		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
 		OnCreated();
 	}
@@ -7053,6 +7173,19 @@ public partial class Website : INotifyPropertyChanging, INotifyPropertyChanged
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Website_DatabaseDetail", Storage="_DatabaseDetails", ThisKey="WebsiteId", OtherKey="DbForWebsiteId")]
+	public EntitySet<DatabaseDetail> DatabaseDetails
+	{
+		get
+		{
+			return this._DatabaseDetails;
+		}
+		set
+		{
+			this._DatabaseDetails.Assign(value);
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_Website", Storage="_aspnet_Membership", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
 	public aspnet_Membership aspnet_Membership
 	{
@@ -7114,6 +7247,18 @@ public partial class Website : INotifyPropertyChanging, INotifyPropertyChanged
 	}
 	
 	private void detach_WebsitePages(WebsitePage entity)
+	{
+		this.SendPropertyChanging();
+		entity.Website = null;
+	}
+	
+	private void attach_DatabaseDetails(DatabaseDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.Website = this;
+	}
+	
+	private void detach_DatabaseDetails(DatabaseDetail entity)
 	{
 		this.SendPropertyChanging();
 		entity.Website = null;
@@ -7390,6 +7535,974 @@ public partial class WebsitePage : INotifyPropertyChanging, INotifyPropertyChang
 					this._WebsiteId = default(Nullable<int>);
 				}
 				this.SendPropertyChanged("Website");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DatabaseDetails")]
+public partial class DatabaseDetail : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _DatabaseId;
+	
+	private string _DatabaseName;
+	
+	private System.Nullable<int> _DbForWebsiteId;
+	
+	private string _WebsiteName;
+	
+	private System.Nullable<System.Guid> _UserId;
+	
+	private string _Username;
+	
+	private string _CreatedBy;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private EntitySet<TableDetail> _TableDetails;
+	
+	private EntityRef<aspnet_Membership> _aspnet_Membership;
+	
+	private EntityRef<Website> _Website;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnDatabaseIdChanging(int value);
+    partial void OnDatabaseIdChanged();
+    partial void OnDatabaseNameChanging(string value);
+    partial void OnDatabaseNameChanged();
+    partial void OnDbForWebsiteIdChanging(System.Nullable<int> value);
+    partial void OnDbForWebsiteIdChanged();
+    partial void OnWebsiteNameChanging(string value);
+    partial void OnWebsiteNameChanged();
+    partial void OnUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnUserIdChanged();
+    partial void OnUsernameChanging(string value);
+    partial void OnUsernameChanged();
+    partial void OnCreatedByChanging(string value);
+    partial void OnCreatedByChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    #endregion
+	
+	public DatabaseDetail()
+	{
+		this._TableDetails = new EntitySet<TableDetail>(new Action<TableDetail>(this.attach_TableDetails), new Action<TableDetail>(this.detach_TableDetails));
+		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
+		this._Website = default(EntityRef<Website>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DatabaseId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int DatabaseId
+	{
+		get
+		{
+			return this._DatabaseId;
+		}
+		set
+		{
+			if ((this._DatabaseId != value))
+			{
+				this.OnDatabaseIdChanging(value);
+				this.SendPropertyChanging();
+				this._DatabaseId = value;
+				this.SendPropertyChanged("DatabaseId");
+				this.OnDatabaseIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DatabaseName", DbType="VarChar(30)")]
+	public string DatabaseName
+	{
+		get
+		{
+			return this._DatabaseName;
+		}
+		set
+		{
+			if ((this._DatabaseName != value))
+			{
+				this.OnDatabaseNameChanging(value);
+				this.SendPropertyChanging();
+				this._DatabaseName = value;
+				this.SendPropertyChanged("DatabaseName");
+				this.OnDatabaseNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DbForWebsiteId", DbType="Int")]
+	public System.Nullable<int> DbForWebsiteId
+	{
+		get
+		{
+			return this._DbForWebsiteId;
+		}
+		set
+		{
+			if ((this._DbForWebsiteId != value))
+			{
+				if (this._Website.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnDbForWebsiteIdChanging(value);
+				this.SendPropertyChanging();
+				this._DbForWebsiteId = value;
+				this.SendPropertyChanged("DbForWebsiteId");
+				this.OnDbForWebsiteIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WebsiteName", DbType="VarChar(50)")]
+	public string WebsiteName
+	{
+		get
+		{
+			return this._WebsiteName;
+		}
+		set
+		{
+			if ((this._WebsiteName != value))
+			{
+				this.OnWebsiteNameChanging(value);
+				this.SendPropertyChanging();
+				this._WebsiteName = value;
+				this.SendPropertyChanged("WebsiteName");
+				this.OnWebsiteNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_Membership.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Username", DbType="VarChar(50)")]
+	public string Username
+	{
+		get
+		{
+			return this._Username;
+		}
+		set
+		{
+			if ((this._Username != value))
+			{
+				this.OnUsernameChanging(value);
+				this.SendPropertyChanging();
+				this._Username = value;
+				this.SendPropertyChanged("Username");
+				this.OnUsernameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="VarChar(50)")]
+	public string CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseDetail_TableDetail", Storage="_TableDetails", ThisKey="DatabaseId", OtherKey="DatabaseId")]
+	public EntitySet<TableDetail> TableDetails
+	{
+		get
+		{
+			return this._TableDetails;
+		}
+		set
+		{
+			this._TableDetails.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_DatabaseDetail", Storage="_aspnet_Membership", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_Membership aspnet_Membership
+	{
+		get
+		{
+			return this._aspnet_Membership.Entity;
+		}
+		set
+		{
+			aspnet_Membership previousValue = this._aspnet_Membership.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_Membership.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_Membership.Entity = null;
+					previousValue.DatabaseDetails.Remove(this);
+				}
+				this._aspnet_Membership.Entity = value;
+				if ((value != null))
+				{
+					value.DatabaseDetails.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_Membership");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Website_DatabaseDetail", Storage="_Website", ThisKey="DbForWebsiteId", OtherKey="WebsiteId", IsForeignKey=true)]
+	public Website Website
+	{
+		get
+		{
+			return this._Website.Entity;
+		}
+		set
+		{
+			Website previousValue = this._Website.Entity;
+			if (((previousValue != value) 
+						|| (this._Website.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._Website.Entity = null;
+					previousValue.DatabaseDetails.Remove(this);
+				}
+				this._Website.Entity = value;
+				if ((value != null))
+				{
+					value.DatabaseDetails.Add(this);
+					this._DbForWebsiteId = value.WebsiteId;
+				}
+				else
+				{
+					this._DbForWebsiteId = default(Nullable<int>);
+				}
+				this.SendPropertyChanged("Website");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_TableDetails(TableDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.DatabaseDetail = this;
+	}
+	
+	private void detach_TableDetails(TableDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.DatabaseDetail = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TableDetails")]
+public partial class TableDetail : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _TableId;
+	
+	private string _TableName;
+	
+	private System.Nullable<int> _DatabaseId;
+	
+	private string _WebsiteName;
+	
+	private System.Nullable<System.DateTime> _CreatedOn;
+	
+	private string _CreatedBy;
+	
+	private System.Nullable<System.DateTime> _UpdatedOn;
+	
+	private System.Nullable<System.Guid> _UserId;
+	
+	private EntitySet<TableColumnDetail> _TableColumnDetails;
+	
+	private EntityRef<aspnet_Membership> _aspnet_Membership;
+	
+	private EntityRef<DatabaseDetail> _DatabaseDetail;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnTableIdChanging(int value);
+    partial void OnTableIdChanged();
+    partial void OnTableNameChanging(string value);
+    partial void OnTableNameChanged();
+    partial void OnDatabaseIdChanging(System.Nullable<int> value);
+    partial void OnDatabaseIdChanged();
+    partial void OnWebsiteNameChanging(string value);
+    partial void OnWebsiteNameChanged();
+    partial void OnCreatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnCreatedOnChanged();
+    partial void OnCreatedByChanging(string value);
+    partial void OnCreatedByChanged();
+    partial void OnUpdatedOnChanging(System.Nullable<System.DateTime> value);
+    partial void OnUpdatedOnChanged();
+    partial void OnUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnUserIdChanged();
+    #endregion
+	
+	public TableDetail()
+	{
+		this._TableColumnDetails = new EntitySet<TableColumnDetail>(new Action<TableColumnDetail>(this.attach_TableColumnDetails), new Action<TableColumnDetail>(this.detach_TableColumnDetails));
+		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
+		this._DatabaseDetail = default(EntityRef<DatabaseDetail>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int TableId
+	{
+		get
+		{
+			return this._TableId;
+		}
+		set
+		{
+			if ((this._TableId != value))
+			{
+				this.OnTableIdChanging(value);
+				this.SendPropertyChanging();
+				this._TableId = value;
+				this.SendPropertyChanged("TableId");
+				this.OnTableIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableName", DbType="VarChar(50)")]
+	public string TableName
+	{
+		get
+		{
+			return this._TableName;
+		}
+		set
+		{
+			if ((this._TableName != value))
+			{
+				this.OnTableNameChanging(value);
+				this.SendPropertyChanging();
+				this._TableName = value;
+				this.SendPropertyChanged("TableName");
+				this.OnTableNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DatabaseId", DbType="Int")]
+	public System.Nullable<int> DatabaseId
+	{
+		get
+		{
+			return this._DatabaseId;
+		}
+		set
+		{
+			if ((this._DatabaseId != value))
+			{
+				if (this._DatabaseDetail.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnDatabaseIdChanging(value);
+				this.SendPropertyChanging();
+				this._DatabaseId = value;
+				this.SendPropertyChanged("DatabaseId");
+				this.OnDatabaseIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_WebsiteName", DbType="VarChar(50)")]
+	public string WebsiteName
+	{
+		get
+		{
+			return this._WebsiteName;
+		}
+		set
+		{
+			if ((this._WebsiteName != value))
+			{
+				this.OnWebsiteNameChanging(value);
+				this.SendPropertyChanging();
+				this._WebsiteName = value;
+				this.SendPropertyChanged("WebsiteName");
+				this.OnWebsiteNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> CreatedOn
+	{
+		get
+		{
+			return this._CreatedOn;
+		}
+		set
+		{
+			if ((this._CreatedOn != value))
+			{
+				this.OnCreatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedOn = value;
+				this.SendPropertyChanged("CreatedOn");
+				this.OnCreatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CreatedBy", DbType="VarChar(50)")]
+	public string CreatedBy
+	{
+		get
+		{
+			return this._CreatedBy;
+		}
+		set
+		{
+			if ((this._CreatedBy != value))
+			{
+				this.OnCreatedByChanging(value);
+				this.SendPropertyChanging();
+				this._CreatedBy = value;
+				this.SendPropertyChanged("CreatedBy");
+				this.OnCreatedByChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UpdatedOn", DbType="DateTime")]
+	public System.Nullable<System.DateTime> UpdatedOn
+	{
+		get
+		{
+			return this._UpdatedOn;
+		}
+		set
+		{
+			if ((this._UpdatedOn != value))
+			{
+				this.OnUpdatedOnChanging(value);
+				this.SendPropertyChanging();
+				this._UpdatedOn = value;
+				this.SendPropertyChanged("UpdatedOn");
+				this.OnUpdatedOnChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_Membership.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TableDetail_TableColumnDetail", Storage="_TableColumnDetails", ThisKey="TableId", OtherKey="TableId")]
+	public EntitySet<TableColumnDetail> TableColumnDetails
+	{
+		get
+		{
+			return this._TableColumnDetails;
+		}
+		set
+		{
+			this._TableColumnDetails.Assign(value);
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_TableDetail", Storage="_aspnet_Membership", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_Membership aspnet_Membership
+	{
+		get
+		{
+			return this._aspnet_Membership.Entity;
+		}
+		set
+		{
+			aspnet_Membership previousValue = this._aspnet_Membership.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_Membership.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_Membership.Entity = null;
+					previousValue.TableDetails.Remove(this);
+				}
+				this._aspnet_Membership.Entity = value;
+				if ((value != null))
+				{
+					value.TableDetails.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_Membership");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="DatabaseDetail_TableDetail", Storage="_DatabaseDetail", ThisKey="DatabaseId", OtherKey="DatabaseId", IsForeignKey=true)]
+	public DatabaseDetail DatabaseDetail
+	{
+		get
+		{
+			return this._DatabaseDetail.Entity;
+		}
+		set
+		{
+			DatabaseDetail previousValue = this._DatabaseDetail.Entity;
+			if (((previousValue != value) 
+						|| (this._DatabaseDetail.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._DatabaseDetail.Entity = null;
+					previousValue.TableDetails.Remove(this);
+				}
+				this._DatabaseDetail.Entity = value;
+				if ((value != null))
+				{
+					value.TableDetails.Add(this);
+					this._DatabaseId = value.DatabaseId;
+				}
+				else
+				{
+					this._DatabaseId = default(Nullable<int>);
+				}
+				this.SendPropertyChanged("DatabaseDetail");
+			}
+		}
+	}
+	
+	public event PropertyChangingEventHandler PropertyChanging;
+	
+	public event PropertyChangedEventHandler PropertyChanged;
+	
+	protected virtual void SendPropertyChanging()
+	{
+		if ((this.PropertyChanging != null))
+		{
+			this.PropertyChanging(this, emptyChangingEventArgs);
+		}
+	}
+	
+	protected virtual void SendPropertyChanged(String propertyName)
+	{
+		if ((this.PropertyChanged != null))
+		{
+			this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+		}
+	}
+	
+	private void attach_TableColumnDetails(TableColumnDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.TableDetail = this;
+	}
+	
+	private void detach_TableColumnDetails(TableColumnDetail entity)
+	{
+		this.SendPropertyChanging();
+		entity.TableDetail = null;
+	}
+}
+
+[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.TableColumnDetails")]
+public partial class TableColumnDetail : INotifyPropertyChanging, INotifyPropertyChanged
+{
+	
+	private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+	
+	private int _ColumnId;
+	
+	private System.Nullable<int> _TableId;
+	
+	private string _TableName;
+	
+	private string _ColumnName;
+	
+	private string _ColumnDataType;
+	
+	private System.Nullable<System.Guid> _UserId;
+	
+	private EntityRef<aspnet_Membership> _aspnet_Membership;
+	
+	private EntityRef<TableDetail> _TableDetail;
+	
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnColumnIdChanging(int value);
+    partial void OnColumnIdChanged();
+    partial void OnTableIdChanging(System.Nullable<int> value);
+    partial void OnTableIdChanged();
+    partial void OnTableNameChanging(string value);
+    partial void OnTableNameChanged();
+    partial void OnColumnNameChanging(string value);
+    partial void OnColumnNameChanged();
+    partial void OnColumnDataTypeChanging(string value);
+    partial void OnColumnDataTypeChanged();
+    partial void OnUserIdChanging(System.Nullable<System.Guid> value);
+    partial void OnUserIdChanged();
+    #endregion
+	
+	public TableColumnDetail()
+	{
+		this._aspnet_Membership = default(EntityRef<aspnet_Membership>);
+		this._TableDetail = default(EntityRef<TableDetail>);
+		OnCreated();
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnId", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+	public int ColumnId
+	{
+		get
+		{
+			return this._ColumnId;
+		}
+		set
+		{
+			if ((this._ColumnId != value))
+			{
+				this.OnColumnIdChanging(value);
+				this.SendPropertyChanging();
+				this._ColumnId = value;
+				this.SendPropertyChanged("ColumnId");
+				this.OnColumnIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableId", DbType="Int")]
+	public System.Nullable<int> TableId
+	{
+		get
+		{
+			return this._TableId;
+		}
+		set
+		{
+			if ((this._TableId != value))
+			{
+				if (this._TableDetail.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnTableIdChanging(value);
+				this.SendPropertyChanging();
+				this._TableId = value;
+				this.SendPropertyChanged("TableId");
+				this.OnTableIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableName", DbType="VarChar(50)")]
+	public string TableName
+	{
+		get
+		{
+			return this._TableName;
+		}
+		set
+		{
+			if ((this._TableName != value))
+			{
+				this.OnTableNameChanging(value);
+				this.SendPropertyChanging();
+				this._TableName = value;
+				this.SendPropertyChanged("TableName");
+				this.OnTableNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnName", DbType="VarChar(50)")]
+	public string ColumnName
+	{
+		get
+		{
+			return this._ColumnName;
+		}
+		set
+		{
+			if ((this._ColumnName != value))
+			{
+				this.OnColumnNameChanging(value);
+				this.SendPropertyChanging();
+				this._ColumnName = value;
+				this.SendPropertyChanged("ColumnName");
+				this.OnColumnNameChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnDataType", DbType="VarChar(50)")]
+	public string ColumnDataType
+	{
+		get
+		{
+			return this._ColumnDataType;
+		}
+		set
+		{
+			if ((this._ColumnDataType != value))
+			{
+				this.OnColumnDataTypeChanging(value);
+				this.SendPropertyChanging();
+				this._ColumnDataType = value;
+				this.SendPropertyChanged("ColumnDataType");
+				this.OnColumnDataTypeChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UserId", DbType="UniqueIdentifier")]
+	public System.Nullable<System.Guid> UserId
+	{
+		get
+		{
+			return this._UserId;
+		}
+		set
+		{
+			if ((this._UserId != value))
+			{
+				if (this._aspnet_Membership.HasLoadedOrAssignedValue)
+				{
+					throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+				}
+				this.OnUserIdChanging(value);
+				this.SendPropertyChanging();
+				this._UserId = value;
+				this.SendPropertyChanged("UserId");
+				this.OnUserIdChanged();
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="aspnet_Membership_TableColumnDetail", Storage="_aspnet_Membership", ThisKey="UserId", OtherKey="UserId", IsForeignKey=true)]
+	public aspnet_Membership aspnet_Membership
+	{
+		get
+		{
+			return this._aspnet_Membership.Entity;
+		}
+		set
+		{
+			aspnet_Membership previousValue = this._aspnet_Membership.Entity;
+			if (((previousValue != value) 
+						|| (this._aspnet_Membership.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._aspnet_Membership.Entity = null;
+					previousValue.TableColumnDetails.Remove(this);
+				}
+				this._aspnet_Membership.Entity = value;
+				if ((value != null))
+				{
+					value.TableColumnDetails.Add(this);
+					this._UserId = value.UserId;
+				}
+				else
+				{
+					this._UserId = default(Nullable<System.Guid>);
+				}
+				this.SendPropertyChanged("aspnet_Membership");
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.AssociationAttribute(Name="TableDetail_TableColumnDetail", Storage="_TableDetail", ThisKey="TableId", OtherKey="TableId", IsForeignKey=true)]
+	public TableDetail TableDetail
+	{
+		get
+		{
+			return this._TableDetail.Entity;
+		}
+		set
+		{
+			TableDetail previousValue = this._TableDetail.Entity;
+			if (((previousValue != value) 
+						|| (this._TableDetail.HasLoadedOrAssignedValue == false)))
+			{
+				this.SendPropertyChanging();
+				if ((previousValue != null))
+				{
+					this._TableDetail.Entity = null;
+					previousValue.TableColumnDetails.Remove(this);
+				}
+				this._TableDetail.Entity = value;
+				if ((value != null))
+				{
+					value.TableColumnDetails.Add(this);
+					this._TableId = value.TableId;
+				}
+				else
+				{
+					this._TableId = default(Nullable<int>);
+				}
+				this.SendPropertyChanged("TableDetail");
 			}
 		}
 	}

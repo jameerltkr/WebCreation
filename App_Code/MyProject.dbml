@@ -123,6 +123,9 @@
       <Association Name="aspnet_Membership_SiteUser" Member="SiteUsers" ThisKey="UserId" OtherKey="CreatorId" Type="SiteUser" />
       <Association Name="aspnet_Membership_ActivateUser" Member="ActivateUsers" ThisKey="UserId" OtherKey="UserId" Type="ActivateUser" />
       <Association Name="aspnet_Membership_Website" Member="Websites" ThisKey="UserId" OtherKey="UserId" Type="Website" />
+      <Association Name="aspnet_Membership_DatabaseDetail" Member="DatabaseDetails" ThisKey="UserId" OtherKey="UserId" Type="DatabaseDetail" />
+      <Association Name="aspnet_Membership_TableDetail" Member="TableDetails" ThisKey="UserId" OtherKey="UserId" Type="TableDetail" />
+      <Association Name="aspnet_Membership_TableColumnDetail" Member="TableColumnDetails" ThisKey="UserId" OtherKey="UserId" Type="TableColumnDetail" />
       <Association Name="aspnet_Application_aspnet_Membership" Member="aspnet_Application" ThisKey="ApplicationId" OtherKey="ApplicationId" Type="aspnet_Application" IsForeignKey="true" />
       <Association Name="aspnet_User_aspnet_Membership" Member="aspnet_User" ThisKey="UserId" OtherKey="UserId" Type="aspnet_User" IsForeignKey="true" />
     </Type>
@@ -322,6 +325,7 @@
       <Column Name="UpdatedBy" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
       <Column Name="IsDeleted" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Association Name="Website_WebsitePage" Member="WebsitePages" ThisKey="WebsiteId" OtherKey="WebsiteId" Type="WebsitePage" />
+      <Association Name="Website_DatabaseDetail" Member="DatabaseDetails" ThisKey="WebsiteId" OtherKey="DbForWebsiteId" Type="DatabaseDetail" />
       <Association Name="aspnet_Membership_Website" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" IsForeignKey="true" />
     </Type>
   </Table>
@@ -337,6 +341,49 @@
       <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Column Name="UpdatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
       <Association Name="Website_WebsitePage" Member="Website" ThisKey="WebsiteId" OtherKey="WebsiteId" Type="Website" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DatabaseDetails" Member="DatabaseDetails">
+    <Type Name="DatabaseDetail">
+      <Column Name="DatabaseId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DatabaseName" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="DbForWebsiteId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="WebsiteName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Column Name="Username" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="DatabaseDetail_TableDetail" Member="TableDetails" ThisKey="DatabaseId" OtherKey="DatabaseId" Type="TableDetail" />
+      <Association Name="aspnet_Membership_DatabaseDetail" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" IsForeignKey="true" />
+      <Association Name="Website_DatabaseDetail" Member="Website" ThisKey="DbForWebsiteId" OtherKey="WebsiteId" Type="Website" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TableDetails" Member="TableDetails">
+    <Type Name="TableDetail">
+      <Column Name="TableId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TableName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DatabaseId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="WebsiteName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="CreatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CreatedBy" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UpdatedOn" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="TableDetail_TableColumnDetail" Member="TableColumnDetails" ThisKey="TableId" OtherKey="TableId" Type="TableColumnDetail" />
+      <Association Name="aspnet_Membership_TableDetail" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" IsForeignKey="true" />
+      <Association Name="DatabaseDetail_TableDetail" Member="DatabaseDetail" ThisKey="DatabaseId" OtherKey="DatabaseId" Type="DatabaseDetail" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TableColumnDetails" Member="TableColumnDetails">
+    <Type Name="TableColumnDetail">
+      <Column Name="ColumnId" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TableId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TableName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ColumnName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ColumnDataType" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="UserId" Type="System.Guid" DbType="UniqueIdentifier" CanBeNull="true" />
+      <Association Name="aspnet_Membership_TableColumnDetail" Member="aspnet_Membership" ThisKey="UserId" OtherKey="UserId" Type="aspnet_Membership" IsForeignKey="true" />
+      <Association Name="TableDetail_TableColumnDetail" Member="TableDetail" ThisKey="TableId" OtherKey="TableId" Type="TableDetail" IsForeignKey="true" />
     </Type>
   </Table>
   <Function Name="dbo.proc_retrieve_second_row" Method="proc_retrieve_second_row">

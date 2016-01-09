@@ -13,31 +13,16 @@
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport' />
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <!-- Ionicons -->
     <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-    <link href="dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
-    <link href="dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
-    <link href="plugins/iCheck/flat/blue.css" rel="stylesheet" type="text/css" />
     <!-- fullCalendar 2.2.5-->
     <link href="plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
     <link href="plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet" type="text/css" media='print' />
-    <!-- Morris chart -->
-    <link href="plugins/morris/morris.css" rel="stylesheet" type="text/css" />
-    <!-- jvectormap -->
-    <link href="plugins/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />
-    <!-- Date Picker -->
-    <link href="plugins/datepicker/datepicker3.css" rel="stylesheet" type="text/css" />
-    <!-- Daterange picker -->
-    <link href="plugins/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
-    <!-- bootstrap wysihtml5 - text editor -->
-    <link href="plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" type="text/css" />
-    <link href="dist/css/style.css" rel="stylesheet" />
-    <script src="dist/js/script.js"></script>
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
+    <!-- Theme style -->
+    <link href="dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+    <!-- AdminLTE Skins. Choose a skin from the css/skins 
+         folder instead of downloading all of them to reduce the load. -->
+    <link href="dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="skin-blue">
     <form id="form1" runat="server">
@@ -141,24 +126,24 @@
             <uc1:footer runat="server" ID="footer" />
         </div>
     </form>
-    <!-- jQuery 2.1.3 -->
-    <script src="../plugins/jQuery/jQuery-2.1.3.min.js"></script>
+    <script src="plugins/jQuery/jQuery-2.1.3.min.js"></script>
     <!-- Bootstrap 3.3.2 JS -->
-    <script src="../bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <!-- jQuery UI 1.11.1 -->
     <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js" type="text/javascript"></script>
     <!-- Slimscroll -->
-    <script src="../plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+    <script src="plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
     <!-- FastClick -->
-    <script src='../plugins/fastclick/fastclick.min.js'></script>
+    <script src='plugins/fastclick/fastclick.min.js'></script>
     <!-- AdminLTE App -->
-    <script src="../dist/js/app.min.js" type="text/javascript"></script>
+    <script src="dist/js/app.min.js" type="text/javascript"></script>
     <!-- AdminLTE for demo purposes -->
-    <script src="../dist/js/demo.js" type="text/javascript"></script>
+    <script src="dist/js/demo.js" type="text/javascript"></script>
     <!-- fullCalendar 2.2.5 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
-    <script src="../plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
+    <script src="plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
     <!-- Page specific script -->
+
     <script type="text/javascript">
         $(function () {
 

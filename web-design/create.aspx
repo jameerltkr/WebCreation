@@ -206,7 +206,7 @@
 
                                             lb_web_name.OnClientClick = "show('" + userid + "' ,'" + username + "','" + a.WebsiteName + "'); return false;";
 
-                                            a2.OnClientClick = "if(confirm('Are you sure you want to delete website?')) delete_data('" + userid + "','" + a.WebsiteName + "','"+username+"')";
+                                            a2.OnClientClick = "if(confirm('Are you sure you want to delete website?')) delete_data('" + userid + "','" + a.WebsiteName + "','" + username + "')";
                                             //a2.OnClientClick = "Hello(); return false;";
                                             cell.ID = "data";
                                             //cell.InnerText = a.WebsiteName;
@@ -229,6 +229,56 @@
 
                         <fieldset class="left-toolbox">
                             <legend>Toolbox</legend>
+
+
+                            <link href="../admin/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+                            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+                            <!-- Ionicons -->
+                            <link href="http://code.ionicframework.com/ionicons/2.0.0/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+                            <!-- fullCalendar 2.2.5-->
+                            <link href="../admin/plugins/fullcalendar/fullcalendar.min.css" rel="stylesheet" type="text/css" />
+                            <link href="../admin/plugins/fullcalendar/fullcalendar.print.css" rel="stylesheet" type="text/css" media='print' />
+                            <!-- Theme style -->
+                            <link href="../admin/dist/css/AdminLTE.min.css" rel="stylesheet" type="text/css" />
+                            <!-- AdminLTE Skins. Choose a skin from the css/skins 
+         folder instead of downloading all of them to reduce the load. -->
+                            <link href="../admin/dist/css/skins/_all-skins.min.css" rel="stylesheet" type="text/css" />
+
+                           
+
+
+                            <section class="content">
+                                <div class="row">
+                                    <div class="col-md">
+                                        <div class="box box-solid">
+                                            <div class="box-header with-border">
+                                                <h4 class="box-title">Draggable Events</h4>
+                                            </div>
+                                            <div class="box-body">
+                                                <!-- the events -->
+                                                <div id='external-events'>
+                                                    <div class='external-event bg-green '>Lunch</div>
+                                                    <div class='external-event bg-yellow'>Go home</div>
+                                                    <div class='external-event bg-aqua'>Do homework</div>
+                                                    <div class='external-event bg-light-blue'>Work on UI design</div>
+                                                    <div class='external-event bg-red'>Sleep tight</div>
+                                                    <div class="checkbox">
+                                                        <label for='drop-remove'>
+                                                            <input type='checkbox' id='drop-remove' />
+                                                            remove after drop
+                     
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- /.box-body -->
+                                        </div>
+                                        <!-- /. box -->
+                                    </div>
+                                </div>
+                            </section>
+
+
                             <div id="toolbox">
                                 <ul>
                                     <li>
@@ -259,8 +309,8 @@
 
                         </fieldset>
                         <fieldset class="website-panel">
+                            <div id="calendar"></div>
                             <legend>Website editing</legend>
-
                             <asp:Panel CssClass="create-web" Visible="false" runat="server" ID="pnl_website_name">
 
                                 <asp:Wizard OnCancelButtonClick="Wizard_Create_Web_CancelButtonClick" OnFinishButtonClick="Wizard_Create_Web_FinishButtonClick" OnSideBarButtonClick="Wizard_Create_Web_SideBarButtonClick" OnNextButtonClick="Wizard_Create_Web_NextButtonClick" OnActiveStepChanged="Wizard_Create_Web_ActiveStepChanged" ID="Wizard_Create_Web" runat="server" Height="407px" Width="572px" BackColor="#F7F6F3" BorderColor="#CCCCCC" BorderStyle="Solid" BorderWidth="1px" Font-Names="Verdana" Font-Size="0.8em">
@@ -482,14 +532,17 @@
                     </ItemTemplate>
                 </asp:Repeater>--%>
                             </div>
-                        </fieldset><br />
-                       <br /><br />
+                        </fieldset>
                         <br />
                         <br />
-                        <br/>
                         <br />
                         <br />
-                        <br /><br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
 
                         <fieldset class="pages-section">
                             <legend>Pages</legend>
@@ -537,6 +590,83 @@
             </div>
         </section>
 
+
+        
+                    <div class="content-wrapper">
+                        <!-- Content Header (Page header) -->
+                        <section class="content-header">
+                            <!-- Main row -->
+                            <div class="row">
+                                <!-- Main col -->
+                                <section class="col-lg-12 ">
+                                    <div class="box box-success">
+                                    </div>
+                                </section>
+                            </div>
+                            <script type="text/javascript">
+                                $('.confirmation').on('click', function () {
+                                    return confirm('Are you sure?');
+                                });
+                            </script>
+                            <div class="row">
+                                <div runat="server" class=" display-none" id="create_website">
+                                    <section class="col-lg-12">
+                                        <div class="box box-primary">
+                                            <div class="box-header">
+                                                <i class="fa fa-edit"></i>
+                                                <h3 class="box-title">Create Website</h3>
+                                                <div class="box-body">
+                                                    <div class="col-lg-4">
+                                                        Website Name:<asp:TextBox runat="server" placeholder="Choose website name" class="form-control" ID="txt_websitename"></asp:TextBox><br />
+                                                        <asp:Button ID="Button2" runat="server" Text="Create Website" OnClick="btn_create_website_Click" class="btn btn-block bg-maroon btn-flat" />
+                                                        <asp:Label runat="server" ID="lbl_message"></asp:Label>
+                                                    </div>
+                                                    <div class="col-lg-8">
+                                                        <i class="fa fa-list"></i>
+                                                        <h3 class="box-title">List of websites</h3>
+                                                        <div class="box-body">
+                                                            <table id="tbl_created_websites" runat="server" class="table table-bordered table-hover dataTable">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="290">Website Name</th>
+                                                                        <th>Edit Name</th>
+                                                                        <th>Delete website</th>
+                                                                    </tr>
+                                                                </thead>
+                                                            </table>
+                                                            <!-- DATA TABLES -->
+                                                            <link href="../admin/plugins/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+                                                            <!-- DATA TABES SCRIPT -->
+                                                            <script src="../admin/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
+                                                            <script src="../admin/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+                                                            <script type="text/javascript">
+                                                                $(function () {
+                                                                    //  $("#tbl_created_websites").dataTable();
+                                                                    $('#tbl_created_websites').dataTable({
+                                                                        "bPaginate": true,
+                                                                        "bLengthChange": false,
+                                                                        "bFilter": false,
+                                                                        "bSort": true,
+                                                                        "bInfo": true,
+                                                                        "bAutoWidth": false
+                                                                    });
+                                                                });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                </div>
+                            </section>
+                        </div>
+        
+    
+
+
         <uc1:bottom runat="server" ID="bottom" />
 
         <footer id="footer" style="border-top: thick 5px rgba(248, 78, 203, 0.72);" class="midnight-blue">
@@ -550,5 +680,181 @@
         <script src="../js/wow.min.js"></script>
 
     </form>
+    
+                             <script src="../admin/plugins/jQuery/jQuery-2.1.3.min.js"></script>
+                            <!-- Bootstrap 3.3.2 JS -->
+                            <script src="../admin/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+                            <!-- jQuery UI 1.11.1 -->
+                            <script src="https://code.jquery.com/ui/1.11.1/jquery-ui.min.js" type="text/javascript"></script>
+                            <!-- Slimscroll -->
+                            <script src="../admin/plugins/slimScroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+                            <!-- FastClick -->
+                            <script src='../admin/plugins/fastclick/fastclick.min.js'></script>
+                            <!-- AdminLTE App -->
+                            <script src="../admin/dist/js/app.min.js" type="text/javascript"></script>
+                            <!-- AdminLTE for demo purposes -->
+                            <script src="../admin/dist/js/demo.js" type="text/javascript"></script>
+                            <!-- fullCalendar 2.2.5 -->
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js" type="text/javascript"></script>
+                            <script src="../admin/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script>
+                            <!-- Page specific script -->
+                            
+                            <script type="text/javascript">
+                                $(function () {
+
+                                    /* initialize the external events
+                                     -----------------------------------------------------------------*/
+                                    function ini_events(ele) {
+                                        ele.each(function () {
+
+                                            // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                                            // it doesn't need to have a start or end
+                                            var eventObject = {
+                                                title: $.trim($(this).text()) // use the element's text as the event title
+                                            };
+
+                                            // store the Event Object in the DOM element so we can get to it later
+                                            $(this).data('eventObject', eventObject);
+
+                                            // make the event draggable using jQuery UI
+                                            $(this).draggable({
+                                                zIndex: 1070,
+                                                revert: true, // will cause the event to go back to its
+                                                revertDuration: 0  //  original position after the drag
+                                            });
+
+                                        });
+                                    }
+                                    ini_events($('#external-events div.external-event'));
+
+                                    /* initialize the calendar
+                                     -----------------------------------------------------------------*/
+                                    //Date for the calendar events (dummy data)
+                                    var date = new Date();
+                                    var d = date.getDate(),
+                                            m = date.getMonth(),
+                                            y = date.getFullYear();
+                                    $('#calendar').fullCalendar({
+                                        header: {
+                                            left: 'prev,next today',
+                                            center: 'title',
+                                            right: 'month,agendaWeek,agendaDay'
+                                        },
+                                        buttonText: {
+                                            today: 'today',
+                                            month: 'month',
+                                            week: 'week',
+                                            day: 'day'
+                                        },
+                                        //Random default events
+                                        events: [
+                                          {
+                                              title: 'All Day Event',
+                                              start: new Date(y, m, 1),
+                                              backgroundColor: "#f56954", //red
+                                              borderColor: "#f56954" //red
+                                          },
+                                          {
+                                              title: 'Long Event',
+                                              start: new Date(y, m, d - 5),
+                                              end: new Date(y, m, d - 2),
+                                              backgroundColor: "#f39c12", //yellow
+                                              borderColor: "#f39c12" //yellow
+                                          },
+                                          {
+                                              title: 'Meeting',
+                                              start: new Date(y, m, d, 10, 30),
+                                              allDay: false,
+                                              backgroundColor: "#0073b7", //Blue
+                                              borderColor: "#0073b7" //Blue
+                                          },
+                                          {
+                                              title: 'Lunch',
+                                              start: new Date(y, m, d, 12, 0),
+                                              end: new Date(y, m, d, 14, 0),
+                                              allDay: false,
+                                              backgroundColor: "#00c0ef", //Info (aqua)
+                                              borderColor: "#00c0ef" //Info (aqua)
+                                          },
+                                          {
+                                              title: 'Birthday Party',
+                                              start: new Date(y, m, d + 1, 19, 0),
+                                              end: new Date(y, m, d + 1, 22, 30),
+                                              allDay: false,
+                                              backgroundColor: "#00a65a", //Success (green)
+                                              borderColor: "#00a65a" //Success (green)
+                                          },
+                                          {
+                                              title: 'Click for Google',
+                                              start: new Date(y, m, 28),
+                                              end: new Date(y, m, 29),
+                                              url: 'http://google.com/',
+                                              backgroundColor: "#3c8dbc", //Primary (light-blue)
+                                              borderColor: "#3c8dbc" //Primary (light-blue)
+                                          }
+                                        ],
+                                        editable: true,
+                                        droppable: true, // this allows things to be dropped onto the calendar !!!
+                                        drop: function (date, allDay) { // this function is called when something is dropped
+
+                                            // retrieve the dropped element's stored Event Object
+                                            var originalEventObject = $(this).data('eventObject');
+
+                                            // we need to copy it, so that multiple events don't have a reference to the same object
+                                            var copiedEventObject = $.extend({}, originalEventObject);
+
+                                            // assign it the date that was reported
+                                            copiedEventObject.start = date;
+                                            copiedEventObject.allDay = allDay;
+                                            copiedEventObject.backgroundColor = $(this).css("background-color");
+                                            copiedEventObject.borderColor = $(this).css("border-color");
+
+                                            // render the event on the calendar
+                                            // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                                            $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+                                            // is the "remove after drop" checkbox checked?
+                                            if ($('#drop-remove').is(':checked')) {
+                                                // if so, remove the element from the "Draggable Events" list
+                                                $(this).remove();
+                                            }
+
+                                        }
+                                    });
+
+                                    /* ADDING EVENTS */
+                                    var currColor = "#3c8dbc"; //Red by default
+                                    //Color chooser button
+                                    var colorChooser = $("#color-chooser-btn");
+                                    $("#color-chooser > li > a").click(function (e) {
+                                        e.preventDefault();
+                                        //Save color
+                                        currColor = $(this).css("color");
+                                        //Add color effect to button
+                                        $('#add-new-event').css({ "background-color": currColor, "border-color": currColor });
+                                    });
+                                    $("#add-new-event").click(function (e) {
+                                        e.preventDefault();
+                                        //Get value and make sure it is not null
+                                        var val = $("#new-event").val();
+                                        if (val.length == 0) {
+                                            return;
+                                        }
+
+                                        //Create events
+                                        var event = $("<div />");
+                                        event.css({ "background-color": currColor, "border-color": currColor, "color": "#fff" }).addClass("external-event");
+                                        event.html(val);
+                                        $('#external-events').prepend(event);
+
+                                        //Add draggable funtionality
+                                        ini_events(event);
+
+                                        //Remove event from text input
+                                        $("#new-event").val("");
+                                    });
+                                });
+    </script>
+
 </body>
 </html>

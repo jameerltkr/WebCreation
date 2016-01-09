@@ -360,4 +360,17 @@ public class datalayer
         }
         return delete;
     }
+    public int GetTotalWebPageCount(Guid userid,string username, string websitename)
+    {
+        int websiteid=GetWebsiteId(userid,username,websitename);
+        var q = from a in da.WebsitePages
+                where a.Username == username && a.WebsiteId == websiteid
+                select a.PageName;
+        if (q.Any())
+        {
+            return Convert.ToInt32(q.Single());
+        }
+        else
+            return 0;
+    }
 }

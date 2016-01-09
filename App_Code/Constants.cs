@@ -31,4 +31,9 @@ public class Constants
     public const string ENTER_WEBSITE_NAME = "Please choose a website name.";
     public const string WEBSITE_NAME = "Website Name";
     public const string PAGE_CREATED = "Page Created";
+    public class Database
+    {
+        public const string UPDATE_DATABASE = "Update Database";
+        public const int DATABASE_ID = 0;
+    }
 }

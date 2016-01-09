@@ -29,6 +29,7 @@ function delete_data(userid, websitename,username) {
 }
 url3 = window.location.pathname + "/show";
 function show(userid, username, websitename) {
+    $("#hf_website_preview").val(websitename);
     $.ajax({
         type: "POST",
         url: url3,
@@ -37,13 +38,17 @@ function show(userid, username, websitename) {
         datatype: "jsondata",
         async: "true",
         success: function (response) {
-            if ((response.d) == "") {
+            if ((response.d) == "nothing") {
                 // show_div();
                 // alert(response.d);
+                $("#tbl_pages tbody tr").remove();
+                $("#website_name a").remove();
                 addTextBox(userid, username, websitename);
             }
             else
                 if (response.d == "data") {
+                    $("#website_div input").remove();
+                    $("#website_div div").remove();
                     document.getElementById("tbl_pages").style.display = "block";
                     get_page_name(username, websitename,userid);
                 }
@@ -61,10 +66,20 @@ function show(userid, username, websitename) {
         }
     });
 }
-function run(pagename) {
+//   uncomment below function when create.aspx page will be run
+
+//function run(pagename) {
+//    $("#hf_page_name").val(pagename);
+//    //document.getElementById('<%= Button1.ClientID %>').click();
+//    $("#Button1").click();
+//    return false;
+//}
+
+function run(pagename, websitename) {
+    $("#hf_website_name").val(websitename);
     $("#hf_page_name").val(pagename);
-    //document.getElementById('<%= Button1.ClientID %>').click();
-    $("#Button1").click();
+  //  $('#<%= Button1.ClientID %>').click();
+    $("#btn_write_page").click();
     return false;
 }
 
@@ -80,8 +95,9 @@ $(document).ready(function () {
 });
 function create_div(userid, username, websitename) {
 
-    return '<p id="error" style="color: Red; display: none">* Special Characters not allowed</p><br/>'+
-    '<input type="text" id="txt_page_name" onkeypress="return IsAlphaNumeric(event);" ondrop="return false;" onpaste="return false;"/>' +
+    return '<p id="error" style="color: Red; display: none">* Special Characters not allowed</p><br/>' +
+        '<p id="empty_error" style="color:red; display:none;">* Please enter a page name</p><br/>' +
+    '<input type="text" id="txt_page_name" placeholder="Page name" onkeypress="return IsAlphaNumeric(event);" ondrop="return false;" onpaste="return false;"/>' +
         '<input type="button" id="btn_create_page" onclick="add_page(\'' + userid + '\',\'' + username + '\',\'' + websitename + '\'); return false;" value="Create Page"/>'
 }
 function addTextBox(userid, username, websitename) {
@@ -92,43 +108,55 @@ function addTextBox(userid, username, websitename) {
     document.getElementById("website_div").appendChild(div);
 }
 function add_page(userid, username, websitename) {
-    var page = document.getElementById("txt_page_name").value;
-    var pagename = document.getElementById("txt_page_name").value + ".aspx";
-    url_add_page = window.location.pathname + "/add_page";
-    $.ajax({
-        type: "POST",
-        url: url_add_page,
-        data: "{userid:'" + userid + "', username: '" + username + "',websitename:'" + websitename + "', pagename: '" + pagename + "'}",
-        contentType: "application/json; charset=utf-8",
-        datatype: "jsondata",
-        async: "true",
-        success: function (response) {
-            if (response.d == "") {
-                alert('An error occurred');
-            }
-            else
-                if (response.d == "error") {
-                    alert('error while inserting');
+    if (document.getElementById("txt_page_name").value == "") {
+        document.getElementById("empty_error").style.display = "inline";
+        //document.getElementById("error").value = "Please enter a page name.";
+    }
+    else {
+        document.getElementById("empty_error").style.display = "none";
+        document.getElementById("btn_create_page").value = "Creating...";
+        var page = document.getElementById("txt_page_name").value;
+        var pagename = document.getElementById("txt_page_name").value + ".aspx";
+        url_add_page = window.location.pathname + "/add_page";
+        $.ajax({
+            type: "POST",
+            url: url_add_page,
+            data: "{userid:'" + userid + "', username: '" + username + "',websitename:'" + websitename + "', pagename: '" + pagename + "'}",
+            contentType: "application/json; charset=utf-8",
+            datatype: "jsondata",
+            async: "true",
+            success: function (response) {
+                if (response.d == "") {
+                    alert('An error occurred');
                 }
                 else
-                    if (response.d == "inserted") {
-
-                        document.getElementById("txt_page_name").value = "";
-                        document.getElementById("website_div").style.display = "none";
-                        run(page);
-                        document.getElementById("first_window").innerHTML = "Page created successfully.";
-                        show_modal("first_window");
+                    if (response.d == "error") {
+                        alert('error while inserting');
                     }
-        },
-        failure: function (response) {
-            document.getElementById("first_window").innerHTML = response.d;
-            show_modal("first_window");
-        },
-        error: function (response) {
-            document.getElementById("first_window").innerHTML = response.d;
-            show_modal("first_window");
-        }
-    });
+                    else
+                        if (response.d == "inserted") {
+
+                            run(page, websitename);      //  run the c# method to create page...........
+
+                            document.getElementById("first_window").innerHTML = "Page created successfully.";
+                            show_modal("first_window");
+                            document.getElementById("btn_create_page").value = "Create Page";
+                            document.getElementById("txt_page_name").value = "";
+                            document.getElementById("website_div").style.display = "none";
+
+                        }
+            },
+            failure: function (response) {
+                document.getElementById("first_window").innerHTML = response.d;
+                show_modal("first_window");
+            },
+            error: function (response) {
+                document.getElementById("first_window").innerHTML = response.d;
+                show_modal("first_window");
+            }
+        });
+        show(userid, username, websitename);    //getting websites from db............
+    }
 }
 
 function nospace() {
@@ -164,6 +192,7 @@ function IsAlphaNumeric(e) {
     var keyCode = e.keyCode == 0 ? e.charCode : e.keyCode;
     var ret = ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122) || (specialKeys.indexOf(e.keyCode) != -1 && e.charCode != e.keyCode));
     document.getElementById("error").style.display = ret ? "none" : "inline";
+    document.getElementById("empty_error").style.display = ret ? "none" : "inline";
     return ret;
 }
 function check(e) {
@@ -224,7 +253,7 @@ function get_page_name(username, websitename,userid) {
                 //$("#website_name").append("<a href='#'>" + item.WebsiteName + "</a>");
                 var rows = "<tr>"
                 
-                + "<td>" + "<a href='#' onclick='edit_page(\"" + username + "\",\"" + item.PageName + "\"); return false;' id=" + "\'" + item.PageName + "\'" + " >" + item.PageName + "</a></td>"
+                + "<td>" + "<a href='#' onclick='edit_page(\"" + username + "\",\"" + websitename + "\",\"" + item.PageName + "\"); return false;' id=" + "\'" + item.PageName + "\'" + " >" + item.PageName + "</a></td>"
                 //+ "<td>" + item.WebsiteName + "</td>"
                 + "</tr>";
                 $('#tbl_pages').append(rows);
@@ -274,9 +303,15 @@ function get_websites_name(username) {
         }
     });
 }
-function edit_page(username, pagename) {
+function edit_page(username, websitename, pagename) {
+    //document.getElementById("website_details").Attributes["class"] = "display-none";  // hiding website details page
+    //document.getElementById("create_website").Attributes["class"] = "display-block";    // show create website page
+    //document.getElementById("create_database").Attributes["class"] = "display-none";   // creatign datavase page  // show
+    document.getElementById('website_details').style.display = "none";
+    document.getElementById('create_database').style.display = "none";
+
     document.getElementById('iframe_edit_page').style.display = "block";
-    var address = username + "/" + pagename;
+    var address = username + "/" + websitename + "/" + pagename;
     var iframe = document.getElementById('iframe_edit_page');
     iframe.src = address;
 
